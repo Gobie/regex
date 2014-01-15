@@ -1,0 +1,5 @@
+.idea/
+.vagrant/
+vendor/
+phpunit.xml
+Vagrantfile
