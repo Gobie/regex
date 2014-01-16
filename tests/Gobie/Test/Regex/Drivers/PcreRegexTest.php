@@ -53,6 +53,10 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 '/(Hello/',
                 'preg_match(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
             ),
+            'unmatched )'             => array(
+                '/Hello)/',
+                'preg_match(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
+            ),
             'nothing to repeat'     => array(
                 '/+/',
                 'preg_match(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
