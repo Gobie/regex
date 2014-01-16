@@ -40,7 +40,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \BadMethodCallException
      * @expectedExceptionMessage Method \Gobie\Regex\Drivers\PcreRegex::unmatch not implemented
      */
     public function testShouldFailExecuteUnknownDriverMethod()

@@ -17,7 +17,7 @@ class RegexFacade
     public function __call($name, $arguments)
     {
         if (!method_exists($this->driverClass, $name)) {
-            throw new \RuntimeException('Method ' . $this->driverClass . '::' . $name . ' not implemented');
+            throw new \BadMethodCallException('Method ' . $this->driverClass . '::' . $name . ' not implemented');
         }
 
         return call_user_func_array(array($this->driverClass, $name), $arguments);
