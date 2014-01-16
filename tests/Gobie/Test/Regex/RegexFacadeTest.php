@@ -38,4 +38,14 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
             array(RegexFacade::PCRE, '/abc/', '01abc23', array('abc')),
         );
     }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Method \Gobie\Regex\Drivers\PcreRegex::unmatch not implemented
+     */
+    public function testShouldFailExecuteUnknownDriverMethod()
+    {
+        $regex = new RegexFacade(RegexFacade::PCRE);
+        $regex->unmatch();
+    }
 }
