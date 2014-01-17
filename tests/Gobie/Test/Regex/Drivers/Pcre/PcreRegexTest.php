@@ -17,7 +17,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideFailWithCompilationError
+     * @dataProvider providePregMatchCompilationError
      */
     public function testShouldTryToMatchButFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -55,7 +55,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideFailWithCompilationError
+     * @dataProvider providePregMatchCompilationError
      */
     public function testShouldTryToGetButFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -84,6 +84,44 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         $this->fail('Runtime exception should have been thrown');
     }
 
+    /**
+     * @dataProvider provideGetAll
+     */
+    public function testShouldGetAll($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame(PcreRegex::getAll($pattern, $subject), $expectedResult);
+    }
+
+    /**
+     * @dataProvider providePregMatchAllCompilationError
+     */
+    public function testShouldTryToGetAllButFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::getAll($pattern, '');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+
+            return;
+        }
+        $this->fail('Compilation exception should have been thrown');
+    }
+
+    /**
+     * @dataProvider provideFailWithRuntimeError
+     */
+    public function testShouldTryToGetAllFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::getAll($pattern, $subject);
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+
+            return;
+        }
+        $this->fail('Runtime exception should have been thrown');
+    }
+
     public function provideMatch()
     {
         return array(
@@ -102,7 +140,16 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideFailWithCompilationError()
+    public function provideGetAll()
+    {
+        return array(
+            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array(array('Hello World'))),
+            '2 matches'          => array('/[A-Z]/', 'Hello World', array(array('H', 'W'))),
+            'no match'           => array('/HelloWorld/', 'Hello World', array()),
+        );
+    }
+
+    public function providePregMatchCompilationError()
     {
         return array(
             'incorrect delimiter'   => array(
@@ -140,6 +187,48 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             'empty pattern'         => array(
                 '',
                 'preg_match(): Empty regular expression; pattern: '
+            ),
+        );
+    }
+
+    public function providePregMatchAllCompilationError()
+    {
+        return array(
+            'incorrect delimiter'   => array(
+                'Hello',
+                'preg_match_all(): Delimiter must not be alphanumeric or backslash; pattern: Hello'
+            ),
+            'no ending delimiter'   => array(
+                '/Hello',
+                'preg_match_all(): No ending delimiter \'/\' found; pattern: /Hello'
+            ),
+            'missing )'             => array(
+                '/(Hello/',
+                'preg_match_all(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
+            ),
+            'unmatched )'           => array(
+                '/Hello)/',
+                'preg_match_all(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
+            ),
+            'nothing to repeat'     => array(
+                '/+/',
+                'preg_match_all(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
+            ),
+            'unsupported \u'        => array(
+                "/\uFFFF/",
+                'preg_match_all(): Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
+            ),
+            'invalid 2 octet utf-8' => array(
+                "/\xc3\x28/u",
+                "preg_match_all(): Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
+            ),
+            'unknown modifier'      => array(
+                '//.',
+                'preg_match_all(): Unknown modifier \'.\'; pattern: //.'
+            ),
+            'empty pattern'         => array(
+                '',
+                'preg_match_all(): Empty regular expression; pattern: '
             ),
         );
     }
