@@ -9,15 +9,26 @@ class MbPosixRegex
 
     public static function get($pattern, $subject)
     {
+        self::prepare($pattern);
+        $res = \mb_ereg($pattern, $subject, $matches);
+        self::cleanup();
+
+        return $res ? $matches : array();
+    }
+
+    /**
+     * @param $pattern
+     */
+    private static function prepare($pattern)
+    {
         set_error_handler(function ($errno, $errstr) use ($pattern) {
             restore_error_handler();
             throw new RegexException($errstr, null, $pattern);
         });
+    }
 
-        $res = \mb_ereg($pattern, $subject, $matches);
-
+    private static function cleanup()
+    {
         restore_error_handler();
-
-        return $res ? $matches : array();
     }
 }
