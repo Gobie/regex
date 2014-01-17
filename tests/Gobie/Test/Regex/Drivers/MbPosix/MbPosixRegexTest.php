@@ -9,14 +9,14 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @dataProvider provideTestShouldMatch
+     * @dataProvider provideTestShouldGet
      */
-    public function testShouldMatch($pattern, $subject, $expectedResult)
+    public function testShouldGet($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(MbPosixRegex::match($pattern, $subject), $expectedResult);
+        $this->assertSame(MbPosixRegex::get($pattern, $subject), $expectedResult);
     }
 
-    public function provideTestShouldMatch()
+    public function provideTestShouldGet()
     {
         return array(
             'simple hello world' => array('Hello\sWorld', 'Hello World', array('Hello World')),
@@ -31,7 +31,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbPosixRegex::match($pattern, '');
+            MbPosixRegex::get($pattern, '');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
 

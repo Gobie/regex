@@ -9,14 +9,14 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @dataProvider provideTestShouldMatch
+     * @dataProvider provideTestShouldGet
      */
-    public function testShouldMatch($pattern, $subject, $expectedResult)
+    public function testShouldGet($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(PcreRegex::match($pattern, $subject), $expectedResult);
+        $this->assertSame(PcreRegex::get($pattern, $subject), $expectedResult);
     }
 
-    public function provideTestShouldMatch()
+    public function provideTestShouldGet()
     {
         return array(
             'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World')),
@@ -31,7 +31,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::match($pattern, '');
+            PcreRegex::get($pattern, '');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
 
@@ -88,7 +88,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
-            PcreRegex::match($pattern, $subject);
+            PcreRegex::get($pattern, $subject);
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
 

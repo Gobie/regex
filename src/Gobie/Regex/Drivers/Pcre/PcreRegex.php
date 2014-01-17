@@ -5,7 +5,7 @@ namespace Gobie\Regex\Drivers\Pcre;
 class PcreRegex
 {
 
-    public static function match($pattern, $subject)
+    public static function get($pattern, $subject)
     {
         set_error_handler(function ($errno, $errstr) use ($pattern) {
             restore_error_handler();

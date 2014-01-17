@@ -30,7 +30,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     public function testShouldMatch($driver, $pattern, $subject, $expectedResult)
     {
         $regex = new RegexFacade($driver);
-        $this->assertSame($regex->match($pattern, $subject), $expectedResult);
+        $this->assertSame($regex->get($pattern, $subject), $expectedResult);
     }
 
     public function provideTestShouldMatch()
