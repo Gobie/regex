@@ -2,8 +2,6 @@
 
 namespace Gobie\Regex\Drivers\Pcre;
 
-use Gobie\Regex\RegexException;
-
 class PcreRegex
 {
 
@@ -11,7 +9,7 @@ class PcreRegex
     {
         set_error_handler(function ($errno, $errstr) use ($pattern) {
             restore_error_handler();
-            throw new RegexException($errstr, null, $pattern);
+            throw new PcreRegexException($errstr, null, $pattern);
         });
 
         $res = preg_match($pattern, $subject, $matches);
@@ -19,7 +17,7 @@ class PcreRegex
         restore_error_handler();
 
         if ($res === false && preg_last_error()) {
-            throw new RegexException(null, preg_last_error(), $pattern);
+            throw new PcreRegexException(null, preg_last_error(), $pattern);
         }
 
         return $res ? $matches : array();
