@@ -5,7 +5,7 @@ namespace Gobie\Regex;
 class RegexFacade
 {
 
-    const PCRE = '\Gobie\Regex\Drivers\PcreRegex';
+    const PCRE = '\Gobie\Regex\Drivers\Pcre\PcreRegex';
 
     private $driverClass;
 

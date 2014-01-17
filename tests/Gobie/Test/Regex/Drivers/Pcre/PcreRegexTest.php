@@ -1,8 +1,8 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers;
+namespace Gobie\Test\Regex\Drivers\Pcre;
 
-use Gobie\Regex\Drivers\PcreRegex;
+use Gobie\Regex\Drivers\Pcre\PcreRegex;
 use Gobie\Regex\RegexException;
 
 class PcreRegexTest extends \PHPUnit_Framework_TestCase

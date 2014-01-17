@@ -1,6 +1,6 @@
 <?php
 
-namespace Gobie\Regex\Drivers;
+namespace Gobie\Regex\Drivers\Pcre;
 
 use Gobie\Regex\RegexException;
 
