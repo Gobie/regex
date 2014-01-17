@@ -9,26 +9,55 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @dataProvider provideTestShouldGet
+     * @dataProvider provideMatch
+     */
+    public function testShouldMatch($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame(PcreRegex::match($pattern, $subject), $expectedResult);
+    }
+
+    /**
+     * @dataProvider provideFailWithCompilationError
+     */
+    public function testShouldTryToMatchButFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::match($pattern, '');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+
+            return;
+        }
+        $this->fail('Compilation exception should have been thrown');
+    }
+
+    /**
+     * @dataProvider provideFailWithRuntimeError
+     */
+    public function testShouldTryToMatchFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::match($pattern, $subject);
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+
+            return;
+        }
+        $this->fail('Runtime exception should have been thrown');
+    }
+
+    /**
+     * @dataProvider provideGet
      */
     public function testShouldGet($pattern, $subject, $expectedResult)
     {
         $this->assertSame(PcreRegex::get($pattern, $subject), $expectedResult);
     }
 
-    public function provideTestShouldGet()
-    {
-        return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World')),
-            '2 subgroups' => array('/(Hello)\s(World)/', 'Hello World', array('Hello World', 'Hello', 'World')),
-            'no match' => array('/HelloWorld/', 'Hello World', array()),
-        );
-    }
-
     /**
-     * @dataProvider provideTestShouldFailWithCompilationError
+     * @dataProvider provideFailWithCompilationError
      */
-    public function testShouldFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldTryToGetButFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             PcreRegex::get($pattern, '');
@@ -40,7 +69,40 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         $this->fail('Compilation exception should have been thrown');
     }
 
-    public function provideTestShouldFailWithCompilationError()
+    /**
+     * @dataProvider provideFailWithRuntimeError
+     */
+    public function testShouldTryToGetFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::get($pattern, $subject);
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+
+            return;
+        }
+        $this->fail('Runtime exception should have been thrown');
+    }
+
+    public function provideMatch()
+    {
+        return array(
+            'simple hello world' => array('/Hello\sWorld/', 'Hello World', true),
+            '2 subgroups'        => array('/(Hello)\s(World)/', 'Hello World', true),
+            'no match'           => array('/HelloWorld/', 'Hello World', false),
+        );
+    }
+
+    public function provideGet()
+    {
+        return array(
+            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World')),
+            '2 subgroups'        => array('/(Hello)\s(World)/', 'Hello World', array('Hello World', 'Hello', 'World')),
+            'no match'           => array('/HelloWorld/', 'Hello World', array()),
+        );
+    }
+
+    public function provideFailWithCompilationError()
     {
         return array(
             'incorrect delimiter'   => array(
@@ -55,7 +117,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 '/(Hello/',
                 'preg_match(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
             ),
-            'unmatched )'             => array(
+            'unmatched )'           => array(
                 '/Hello)/',
                 'preg_match(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
             ),
@@ -82,22 +144,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @dataProvider provideTestShouldFailWithRuntimeError
-     */
-    public function testShouldFailWithRuntimeError($pattern, $subject, $exceptionMessage)
-    {
-        try {
-            PcreRegex::get($pattern, $subject);
-        } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
-        }
-        $this->fail('Runtime exception should have been thrown');
-    }
-
-    public function provideTestShouldFailWithRuntimeError()
+    public function provideFailWithRuntimeError()
     {
         return array(
             'malformed utf-8' => array(
