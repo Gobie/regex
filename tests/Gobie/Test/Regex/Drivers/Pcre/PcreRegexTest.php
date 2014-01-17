@@ -19,7 +19,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideTestShouldMatch()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World'))
+            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World')),
+            '2 subgroups' => array('/(Hello)\s(World)/', 'Hello World', array('Hello World', 'Hello', 'World')),
+            'no match' => array('/HelloWorld/', 'Hello World', array()),
         );
     }
 
