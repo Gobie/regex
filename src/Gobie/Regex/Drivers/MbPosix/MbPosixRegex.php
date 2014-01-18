@@ -7,6 +7,15 @@ use Gobie\Regex\RegexException;
 class MbPosixRegex
 {
 
+    public static function match($pattern, $subject)
+    {
+        self::prepare($pattern);
+        $res = \mb_ereg_match($pattern, $subject);
+        self::cleanup();
+
+        return $res;
+    }
+
     public static function get($pattern, $subject)
     {
         self::prepare($pattern);
