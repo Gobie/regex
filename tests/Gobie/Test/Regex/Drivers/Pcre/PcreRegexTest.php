@@ -8,6 +8,8 @@ use Gobie\Regex\RegexException;
 class PcreRegexTest extends \PHPUnit_Framework_TestCase
 {
 
+    const SUBJECT = 'Hello World';
+
     /**
      * @dataProvider provideMatch
      */
@@ -17,33 +19,29 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providePregMatchCompilationError
+     * @dataProvider provideMatchCompilationError
      */
-    public function testShouldTryToMatchButFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             PcreRegex::match($pattern, '');
+            $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Compilation exception should have been thrown');
     }
 
     /**
-     * @dataProvider provideFailWithRuntimeError
+     * @dataProvider provideRuntimeError
      */
-    public function testShouldTryToMatchFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    public function testShouldMatchAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
             PcreRegex::match($pattern, $subject);
+            $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Runtime exception should have been thrown');
     }
 
     /**
@@ -55,33 +53,29 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providePregMatchCompilationError
+     * @dataProvider provideMatchCompilationError
      */
-    public function testShouldTryToGetButFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             PcreRegex::get($pattern, '');
+            $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Compilation exception should have been thrown');
     }
 
     /**
-     * @dataProvider provideFailWithRuntimeError
+     * @dataProvider provideRuntimeError
      */
-    public function testShouldTryToGetFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    public function testShouldGetAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
             PcreRegex::get($pattern, $subject);
+            $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Runtime exception should have been thrown');
     }
 
     /**
@@ -93,63 +87,59 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider providePregMatchAllCompilationError
+     * @dataProvider provideMatchAllCompilationError
      */
-    public function testShouldTryToGetAllButFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldGetAllAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             PcreRegex::getAll($pattern, '');
+            $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Compilation exception should have been thrown');
     }
 
     /**
-     * @dataProvider provideFailWithRuntimeError
+     * @dataProvider provideRuntimeError
      */
-    public function testShouldTryToGetAllFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    public function testShouldGetAllAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
             PcreRegex::getAll($pattern, $subject);
+            $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
-
-            return;
         }
-        $this->fail('Runtime exception should have been thrown');
     }
 
     public function provideMatch()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Hello World', true),
-            '2 subgroups'        => array('/(Hello)\s(World)/', 'Hello World', true),
-            'no match'           => array('/HelloWorld/', 'Hello World', false),
+            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, true),
+            '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, true),
+            'no match'           => array('/HelloWorld/', self::SUBJECT, false),
         );
     }
 
     public function provideGet()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array('Hello World')),
-            '2 subgroups'        => array('/(Hello)\s(World)/', 'Hello World', array('Hello World', 'Hello', 'World')),
-            'no match'           => array('/HelloWorld/', 'Hello World', array()),
+            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array('Hello World')),
+            '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, array('Hello World', 'Hello', 'World')),
+            'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
         );
     }
 
     public function provideGetAll()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Hello World', array(array('Hello World'))),
-            '2 matches'          => array('/[A-Z]/', 'Hello World', array(array('H', 'W'))),
-            'no match'           => array('/HelloWorld/', 'Hello World', array()),
+            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array(array('Hello World'))),
+            '2 matches'          => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
+            'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
         );
     }
 
-    public function providePregMatchCompilationError()
+    public function provideMatchCompilationError()
     {
         return array(
             'incorrect delimiter'   => array(
@@ -191,7 +181,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function providePregMatchAllCompilationError()
+    public function provideMatchAllCompilationError()
     {
         return array(
             'incorrect delimiter'   => array(
@@ -233,7 +223,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideFailWithRuntimeError()
+    public function provideRuntimeError()
     {
         return array(
             'malformed utf-8' => array(
