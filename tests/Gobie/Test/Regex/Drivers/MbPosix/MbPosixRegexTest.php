@@ -11,7 +11,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     const SUBJECT = 'Hello World';
 
     /**
-     * @dataProvider provideTestShouldGet
+     * @dataProvider provideGet
      */
     public function testShouldGet($pattern, $subject, $expectedResult)
     {
@@ -19,7 +19,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideTestShouldMatch
+     * @dataProvider provideMatch
      */
     public function testShouldMatch($pattern, $subject, $expectedResult)
     {
@@ -29,7 +29,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideGetCompilationError
      */
-    public function testShouldTryToGetButFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             MbPosixRegex::get($pattern, self::SUBJECT);
@@ -42,7 +42,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideMatchCompilationError
      */
-    public function testShouldTryToMatchButFailWithCompilationError($pattern, $exceptionMessage)
+    public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             MbPosixRegex::match($pattern, self::SUBJECT);
@@ -52,7 +52,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function provideTestShouldGet()
+    public function provideGet()
     {
         return array(
             'simple hello world' => array('Hello\sWorld', self::SUBJECT, array('Hello World')),
@@ -61,7 +61,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideTestShouldMatch()
+    public function provideMatch()
     {
         return array(
             'empty pattern'      => array('', self::SUBJECT, true),
