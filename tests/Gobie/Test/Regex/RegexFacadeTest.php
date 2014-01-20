@@ -16,14 +16,6 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($regex->getDriverClass(), $driver);
     }
 
-    public function provideTestShouldCreateRegexWithDriver()
-    {
-        return array(
-            array(RegexFacade::PCRE),
-            array(RegexFacade::MB_EREG),
-        );
-    }
-
     /**
      * @dataProvider provideTestShouldMatch
      */
@@ -31,14 +23,6 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     {
         $regex = new RegexFacade($driver);
         $this->assertSame($regex->match($pattern, $subject), $expectedResult);
-    }
-
-    public function provideTestShouldMatch()
-    {
-        return array(
-            array(RegexFacade::PCRE, '/abc/', '01abc23', true),
-            array(RegexFacade::MB_EREG, 'abc', '01abc23', true),
-        );
     }
 
     /**
@@ -56,6 +40,22 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->fail();
+    }
+
+    public function provideTestShouldCreateRegexWithDriver()
+    {
+        return array(
+            array(RegexFacade::PCRE),
+            array(RegexFacade::MB_EREG),
+        );
+    }
+
+    public function provideTestShouldMatch()
+    {
+        return array(
+            array(RegexFacade::PCRE, '/abc/', '01abc23', true),
+            array(RegexFacade::MB_EREG, 'abc', '01abc23', true),
+        );
     }
 
     public function provideTestShouldFailExecuteUnknownDriverMethod()
