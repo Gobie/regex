@@ -17,7 +17,7 @@ class PcreRegex
     public static function get($pattern, $subject)
     {
         self::prepare($pattern);
-        $res = preg_match($pattern, $subject, $matches);
+        preg_match($pattern, $subject, $matches);
         self::cleanup($pattern);
 
         return $matches;
@@ -26,7 +26,7 @@ class PcreRegex
     public static function getAll($pattern, $subject)
     {
         self::prepare($pattern);
-        $res = preg_match_all($pattern, $subject, $matches);
+        preg_match_all($pattern, $subject, $matches);
         self::cleanup($pattern);
 
         return $matches;
@@ -43,7 +43,7 @@ class PcreRegex
 
     private static function prepare($pattern)
     {
-        set_error_handler(function ($errno, $errstr) use ($pattern) {
+        set_error_handler(function ($_, $errstr) use ($pattern) {
             restore_error_handler();
             throw new PcreRegexException($errstr, null, $pattern);
         });
