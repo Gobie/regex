@@ -5,6 +5,9 @@ namespace Gobie\Test\Regex\Drivers;
 use Gobie\Regex\Drivers\MbEreg\MbEregRegex;
 use Gobie\Regex\RegexException;
 
+/**
+ * @requires extension mbstring
+ */
 class MbEregRegexTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -73,6 +76,29 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @requires PHP 5.4.1
+     * @dataProvider provideReplaceCallback
+     */
+    public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::ReplaceCallback($pattern, $callback, $subject));
+    }
+
+    /**
+     * @requires PHP 5.4.1
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::ReplaceCallback($pattern, function() {}, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
     public function provideMatch()
     {
         return array(
@@ -104,9 +130,59 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function provideReplaceCallback()
+    {
+        return array(
+            'full replace'           => array(
+                '^Hello\sWorld$',
+                function () {
+                    return 'Good day';
+                },
+                self::SUBJECT,
+                'Good day'
+            ),
+            'lowercase to uppercase' => array(
+                '[a-z]',
+                function ($matches) {
+                    return \strtoupper($matches[0]);
+                },
+                self::SUBJECT,
+                'HELLO WORLD'
+            ),
+            'full replace by groups'             => array(
+                '^(\w+)\s(\w+)$',
+                function ($matches) {
+                    return $matches[1] . '-' . $matches[2];
+                },
+                self::SUBJECT,
+                'Hello-World'
+            ),
+            'replace each char'             => array(
+                '.',
+                function ($matches) {
+                    return ord($matches[0]);
+                },
+                self::SUBJECT,
+                '721011081081113287111114108100'
+            ),
+            'no match'               => array(
+                'HelloWorld',
+                function () {
+                    return '';
+                },
+                self::SUBJECT,
+                'Hello World'
+            ),
+        );
+    }
+
     public function provideMatchCompilationError()
     {
         return array(
+            'missing ]'         => array(
+                '[a-z',
+                'mbregex compile err: premature end of char-class; pattern: [a-z'
+            ),
             'missing )'         => array(
                 '(Hello',
                 'mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
@@ -129,6 +205,10 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     public function provideReplaceCompilationError()
     {
         return array(
+            'missing ]'         => array(
+                '[a-z',
+                'mbregex compile err: premature end of char-class; pattern: [a-z'
+            ),
             'missing )'         => array(
                 '(Hello',
                 'mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'

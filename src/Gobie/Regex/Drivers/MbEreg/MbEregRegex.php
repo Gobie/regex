@@ -34,6 +34,15 @@ class MbEregRegex
         return $res;
     }
 
+    public static function replaceCallback($pattern, $callback, $subject)
+    {
+        self::prepare($pattern);
+        $res = \mb_ereg_replace_callback($pattern, $callback, $subject);
+        self::cleanup();
+
+        return $res;
+    }
+
     /**
      * @param $pattern
      */
