@@ -19,7 +19,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideCompilationError
+     * @dataProvider provideMatchCompilationError
      */
     public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -40,12 +40,33 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideCompilationError
+     * @dataProvider provideMatchCompilationError
      */
     public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
             MbEregRegex::get($pattern, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideReplace
+     */
+    public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::Replace($pattern, $replacement, $subject));
+    }
+
+    /**
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::Replace($pattern, '', self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -72,7 +93,17 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideCompilationError()
+    public function provideReplace()
+    {
+        return array(
+            'simple hello world' => array('Hello\sWorld', 'Good day', self::SUBJECT, 'Good day'),
+            'multiple matches'   => array('l', '*', self::SUBJECT, 'He**o Wor*d'),
+            '2 matches'          => array('[A-Z]', '$', self::SUBJECT, '$ello $orld'),
+            'no match'           => array('HelloWorld', '', self::SUBJECT, 'Hello World'),
+        );
+    }
+
+    public function provideMatchCompilationError()
     {
         return array(
             'missing )'         => array(
@@ -91,6 +122,24 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
                 '',
                 'mb_ereg(): empty pattern; pattern: '
             ),
+        );
+    }
+
+    public function provideReplaceCompilationError()
+    {
+        return array(
+            'missing )'         => array(
+                '(Hello',
+                'mb_ereg_replace(): mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
+            ),
+            'unmatched )'       => array(
+                'Hello)',
+                'mb_ereg_replace(): mbregex compile err: unmatched close parenthesis; pattern: Hello)'
+            ),
+            'nothing to repeat' => array(
+                '+',
+                'mb_ereg_replace(): mbregex compile err: target of repeat operator is not specified; pattern: +'
+            )
         );
     }
 

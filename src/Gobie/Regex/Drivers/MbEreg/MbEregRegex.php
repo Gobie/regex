@@ -25,6 +25,15 @@ class MbEregRegex
         return $res ? $matches : array();
     }
 
+    public static function replace($pattern, $replacement, $subject)
+    {
+        self::prepare($pattern);
+        $res = \mb_ereg_replace($pattern, $replacement, $subject);
+        self::cleanup();
+
+        return $res;
+    }
+
     /**
      * @param $pattern
      */
