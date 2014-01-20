@@ -77,7 +77,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @requires PHP 5.4.1
+     * @requires     PHP 5.4.1
      * @dataProvider provideReplaceCallback
      */
     public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
@@ -86,13 +86,14 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @requires PHP 5.4.1
+     * @requires     PHP 5.4.1
      * @dataProvider provideReplaceCompilationError
      */
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbEregRegex::ReplaceCallback($pattern, function() {}, self::SUBJECT);
+            MbEregRegex::ReplaceCallback($pattern, function () {
+            }, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -149,7 +150,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
                 self::SUBJECT,
                 'HELLO WORLD'
             ),
-            'full replace by groups'             => array(
+            'full replace by groups' => array(
                 '^(\w+)\s(\w+)$',
                 function ($matches) {
                     return $matches[1] . '-' . $matches[2];
@@ -157,7 +158,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
                 self::SUBJECT,
                 'Hello-World'
             ),
-            'replace each char'             => array(
+            'replace each char'      => array(
                 '.',
                 function ($matches) {
                     return ord($matches[0]);
@@ -197,7 +198,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             ),
             'empty pattern'     => array(
                 '',
-                'empty pattern; pattern: '
+                'Empty pattern; pattern: '
             ),
         );
     }

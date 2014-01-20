@@ -10,7 +10,8 @@ class MbEregRegex
     public static function match($pattern, $subject)
     {
         self::prepare($pattern);
-        $res = \mb_ereg($pattern, $subject);
+        \mb_ereg_search_init($subject, $pattern);
+        $res = \mb_ereg_search();
         self::cleanup();
 
         return (bool) $res;
@@ -19,10 +20,11 @@ class MbEregRegex
     public static function get($pattern, $subject)
     {
         self::prepare($pattern);
-        $res = \mb_ereg($pattern, $subject, $matches);
+        \mb_ereg_search_init($subject, $pattern);
+        $matches = \mb_ereg_search_regs();
         self::cleanup();
 
-        return $res ? $matches : array();
+        return $matches ? : array();
     }
 
     public static function replace($pattern, $replacement, $subject)
