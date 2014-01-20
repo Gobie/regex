@@ -160,7 +160,8 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::ReplaceCallback($pattern, function() {}, self::SUBJECT);
+            PcreRegex::ReplaceCallback($pattern, function () {
+            }, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -173,7 +174,8 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceCallbackAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
-            PcreRegex::ReplaceCallback($pattern, function() {}, $subject);
+            PcreRegex::ReplaceCallback($pattern, function () {
+            }, $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -196,6 +198,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 $this->assertSame('Compilation failed: missing ) at offset 1; pattern: /(/', $e->getShortMessage());
                 // Preg_last_error isn't cleared when compilation error occurs
                 $this->assertSame(\PREG_BAD_UTF8_ERROR, \preg_last_error());
+
                 return;
             }
         }
@@ -230,6 +233,16 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             'multiple matches' => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
             '2 subgroups'      => array('/(.)\s(.)/', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
             '2 matches'        => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
+            'all'              => array(
+                '/(.)(\w+)(.)/',
+                self::SUBJECT,
+                array(
+                    array('Hello ', 'World'),
+                    array('H', 'W'),
+                    array('ello', 'orl'),
+                    array(' ', 'd')
+                )
+            ),
             'no match'         => array('/HelloWorld/', self::SUBJECT, array(array())),
         );
     }
@@ -263,7 +276,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 self::SUBJECT,
                 'HELLO WORLD'
             ),
-            'full replace by groups'             => array(
+            'full replace by groups' => array(
                 '/^(\w+)\s(\w+)$/',
                 function ($matches) {
                     return $matches[1] . '-' . $matches[2];
@@ -271,7 +284,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 self::SUBJECT,
                 'Hello-World'
             ),
-            'replace each char'             => array(
+            'replace each char'      => array(
                 '/./',
                 function ($matches) {
                     return ord($matches[0]);
@@ -301,7 +314,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 '/Hello',
                 'No ending delimiter \'/\' found; pattern: /Hello'
             ),
-            'missing ]'         => array(
+            'missing ]'             => array(
                 '/[a-z/',
                 'Compilation failed: missing terminating ] for character class at offset 4; pattern: /[a-z/'
             ),
