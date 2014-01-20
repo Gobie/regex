@@ -2,10 +2,10 @@
 
 namespace Gobie\Test\Regex\Drivers;
 
-use Gobie\Regex\Drivers\MbPosix\MbPosixRegex;
+use Gobie\Regex\Drivers\MbEreg\MbEregRegex;
 use Gobie\Regex\RegexException;
 
-class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
+class MbEregRegexTest extends \PHPUnit_Framework_TestCase
 {
 
     const SUBJECT = 'Hello World';
@@ -15,7 +15,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldMatch($pattern, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, MbPosixRegex::match($pattern, $subject));
+        $this->assertSame($expectedResult, MbEregRegex::match($pattern, $subject));
     }
 
     /**
@@ -24,7 +24,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbPosixRegex::match($pattern, self::SUBJECT);
+            MbEregRegex::match($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -36,7 +36,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldGet($pattern, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, MbPosixRegex::get($pattern, $subject));
+        $this->assertSame($expectedResult, MbEregRegex::get($pattern, $subject));
     }
 
     /**
@@ -45,7 +45,7 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbPosixRegex::get($pattern, self::SUBJECT);
+            MbEregRegex::get($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());

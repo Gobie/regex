@@ -20,7 +20,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(RegexFacade::PCRE),
-            array(RegexFacade::MB_POSIX),
+            array(RegexFacade::MB_EREG),
         );
     }
 
@@ -37,7 +37,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(RegexFacade::PCRE, '/abc/', '01abc23', array('abc')),
-            array(RegexFacade::MB_POSIX, 'abc', '01abc23', array('abc')),
+            array(RegexFacade::MB_EREG, 'abc', '01abc23', array('abc')),
         );
     }
 
@@ -62,7 +62,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(RegexFacade::PCRE, 'foo', 'Method \Gobie\Regex\Drivers\Pcre\PcreRegex::foo not implemented'),
-            array(RegexFacade::MB_POSIX, 'bar', 'Method \Gobie\Regex\Drivers\MbPosix\MbPosixRegex::bar not implemented'),
+            array(RegexFacade::MB_EREG, 'bar', 'Method \Gobie\Regex\Drivers\MbEreg\MbEregRegex::bar not implemented'),
         );
     }
 }
