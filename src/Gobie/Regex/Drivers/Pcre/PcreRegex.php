@@ -41,6 +41,15 @@ class PcreRegex
         return $res;
     }
 
+    public static function replaceCallback($pattern, $callback, $subject)
+    {
+        self::prepare($pattern);
+        $res = \preg_replace_callback($pattern, $callback, $subject);
+        self::cleanup($pattern);
+
+        return $res;
+    }
+
     private static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {

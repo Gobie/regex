@@ -146,44 +146,124 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider provideReplaceCallback
+     */
+    public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, PcreRegex::ReplaceCallback($pattern, $callback, $subject));
+    }
+
+    /**
+     * @dataProvider provideMatchCompilationError
+     */
+    public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::ReplaceCallback($pattern, function() {}, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideRuntimeError
+     */
+    public function testShouldReplaceCallbackAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::ReplaceCallback($pattern, function() {}, $subject);
+            $this->fail('Runtime exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
     public function provideMatch()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, true),
-            'single match'       => array('/l/', self::SUBJECT, true),
-            '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, true),
-            'no match'           => array('/HelloWorld/', self::SUBJECT, false),
+            'full match'   => array('/^Hello\sWorld$/', self::SUBJECT, true),
+            'single match' => array('/l/', self::SUBJECT, true),
+            '2 subgroups'  => array('/(Hello)\s(World)/', self::SUBJECT, true),
+            'no match'     => array('/HelloWorld/', self::SUBJECT, false),
         );
     }
 
     public function provideGet()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array('Hello World')),
-            'single match'       => array('/l/', self::SUBJECT, array('l')),
-            '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, array('Hello World', 'Hello', 'World')),
-            'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
+            'full match'   => array('/^Hello\sWorld$/', self::SUBJECT, array('Hello World')),
+            'single match' => array('/l/', self::SUBJECT, array('l')),
+            '2 subgroups'  => array('/(Hello)\s(World)/', self::SUBJECT, array('Hello World', 'Hello', 'World')),
+            'no match'     => array('/HelloWorld/', self::SUBJECT, array()),
         );
     }
 
     public function provideGetAll()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array(array('Hello World'))),
-            'multiple matches'   => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
-            '2 subgroups'        => array('/(.)\s(.)/', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
-            '2 matches'          => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
-            'no match'           => array('/HelloWorld/', self::SUBJECT, array(array())),
+            'full match'       => array('/^Hello\sWorld$/', self::SUBJECT, array(array('Hello World'))),
+            'multiple matches' => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
+            '2 subgroups'      => array('/(.)\s(.)/', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
+            '2 matches'        => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
+            'no match'         => array('/HelloWorld/', self::SUBJECT, array(array())),
         );
     }
 
     public function provideReplace()
     {
         return array(
-            'simple hello world' => array('/Hello\sWorld/', 'Good day', self::SUBJECT, 'Good day'),
-            'multiple matches'   => array('/l/', '*', self::SUBJECT, 'He**o Wor*d'),
-            '2 matches'          => array('/[A-Z]/', '$', self::SUBJECT, '$ello $orld'),
-            'no match'           => array('/HelloWorld/', '', self::SUBJECT, 'Hello World'),
+            'full replace'      => array('/^Hello\sWorld$/', 'Good day', self::SUBJECT, 'Good day'),
+            'multiple replaces' => array('/l/', '*', self::SUBJECT, 'He**o Wor*d'),
+            '2 replaces'        => array('/[A-Z]/', '$', self::SUBJECT, '$ello $orld'),
+            'no match'          => array('/HelloWorld/', '', self::SUBJECT, 'Hello World'),
+        );
+    }
+
+    public function provideReplaceCallback()
+    {
+        return array(
+            'full replace'           => array(
+                '/^Hello\sWorld$/',
+                function () {
+                    return 'Good day';
+                },
+                self::SUBJECT,
+                'Good day'
+            ),
+            'lowercase to uppercase' => array(
+                '/[a-z]/',
+                function ($matches) {
+                    return \strtoupper($matches[0]);
+                },
+                self::SUBJECT,
+                'HELLO WORLD'
+            ),
+            'full replace by groups'             => array(
+                '/^(\w+)\s(\w+)$/',
+                function ($matches) {
+                    return $matches[1] . '-' . $matches[2];
+                },
+                self::SUBJECT,
+                'Hello-World'
+            ),
+            'replace each char'             => array(
+                '/./',
+                function ($matches) {
+                    return ord($matches[0]);
+                },
+                self::SUBJECT,
+                '721011081081113287111114108100'
+            ),
+            'no match'               => array(
+                '/HelloWorld/',
+                function () {
+                    return '';
+                },
+                self::SUBJECT,
+                'Hello World'
+            ),
         );
     }
 
