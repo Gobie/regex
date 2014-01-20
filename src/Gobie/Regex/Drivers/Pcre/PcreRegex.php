@@ -20,7 +20,7 @@ class PcreRegex
         $res = preg_match($pattern, $subject, $matches);
         self::cleanup($pattern);
 
-        return $res ? $matches : array();
+        return $matches;
     }
 
     public static function getAll($pattern, $subject)
@@ -29,7 +29,16 @@ class PcreRegex
         $res = preg_match_all($pattern, $subject, $matches);
         self::cleanup($pattern);
 
-        return $res ? $matches : array();
+        return $matches;
+    }
+
+    public static function replace($pattern, $replacement, $subject)
+    {
+        self::prepare($pattern);
+        $res = \preg_replace($pattern, $replacement, $subject);
+        self::cleanup($pattern);
+
+        return $res;
     }
 
     private static function prepare($pattern)

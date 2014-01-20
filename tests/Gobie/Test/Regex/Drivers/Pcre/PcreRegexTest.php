@@ -24,7 +24,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::match($pattern, '');
+            PcreRegex::match($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -58,7 +58,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::get($pattern, '');
+            PcreRegex::get($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -92,7 +92,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldGetAllAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::getAll($pattern, '');
+            PcreRegex::getAll($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -106,6 +106,40 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     {
         try {
             PcreRegex::getAll($pattern, $subject);
+            $this->fail('Runtime exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideReplace
+     */
+    public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, PcreRegex::Replace($pattern, $replacement, $subject));
+    }
+
+    /**
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::Replace($pattern, '', self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideRuntimeError
+     */
+    public function testShouldReplaceAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::Replace($pattern, '', $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getMessage());
@@ -137,8 +171,19 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         return array(
             'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array(array('Hello World'))),
             'multiple matches'   => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
+            '2 subgroups'        => array('/(.)\s(.)/', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
             '2 matches'          => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
-            'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
+            'no match'           => array('/HelloWorld/', self::SUBJECT, array(array())),
+        );
+    }
+
+    public function provideReplace()
+    {
+        return array(
+            'simple hello world' => array('/Hello\sWorld/', 'Good day', self::SUBJECT, 'Good day'),
+            'multiple matches'   => array('/l/', '*', self::SUBJECT, 'He**o Wor*d'),
+            '2 matches'          => array('/[A-Z]/', '$', self::SUBJECT, '$ello $orld'),
+            'no match'           => array('/HelloWorld/', '', self::SUBJECT, 'Hello World'),
         );
     }
 
@@ -222,6 +267,48 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             'empty pattern'         => array(
                 '',
                 'preg_match_all(): Empty regular expression; pattern: '
+            ),
+        );
+    }
+
+    public function provideReplaceCompilationError()
+    {
+        return array(
+            'incorrect delimiter'   => array(
+                'Hello',
+                'preg_replace(): Delimiter must not be alphanumeric or backslash; pattern: Hello'
+            ),
+            'no ending delimiter'   => array(
+                '/Hello',
+                'preg_replace(): No ending delimiter \'/\' found; pattern: /Hello'
+            ),
+            'missing )'             => array(
+                '/(Hello/',
+                'preg_replace(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
+            ),
+            'unmatched )'           => array(
+                '/Hello)/',
+                'preg_replace(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
+            ),
+            'nothing to repeat'     => array(
+                '/+/',
+                'preg_replace(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
+            ),
+            'unsupported \u'        => array(
+                "/\uFFFF/",
+                'preg_replace(): Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
+            ),
+            'invalid 2 octet utf-8' => array(
+                "/\xc3\x28/u",
+                "preg_replace(): Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
+            ),
+            'unknown modifier'      => array(
+                '//.',
+                'preg_replace(): Unknown modifier \'.\'; pattern: //.'
+            ),
+            'empty pattern'         => array(
+                '',
+                'preg_replace(): Empty regular expression; pattern: '
             ),
         );
     }
