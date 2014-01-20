@@ -4,6 +4,11 @@ namespace Gobie\Regex\Drivers\Pcre;
 
 use Gobie\Regex\RegexException;
 
+// hhvm fix
+if (!\defined('PREG_BAD_UTF8_OFFSET_ERROR')) {
+    \define('PREG_BAD_UTF8_OFFSET_ERROR', 5);
+};
+
 class PcreRegexException extends RegexException
 {
 
