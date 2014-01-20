@@ -56,6 +56,27 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider provideGetAll
+     */
+    public function testShouldGetAll($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::getAll($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideMatchCompilationError
+     */
+    public function testShouldGetAllAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::getAll($pattern, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
      * @dataProvider provideReplace
      */
     public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
@@ -117,6 +138,27 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             'single match'       => array('l', self::SUBJECT, array('l')),
             '2 subgroups'        => array('(Hello)\s(World)', self::SUBJECT, array('Hello World', 'Hello', 'World')),
             'no match'           => array('HelloWorld', self::SUBJECT, array()),
+        );
+    }
+
+    public function provideGetAll()
+    {
+        return array(
+            'full match'       => array('^Hello\sWorld$', self::SUBJECT, array(array('Hello World'))),
+            'multiple matches' => array('l', self::SUBJECT, array(array('l', 'l', 'l'))),
+            '2 subgroups'      => array('(.)\s(.)', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
+            '2 matches'        => array('[A-Z]', self::SUBJECT, array(array('H', 'W'))),
+            'all'              => array(
+                '(.)(\w+)(.)',
+                self::SUBJECT,
+                array(
+                    array('Hello ', 'World'),
+                    array('H', 'W'),
+                    array('ello', 'orl'),
+                    array(' ', 'd')
+                )
+            ),
+            'no match'         => array('HelloWorld', self::SUBJECT, array(array())),
         );
     }
 

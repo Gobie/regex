@@ -27,6 +27,38 @@ class MbEregRegex
         return $matches ? : array();
     }
 
+    public static function getAll($pattern, $subject)
+    {
+        self::prepare($pattern);
+
+        $position      = 0;
+        $subjectLen    = \mb_strlen($subject);
+        $matches       = array();
+
+        \mb_ereg_search_init($subject, $pattern);
+        while ($position !== false && $position < $subjectLen) {
+            \mb_ereg_search_setpos($position);
+
+            $result = \mb_ereg_search_regs();
+            if ($result === false) {
+                if (!$matches) {
+                    $matches[] = array();
+                }
+                break;
+            }
+
+            foreach ($result as $key => $part) {
+                $matches[$key][] = $part;
+            }
+
+            $position = \mb_ereg_search_getpos();
+        }
+
+        self::cleanup();
+
+        return $matches;
+    }
+
     public static function replace($pattern, $replacement, $subject)
     {
         self::prepare($pattern);
