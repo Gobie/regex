@@ -27,7 +27,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             MbEregRegex::match($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -48,7 +48,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             MbEregRegex::get($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             MbEregRegex::Replace($pattern, '', self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -108,19 +108,19 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         return array(
             'missing )'         => array(
                 '(Hello',
-                'mb_ereg(): mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
+                'mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
             ),
             'unmatched )'       => array(
                 'Hello)',
-                'mb_ereg(): mbregex compile err: unmatched close parenthesis; pattern: Hello)'
+                'mbregex compile err: unmatched close parenthesis; pattern: Hello)'
             ),
             'nothing to repeat' => array(
                 '+',
-                'mb_ereg(): mbregex compile err: target of repeat operator is not specified; pattern: +'
+                'mbregex compile err: target of repeat operator is not specified; pattern: +'
             ),
             'empty pattern'     => array(
                 '',
-                'mb_ereg(): empty pattern; pattern: '
+                'empty pattern; pattern: '
             ),
         );
     }
@@ -130,15 +130,15 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         return array(
             'missing )'         => array(
                 '(Hello',
-                'mb_ereg_replace(): mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
+                'mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
             ),
             'unmatched )'       => array(
                 'Hello)',
-                'mb_ereg_replace(): mbregex compile err: unmatched close parenthesis; pattern: Hello)'
+                'mbregex compile err: unmatched close parenthesis; pattern: Hello)'
             ),
             'nothing to repeat' => array(
                 '+',
-                'mb_ereg_replace(): mbregex compile err: target of repeat operator is not specified; pattern: +'
+                'mbregex compile err: target of repeat operator is not specified; pattern: +'
             )
         );
     }

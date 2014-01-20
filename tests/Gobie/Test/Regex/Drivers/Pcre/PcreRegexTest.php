@@ -27,7 +27,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::match($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -40,7 +40,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::match($pattern, $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -61,7 +61,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::get($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -74,7 +74,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::get($pattern, $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -87,7 +87,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchAllCompilationError
+     * @dataProvider provideMatchCompilationError
      */
     public function testShouldGetAllAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -95,7 +95,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::getAll($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -108,7 +108,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::getAll($pattern, $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -121,7 +121,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideReplaceCompilationError
+     * @dataProvider provideMatchCompilationError
      */
     public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -129,7 +129,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::Replace($pattern, '', self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -142,7 +142,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             PcreRegex::Replace($pattern, '', $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
     }
 
@@ -192,123 +192,39 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         return array(
             'incorrect delimiter'   => array(
                 'Hello',
-                'preg_match(): Delimiter must not be alphanumeric or backslash; pattern: Hello'
+                'Delimiter must not be alphanumeric or backslash; pattern: Hello'
             ),
             'no ending delimiter'   => array(
                 '/Hello',
-                'preg_match(): No ending delimiter \'/\' found; pattern: /Hello'
+                'No ending delimiter \'/\' found; pattern: /Hello'
             ),
             'missing )'             => array(
                 '/(Hello/',
-                'preg_match(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
+                'Compilation failed: missing ) at offset 6; pattern: /(Hello/'
             ),
             'unmatched )'           => array(
                 '/Hello)/',
-                'preg_match(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
+                'Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
             ),
             'nothing to repeat'     => array(
                 '/+/',
-                'preg_match(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
+                'Compilation failed: nothing to repeat at offset 0; pattern: /+/'
             ),
             'unsupported \u'        => array(
                 "/\uFFFF/",
-                'preg_match(): Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
+                'Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
             ),
             'invalid 2 octet utf-8' => array(
                 "/\xc3\x28/u",
-                "preg_match(): Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
+                "Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
             ),
             'unknown modifier'      => array(
                 '//.',
-                'preg_match(): Unknown modifier \'.\'; pattern: //.'
+                'Unknown modifier \'.\'; pattern: //.'
             ),
             'empty pattern'         => array(
                 '',
-                'preg_match(): Empty regular expression; pattern: '
-            ),
-        );
-    }
-
-    public function provideMatchAllCompilationError()
-    {
-        return array(
-            'incorrect delimiter'   => array(
-                'Hello',
-                'preg_match_all(): Delimiter must not be alphanumeric or backslash; pattern: Hello'
-            ),
-            'no ending delimiter'   => array(
-                '/Hello',
-                'preg_match_all(): No ending delimiter \'/\' found; pattern: /Hello'
-            ),
-            'missing )'             => array(
-                '/(Hello/',
-                'preg_match_all(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
-            ),
-            'unmatched )'           => array(
-                '/Hello)/',
-                'preg_match_all(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
-            ),
-            'nothing to repeat'     => array(
-                '/+/',
-                'preg_match_all(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
-            ),
-            'unsupported \u'        => array(
-                "/\uFFFF/",
-                'preg_match_all(): Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
-            ),
-            'invalid 2 octet utf-8' => array(
-                "/\xc3\x28/u",
-                "preg_match_all(): Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
-            ),
-            'unknown modifier'      => array(
-                '//.',
-                'preg_match_all(): Unknown modifier \'.\'; pattern: //.'
-            ),
-            'empty pattern'         => array(
-                '',
-                'preg_match_all(): Empty regular expression; pattern: '
-            ),
-        );
-    }
-
-    public function provideReplaceCompilationError()
-    {
-        return array(
-            'incorrect delimiter'   => array(
-                'Hello',
-                'preg_replace(): Delimiter must not be alphanumeric or backslash; pattern: Hello'
-            ),
-            'no ending delimiter'   => array(
-                '/Hello',
-                'preg_replace(): No ending delimiter \'/\' found; pattern: /Hello'
-            ),
-            'missing )'             => array(
-                '/(Hello/',
-                'preg_replace(): Compilation failed: missing ) at offset 6; pattern: /(Hello/'
-            ),
-            'unmatched )'           => array(
-                '/Hello)/',
-                'preg_replace(): Compilation failed: unmatched parentheses at offset 5; pattern: /Hello)/'
-            ),
-            'nothing to repeat'     => array(
-                '/+/',
-                'preg_replace(): Compilation failed: nothing to repeat at offset 0; pattern: /+/'
-            ),
-            'unsupported \u'        => array(
-                "/\uFFFF/",
-                'preg_replace(): Compilation failed: PCRE does not support \L, \l, \N{name}, \U, or \u at offset 1; pattern: /\uFFFF/'
-            ),
-            'invalid 2 octet utf-8' => array(
-                "/\xc3\x28/u",
-                "preg_replace(): Compilation failed: invalid UTF-8 string at offset 0; pattern: /\xc3\x28/u"
-            ),
-            'unknown modifier'      => array(
-                '//.',
-                'preg_replace(): Unknown modifier \'.\'; pattern: //.'
-            ),
-            'empty pattern'         => array(
-                '',
-                'preg_replace(): Empty regular expression; pattern: '
+                'Empty regular expression; pattern: '
             ),
         );
     }
