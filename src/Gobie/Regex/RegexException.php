@@ -17,4 +17,14 @@ class RegexException extends \Exception
 
         parent::__construct($message, $code);
     }
+
+    public function getShortMessage()
+    {
+        $msg = $this->getMessage();
+        if (strpos($msg, '(): ') !== false) {
+            list(, $msg) = explode('(): ', $msg);
+        }
+
+        return $msg;
+    }
 }
