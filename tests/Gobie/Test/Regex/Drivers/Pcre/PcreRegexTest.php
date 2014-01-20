@@ -278,6 +278,10 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 '/Hello',
                 'No ending delimiter \'/\' found; pattern: /Hello'
             ),
+            'missing ]'         => array(
+                '/[a-z/',
+                'Compilation failed: missing terminating ] for character class at offset 4; pattern: /[a-z/'
+            ),
             'missing )'             => array(
                 '/(Hello/',
                 'Compilation failed: missing ) at offset 6; pattern: /(Hello/'
