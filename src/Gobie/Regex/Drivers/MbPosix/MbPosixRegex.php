@@ -10,10 +10,10 @@ class MbPosixRegex
     public static function match($pattern, $subject)
     {
         self::prepare($pattern);
-        $res = \mb_ereg_match($pattern, $subject);
+        $res = \mb_ereg($pattern, $subject);
         self::cleanup();
 
-        return $res;
+        return (bool) $res;
     }
 
     public static function get($pattern, $subject)

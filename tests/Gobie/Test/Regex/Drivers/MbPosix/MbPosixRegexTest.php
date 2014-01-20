@@ -11,36 +11,15 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
     const SUBJECT = 'Hello World';
 
     /**
-     * @dataProvider provideGet
-     */
-    public function testShouldGet($pattern, $subject, $expectedResult)
-    {
-        $this->assertSame(MbPosixRegex::get($pattern, $subject), $expectedResult);
-    }
-
-    /**
      * @dataProvider provideMatch
      */
     public function testShouldMatch($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(MbPosixRegex::match($pattern, $subject), $expectedResult);
+        $this->assertSame($expectedResult, MbPosixRegex::match($pattern, $subject));
     }
 
     /**
-     * @dataProvider provideGetCompilationError
-     */
-    public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
-    {
-        try {
-            MbPosixRegex::get($pattern, self::SUBJECT);
-            $this->fail('Compilation exception should have been thrown');
-        } catch (RegexException $ex) {
-            $this->assertSame($exceptionMessage, $ex->getMessage());
-        }
-    }
-
-    /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -52,26 +31,48 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function provideGet()
+    /**
+     * @dataProvider provideGet
+     */
+    public function testShouldGet($pattern, $subject, $expectedResult)
     {
-        return array(
-            'simple hello world' => array('Hello\sWorld', self::SUBJECT, array('Hello World')),
-            '2 subgroups'        => array('(Hello)\s(World)', self::SUBJECT, array('Hello World', 'Hello', 'World')),
-            'no match'           => array('HelloWorld', self::SUBJECT, array()),
-        );
+        $this->assertSame($expectedResult, MbPosixRegex::get($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideCompilationError
+     */
+    public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbPosixRegex::get($pattern, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getMessage());
+        }
     }
 
     public function provideMatch()
     {
         return array(
-            'empty pattern'      => array('', self::SUBJECT, true),
             'simple hello world' => array('Hello\sWorld', self::SUBJECT, true),
+            'single match'       => array('l', self::SUBJECT, true),
             '2 subgroups'        => array('(Hello)\s(World)', self::SUBJECT, true),
             'no match'           => array('HelloWorld', self::SUBJECT, false),
         );
     }
 
-    public function provideGetCompilationError()
+    public function provideGet()
+    {
+        return array(
+            'simple hello world' => array('Hello\sWorld', self::SUBJECT, array('Hello World')),
+            'single match'       => array('l', self::SUBJECT, array('l')),
+            '2 subgroups'        => array('(Hello)\s(World)', self::SUBJECT, array('Hello World', 'Hello', 'World')),
+            'no match'           => array('HelloWorld', self::SUBJECT, array()),
+        );
+    }
+
+    public function provideCompilationError()
     {
         return array(
             'missing )'         => array(
@@ -93,21 +94,4 @@ class MbPosixRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideMatchCompilationError()
-    {
-        return array(
-            'missing )'         => array(
-                '(Hello',
-                'mb_ereg_match(): mbregex compile err: end pattern with unmatched parenthesis; pattern: (Hello'
-            ),
-            'unmatched )'       => array(
-                'Hello)',
-                'mb_ereg_match(): mbregex compile err: unmatched close parenthesis; pattern: Hello)'
-            ),
-            'nothing to repeat' => array(
-                '+',
-                'mb_ereg_match(): mbregex compile err: target of repeat operator is not specified; pattern: +'
-            )
-        );
-    }
 }

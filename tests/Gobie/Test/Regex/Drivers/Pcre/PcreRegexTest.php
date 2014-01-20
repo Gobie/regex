@@ -15,7 +15,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldMatch($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(PcreRegex::match($pattern, $subject), $expectedResult);
+        $this->assertSame($expectedResult, PcreRegex::match($pattern, $subject));
     }
 
     /**
@@ -49,7 +49,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldGet($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(PcreRegex::get($pattern, $subject), $expectedResult);
+        $this->assertSame($expectedResult, PcreRegex::get($pattern, $subject));
     }
 
     /**
@@ -83,7 +83,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldGetAll($pattern, $subject, $expectedResult)
     {
-        $this->assertSame(PcreRegex::getAll($pattern, $subject), $expectedResult);
+        $this->assertSame($expectedResult, PcreRegex::getAll($pattern, $subject));
     }
 
     /**
@@ -116,6 +116,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, true),
+            'single match'       => array('/l/', self::SUBJECT, true),
             '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, true),
             'no match'           => array('/HelloWorld/', self::SUBJECT, false),
         );
@@ -125,6 +126,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array('Hello World')),
+            'single match'       => array('/l/', self::SUBJECT, array('l')),
             '2 subgroups'        => array('/(Hello)\s(World)/', self::SUBJECT, array('Hello World', 'Hello', 'World')),
             'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
         );
@@ -134,6 +136,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'simple hello world' => array('/Hello\sWorld/', self::SUBJECT, array(array('Hello World'))),
+            'multiple matches'   => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
             '2 matches'          => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
             'no match'           => array('/HelloWorld/', self::SUBJECT, array()),
         );
