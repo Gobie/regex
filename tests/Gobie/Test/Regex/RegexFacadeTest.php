@@ -26,9 +26,9 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideTestShouldFailExecuteUnknownDriverMethod
+     * @dataProvider provideTestShouldFailExecutingUnknownDriverMethod
      */
-    public function testShouldFailExecuteUnknownDriverMethod($driver, $methodName, $exceptionMessage)
+    public function testShouldFailExecutingUnknownDriverMethod($driver, $methodName, $exceptionMessage)
     {
         try {
             $regex = new RegexFacade($driver);
@@ -58,7 +58,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideTestShouldFailExecuteUnknownDriverMethod()
+    public function provideTestShouldFailExecutingUnknownDriverMethod()
     {
         return array(
             array(RegexFacade::PCRE, 'foo', 'Method \Gobie\Regex\Drivers\Pcre\PcreRegex::foo not implemented'),
