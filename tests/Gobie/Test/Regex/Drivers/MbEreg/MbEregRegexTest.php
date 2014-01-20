@@ -99,6 +99,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             'simple hello world' => array('Hello\sWorld', 'Good day', self::SUBJECT, 'Good day'),
             'multiple matches'   => array('l', '*', self::SUBJECT, 'He**o Wor*d'),
             '2 matches'          => array('[A-Z]', '$', self::SUBJECT, '$ello $orld'),
+            'empty pattern'      => array('', '-', self::SUBJECT, '-H-e-l-l-o- -W-o-r-l-d-'),
             'no match'           => array('HelloWorld', '', self::SUBJECT, 'Hello World'),
         );
     }
@@ -139,7 +140,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             'nothing to repeat' => array(
                 '+',
                 'mbregex compile err: target of repeat operator is not specified; pattern: +'
-            )
+            ),
         );
     }
 
