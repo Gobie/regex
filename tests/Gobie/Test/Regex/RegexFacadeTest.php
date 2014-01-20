@@ -30,14 +30,14 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     public function testShouldMatch($driver, $pattern, $subject, $expectedResult)
     {
         $regex = new RegexFacade($driver);
-        $this->assertSame($regex->get($pattern, $subject), $expectedResult);
+        $this->assertSame($regex->match($pattern, $subject), $expectedResult);
     }
 
     public function provideTestShouldMatch()
     {
         return array(
-            array(RegexFacade::PCRE, '/abc/', '01abc23', array('abc')),
-            array(RegexFacade::MB_EREG, 'abc', '01abc23', array('abc')),
+            array(RegexFacade::PCRE, '/abc/', '01abc23', true),
+            array(RegexFacade::MB_EREG, 'abc', '01abc23', true),
         );
     }
 
