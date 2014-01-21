@@ -62,6 +62,15 @@ class PcreRegex
         return $res;
     }
 
+    public static function grep($pattern, $subject)
+    {
+        self::prepare($pattern);
+        $res = \preg_grep($pattern, $subject);
+        self::cleanup($pattern);
+
+        return $res;
+    }
+
     private static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {

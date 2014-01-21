@@ -233,6 +233,40 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider provideGrep
+     */
+    public function testShouldGrep($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, PcreRegex::grep($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideCompilationError
+     */
+    public function testShouldGrepAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::grep($pattern, array(self::SUBJECT));
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideRuntimeError
+     */
+    public function testShouldGrepAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::grep($pattern, array($subject));
+            $this->fail('Runtime exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
     public function testShouldShowPregMatchCompilationErrorDoesNotClearPregLastError()
     {
         try {
@@ -379,6 +413,15 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd',)
             ),
             'no split'        => array('/\d/', self::SUBJECT, array('Hello World')),
+        );
+    }
+
+    public function provideGrep()
+    {
+        return array(
+            'all'             => array('/./', array('a', 'b', 'c'), array('a', 'b', 'c')),
+            'space separated' => array('/\s/', array('a b', 'bc', 'c d'), array('a b', 2 => 'c d')),
+            'none'            => array('/\d/', array('a b', 'bc', 'c d'), array()),
         );
     }
 
