@@ -53,6 +53,15 @@ class PcreRegex
         return $res;
     }
 
+    public static function split($pattern, $subject)
+    {
+        self::prepare($pattern);
+        $res = \preg_split($pattern, $subject, -1, \PREG_SPLIT_DELIM_CAPTURE);
+        self::cleanup($pattern);
+
+        return $res;
+    }
+
     private static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {

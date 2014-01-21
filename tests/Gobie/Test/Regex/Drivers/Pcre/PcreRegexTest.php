@@ -123,7 +123,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::Replace($pattern, $replacement, $subject));
+        $this->assertSame($expectedResult, PcreRegex::replace($pattern, $replacement, $subject));
     }
 
     /**
@@ -132,7 +132,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::Replace($pattern, '', self::SUBJECT);
+            PcreRegex::replace($pattern, '', self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -145,7 +145,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
-            PcreRegex::Replace($pattern, '', $subject);
+            PcreRegex::replace($pattern, '', $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -157,7 +157,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::ReplaceCallback($pattern, $callback, $subject));
+        $this->assertSame($expectedResult, PcreRegex::replaceCallback($pattern, $callback, $subject));
     }
 
     /**
@@ -166,7 +166,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            PcreRegex::ReplaceCallback($pattern, function () {
+            PcreRegex::replaceCallback($pattern, function () {
             }, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
@@ -180,7 +180,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceCallbackAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
     {
         try {
-            PcreRegex::ReplaceCallback($pattern, function () {
+            PcreRegex::replaceCallback($pattern, function () {
             }, $subject);
             $this->fail('Runtime exception should have been thrown');
         } catch (RegexException $ex) {
@@ -188,14 +188,49 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+
     /**
      * @expectedException \PHPUnit_Framework_Error_Notice
      * @expectedExceptionMessage Undefined variable: undef
-     * @dataProvider provideReplaceCallbackNotice
+     * @dataProvider             provideReplaceCallbackNotice
      */
     public function testShouldReplaceCallbackAndThrowNotice($pattern, $callback)
     {
         PcreRegex::ReplaceCallback($pattern, $callback, self::SUBJECT);
+    }
+
+    /**
+     * @dataProvider provideSplit
+     */
+    public function testShouldSplit($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, PcreRegex::split($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideCompilationError
+     */
+    public function testShouldSplitAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            PcreRegex::split($pattern, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideRuntimeError
+     */
+    public function testShouldSplitAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
+    {
+        try {
+            PcreRegex::split($pattern, $subject);
+            $this->fail('Runtime exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
     }
 
     public function testShouldShowPregMatchCompilationErrorDoesNotClearPregLastError()
@@ -331,6 +366,19 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return '';
                 },
             ),
+        );
+    }
+
+    public function provideSplit()
+    {
+        return array(
+            'space separated' => array('/\s/', self::SUBJECT, array('Hello', 'World')),
+            'on characters'   => array(
+                '/(?<!^)(?!$)/',
+                self::SUBJECT,
+                array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd',)
+            ),
+            'no split'        => array('/\d/', self::SUBJECT, array('Hello World')),
         );
     }
 
