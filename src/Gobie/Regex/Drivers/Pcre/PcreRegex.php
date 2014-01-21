@@ -43,9 +43,12 @@ class PcreRegex
 
     public static function replaceCallback($pattern, $callback, $subject)
     {
-        self::prepare($pattern);
+        self::match($pattern, '');
         $res = \preg_replace_callback($pattern, $callback, $subject);
-        self::cleanup($pattern);
+
+        if ($res === null && preg_last_error()) {
+            throw new PcreRegexException(null, preg_last_error(), $pattern);
+        }
 
         return $res;
     }

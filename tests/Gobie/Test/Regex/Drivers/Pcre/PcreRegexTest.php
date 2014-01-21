@@ -188,6 +188,16 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @expectedException \PHPUnit_Framework_Error_Notice
+     * @expectedExceptionMessage Undefined variable: undef
+     * @dataProvider provideReplaceCallbackNotice
+     */
+    public function testShouldReplaceCallbackAndThrowNotice($pattern, $callback)
+    {
+        PcreRegex::ReplaceCallback($pattern, $callback, self::SUBJECT);
+    }
+
     public function testShouldShowPregMatchCompilationErrorDoesNotClearPregLastError()
     {
         try {
@@ -305,6 +315,21 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 },
                 self::SUBJECT,
                 'Hello World'
+            ),
+
+        );
+    }
+
+    public function provideReplaceCallbackNotice()
+    {
+        return array(
+            'notice' => array(
+                '/./',
+                function () {
+                    ++$undef;
+
+                    return '';
+                },
             ),
         );
     }
