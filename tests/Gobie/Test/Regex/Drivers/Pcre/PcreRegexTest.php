@@ -25,7 +25,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldMatchAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -59,7 +59,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldGetAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -93,7 +93,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldGetAllAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -127,7 +127,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -161,7 +161,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideMatchCompilationError
+     * @dataProvider provideCompilationError
      */
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
     {
@@ -309,7 +309,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function provideMatchCompilationError()
+    public function provideCompilationError()
     {
         return array(
             'incorrect delimiter'   => array(
