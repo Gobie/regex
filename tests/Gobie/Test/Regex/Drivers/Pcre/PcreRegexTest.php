@@ -10,6 +10,12 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
 
     const SUBJECT = 'Hello World';
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        ini_set('pcre.backtrack_limit', 100);
+    }
+
     /**
      * @dataProvider provideMatch
      */
@@ -359,7 +365,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             ),
             'backtrack limit' => array(
                 '/(a*)*$/',
-                'aaaaaaaaaaaaaaaaaaaaaab',
+                'aaaaaab',
                 'Backtrack limit was exhausted; pattern: /(a*)*$/'
             ),
         );
