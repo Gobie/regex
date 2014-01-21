@@ -81,7 +81,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, MbEregRegex::Replace($pattern, $replacement, $subject));
+        $this->assertSame($expectedResult, MbEregRegex::replace($pattern, $replacement, $subject));
     }
 
     /**
@@ -90,7 +90,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbEregRegex::Replace($pattern, '', self::SUBJECT);
+            MbEregRegex::replace($pattern, '', self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -103,7 +103,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
     {
-        $this->assertSame($expectedResult, MbEregRegex::ReplaceCallback($pattern, $callback, $subject));
+        $this->assertSame($expectedResult, MbEregRegex::replaceCallback($pattern, $callback, $subject));
     }
 
     /**
@@ -113,8 +113,29 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
     {
         try {
-            MbEregRegex::ReplaceCallback($pattern, function () {
+            MbEregRegex::replaceCallback($pattern, function () {
             }, self::SUBJECT);
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideSplit
+     */
+    public function testShouldSplit($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::split($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldSplitAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::split($pattern, self::SUBJECT);
             $this->fail('Compilation exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
@@ -216,6 +237,15 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
                 self::SUBJECT,
                 'Hello World'
             ),
+        );
+    }
+
+    public function provideSplit()
+    {
+        return array(
+            'space separated' => array('\s', self::SUBJECT, array('Hello', 'World')),
+            'on l'   => array('l', self::SUBJECT, array('He', '', 'o Wor', 'd')),
+            'no split'        => array('\d', self::SUBJECT, array('Hello World')),
         );
     }
 

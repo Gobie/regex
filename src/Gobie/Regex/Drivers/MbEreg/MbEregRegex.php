@@ -31,9 +31,9 @@ class MbEregRegex
     {
         self::prepare($pattern);
 
-        $position      = 0;
-        $subjectLen    = \mb_strlen($subject);
-        $matches       = array();
+        $position   = 0;
+        $subjectLen = \mb_strlen($subject);
+        $matches    = array();
 
         \mb_ereg_search_init($subject, $pattern);
         while ($position !== false && $position < $subjectLen) {
@@ -72,6 +72,15 @@ class MbEregRegex
     {
         self::prepare($pattern);
         $res = \mb_ereg_replace_callback($pattern, $callback, $subject);
+        self::cleanup();
+
+        return $res;
+    }
+
+    public static function split($pattern, $subject)
+    {
+        self::prepare($pattern);
+        $res = \mb_split($pattern, $subject);
         self::cleanup();
 
         return $res;
