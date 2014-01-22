@@ -268,6 +268,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @requires     function preg_filter
      * @dataProvider provideFilter
      */
     public function testShouldFilter($pattern, $replacement, $subject, $expectedResult)
@@ -276,6 +277,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @requires     function preg_filter
      * @dataProvider provideCompilationError
      */
     public function testShouldFilterAndFailWithCompilationError($pattern, $exceptionMessage)
@@ -289,6 +291,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @requires     function preg_filter
      * @dataProvider provideRuntimeError
      */
     public function testShouldFilterAndFailWithRuntimeError($pattern, $subject, $exceptionMessage)
