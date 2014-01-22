@@ -4,11 +4,6 @@ namespace Gobie\Regex\Drivers\Pcre;
 
 use Gobie\Regex\RegexException;
 
-// hhvm fix
-if (!\defined('PREG_BAD_UTF8_OFFSET_ERROR')) {
-    \define('PREG_BAD_UTF8_OFFSET_ERROR', 5);
-};
-
 class PcreRegexException extends RegexException
 {
 
@@ -17,7 +12,8 @@ class PcreRegexException extends RegexException
         PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted',
         PREG_RECURSION_LIMIT_ERROR => 'Recursion limit was exhausted',
         PREG_BAD_UTF8_ERROR        => 'Malformed UTF-8 data',
-        PREG_BAD_UTF8_OFFSET_ERROR => 'The offset didn\'t correspond to the begin of a valid UTF-8 code point',
+        // HHVM fix, constant PREG_BAD_UTF8_OFFSET_ERROR replaced by its number
+        5 => 'The offset didn\'t correspond to the begin of a valid UTF-8 code point',
     );
 
     public function __construct($message, $code = null, $pattern = null)
