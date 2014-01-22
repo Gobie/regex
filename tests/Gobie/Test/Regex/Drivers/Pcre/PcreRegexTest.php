@@ -19,9 +19,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideMatch
      */
-    public function testShouldMatch($pattern, $subject, $expectedResult)
+    public function testShouldMatch($pattern, $subject, $offset, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::match($pattern, $subject));
+        $this->assertSame($expectedResult, PcreRegex::match($pattern, $subject, $offset));
     }
 
     /**
@@ -328,10 +328,13 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideMatch()
     {
         return array(
-            'full match'   => array('/^Hello\sWorld$/', self::SUBJECT, true),
-            'single match' => array('/l/', self::SUBJECT, true),
-            '2 subgroups'  => array('/(Hello)\s(World)/', self::SUBJECT, true),
-            'no match'     => array('/HelloWorld/', self::SUBJECT, false),
+            'full match'           => array('/^Hello\sWorld$/', self::SUBJECT, 0, true),
+            'single match'         => array('/l/', self::SUBJECT, 0, true),
+            '2 subgroups'          => array('/(Hello)\s(World)/', self::SUBJECT, 0, true),
+            'no match'             => array('/HelloWorld/', self::SUBJECT, 0, false),
+            'e at offset 1'        => array('/e/', self::SUBJECT, 1, true),
+            'e not after offset 2' => array('/e/', self::SUBJECT, 2, false),
+            'e not after H'        => array('/(?<!H)e/', self::SUBJECT, 1, false),
         );
     }
 
@@ -510,7 +513,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
             'empty pattern'         => array(
                 '',
                 'Empty regular expression; pattern: '
-            ),
+            )
         );
     }
 

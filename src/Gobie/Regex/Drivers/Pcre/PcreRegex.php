@@ -5,10 +5,20 @@ namespace Gobie\Regex\Drivers\Pcre;
 class PcreRegex
 {
 
-    public static function match($pattern, $subject)
+    /**
+     * Regular expression match and return if pattern matches given subject.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param int    $offset  Offset
+     * @return bool True if pattern matches given subject, false otherwise
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-match.php
+     */
+    public static function match($pattern, $subject, $offset = 0)
     {
         self::prepare($pattern);
-        $res = preg_match($pattern, $subject);
+        $res = preg_match($pattern, $subject, $matches, 0, $offset);
         self::cleanup($pattern);
 
         return (bool) $res;
