@@ -87,9 +87,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideGetAll
      */
-    public function testShouldGetAll($pattern, $subject, $expectedResult)
+    public function testShouldGetAll($pattern, $subject, $flags, $offset, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::getAll($pattern, $subject));
+        $this->assertSame($expectedResult, PcreRegex::getAll($pattern, $subject, $flags, $offset));
     }
 
     /**
@@ -368,13 +368,21 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideGetAll()
     {
         return array(
-            'full match'       => array('/^Hello\sWorld$/', self::SUBJECT, array(array('Hello World'))),
-            'multiple matches' => array('/l/', self::SUBJECT, array(array('l', 'l', 'l'))),
-            '2 subgroups'      => array('/(.)\s(.)/', self::SUBJECT, array(array('o W'), array('o'), array('W'))),
-            '2 matches'        => array('/[A-Z]/', self::SUBJECT, array(array('H', 'W'))),
-            'all'              => array(
+            'full match'                => array('/^Hello\sWorld$/', self::SUBJECT, 0, 0, array(array('Hello World'))),
+            'multiple matches'          => array('/l/', self::SUBJECT, 0, 0, array(array('l', 'l', 'l'))),
+            '2 subgroups'               => array(
+                '/(.)\s(.)/',
+                self::SUBJECT,
+                0,
+                0,
+                array(array('o W'), array('o'), array('W'))
+            ),
+            '2 matches'                 => array('/[A-Z]/', self::SUBJECT, 0, 0, array(array('H', 'W'))),
+            'all'                       => array(
                 '/(.)(\w+)(.)/',
                 self::SUBJECT,
+                0,
+                0,
                 array(
                     array('Hello ', 'World'),
                     array('H', 'W'),
@@ -382,7 +390,36 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     array(' ', 'd')
                 )
             ),
-            'no match'         => array('/HelloWorld/', self::SUBJECT, array(array())),
+            'no match'                  => array('/HelloWorld/', self::SUBJECT, 0, 0, array()),
+            'uppercase after offset 1'  => array('/[A-Z]/', self::SUBJECT, 0, 1, array(array('W'))),
+            '2 subpatterns'             => array(
+                '/([A-Z])(.)/',
+                self::SUBJECT,
+                0,
+                0,
+                array(array('He', 'Wo'), array('H', 'W'), array('e', 'o'))
+            ),
+            '2 subpatterns; set order'  => array(
+                '/([A-Z])(.)/',
+                self::SUBJECT,
+                \PREG_SET_ORDER,
+                0,
+                array(array('He', 'H', 'e'), array('Wo', 'W', 'o'))
+            ),
+            'offset capture'            => array(
+                '/[A-Z]/',
+                self::SUBJECT,
+                \PREG_OFFSET_CAPTURE,
+                0,
+                array(array(array('H', 0), array('W', 6)))
+            ),
+            'offset capture; set order' => array(
+                '/[A-Z]/',
+                self::SUBJECT,
+                \PREG_OFFSET_CAPTURE | PREG_SET_ORDER,
+                0,
+                array(array(array('H', 0)), array(array('W', 6)))
+            ),
         );
     }
 

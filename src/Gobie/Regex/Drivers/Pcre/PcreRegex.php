@@ -44,13 +44,24 @@ class PcreRegex
         return $matches;
     }
 
-    public static function getAll($pattern, $subject)
+    /**
+     * Global regular expression match and return all matches.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param int    $flags   Flags
+     * @param int    $offset  Offset
+     * @return array Array of matches that match given subject, empty array otherwise
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-match-all.php
+     */
+    public static function getAll($pattern, $subject, $flags = \PREG_PATTERN_ORDER, $offset = 0)
     {
         self::prepare($pattern);
-        preg_match_all($pattern, $subject, $matches);
+        preg_match_all($pattern, $subject, $matches, $flags, $offset);
         self::cleanup($pattern);
 
-        return $matches;
+        return \array_filter($matches);
     }
 
     public static function replace($pattern, $replacement, $subject)
