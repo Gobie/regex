@@ -71,6 +71,15 @@ class PcreRegex
         return $res;
     }
 
+    public static function filter($pattern, $replacement, $subject)
+    {
+        self::prepare($pattern);
+        $res = \preg_filter($pattern, $replacement, $subject);
+        self::cleanup($pattern);
+
+        return $res;
+    }
+
     private static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
