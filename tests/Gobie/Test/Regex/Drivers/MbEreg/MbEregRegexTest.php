@@ -99,6 +99,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @requires     PHP 5.4.1
+     * @requires     function mb_ereg_replace_callback
      * @dataProvider provideReplaceCallback
      */
     public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
@@ -108,6 +109,7 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @requires     PHP 5.4.1
+     * @requires     function mb_ereg_replace_callback
      * @dataProvider provideReplaceCompilationError
      */
     public function testShouldReplaceCallbackAndFailWithCompilationError($pattern, $exceptionMessage)
