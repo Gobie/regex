@@ -163,6 +163,27 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider provideFilter
+     */
+    public function testShouldFilter($pattern, $replacement, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::filter($pattern, $replacement, $subject));
+    }
+
+    /**
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldFilterAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::filter($pattern, '', array(self::SUBJECT));
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
     public function provideMatch()
     {
         return array(
@@ -276,6 +297,16 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
             'all'             => array('.', array('a', 'b', 'c'), array('a', 'b', 'c')),
             'space separated' => array('\s', array('a b', 'bc', 'c d'), array('a b', 2 => 'c d')),
             'none'            => array('\d', array('a b', 'bc', 'c d'), array()),
+        );
+    }
+
+
+    public function provideFilter()
+    {
+        return array(
+            'all'             => array('.', '-', array('a', 'b', 'c'), array('-', '-', '-')),
+            'space separated' => array('\s', '-', array('a b', 'bc', 'c d'), array('a-b', 2 => 'c-d')),
+            'none'            => array('\d', '', array('a b', 'bc', 'c d'), array()),
         );
     }
 

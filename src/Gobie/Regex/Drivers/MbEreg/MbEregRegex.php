@@ -105,6 +105,25 @@ class MbEregRegex
         return $matches;
     }
 
+    public static function filter($pattern, $replacement, $subject)
+    {
+        self::prepare($pattern);
+
+        $matches = array();
+        $counter = 0;
+        foreach ((array)$subject as $sub) {
+            \mb_ereg_search_init($sub, $pattern);
+            if (\mb_ereg_search()) {
+                $matches[$counter] = \mb_ereg_replace($pattern, $replacement, $sub);
+            }
+            ++$counter;
+        }
+
+        self::cleanup();
+
+        return $matches;
+    }
+
     /**
      * @param $pattern
      */
