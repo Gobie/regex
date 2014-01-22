@@ -24,10 +24,21 @@ class PcreRegex
         return (bool) $res;
     }
 
-    public static function get($pattern, $subject)
+    /**
+     * Regular expression match and return first match.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param int    $flags   Flags
+     * @param int    $offset  Offset
+     * @return array Array with first match that matches given subject, empty array otherwise
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-match.php
+     */
+    public static function get($pattern, $subject, $flags = 0, $offset = 0)
     {
         self::prepare($pattern);
-        preg_match($pattern, $subject, $matches);
+        preg_match($pattern, $subject, $matches, $flags, $offset);
         self::cleanup($pattern);
 
         return $matches;

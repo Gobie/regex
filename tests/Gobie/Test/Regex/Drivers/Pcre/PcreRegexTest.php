@@ -53,9 +53,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideGet
      */
-    public function testShouldGet($pattern, $subject, $expectedResult)
+    public function testShouldGet($pattern, $subject, $flags, $offset, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::get($pattern, $subject));
+        $this->assertSame($expectedResult, PcreRegex::get($pattern, $subject, $flags, $offset));
     }
 
     /**
@@ -344,10 +344,24 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideGet()
     {
         return array(
-            'full match'   => array('/^Hello\sWorld$/', self::SUBJECT, array('Hello World')),
-            'single match' => array('/l/', self::SUBJECT, array('l')),
-            '2 subgroups'  => array('/(Hello)\s(World)/', self::SUBJECT, array('Hello World', 'Hello', 'World')),
-            'no match'     => array('/HelloWorld/', self::SUBJECT, array()),
+            'full match'               => array('/^Hello\sWorld$/', self::SUBJECT, 0, 0, array('Hello World')),
+            'single match'             => array('/l/', self::SUBJECT, 0, 0, array('l')),
+            '2 subgroups'              => array(
+                '/(Hello)\s(World)/',
+                self::SUBJECT,
+                0,
+                0,
+                array('Hello World', 'Hello', 'World')
+            ),
+            'no match'                 => array('/HelloWorld/', self::SUBJECT, 0, 0, array()),
+            'uppercase after offset 1' => array('/[A-Z]/', self::SUBJECT, 0, 1, array('W')),
+            'offset capture'           => array(
+                '/[A-Z]/',
+                self::SUBJECT,
+                \PREG_OFFSET_CAPTURE,
+                0,
+                array(array('H', 0))
+            ),
         );
     }
 
