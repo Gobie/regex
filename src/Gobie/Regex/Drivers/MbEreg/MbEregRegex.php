@@ -86,6 +86,25 @@ class MbEregRegex
         return $res;
     }
 
+    public static function grep($pattern, $subject)
+    {
+        self::prepare($pattern);
+
+        $matches = array();
+        $counter = 0;
+        foreach ((array)$subject as $sub) {
+            \mb_ereg_search_init($sub, $pattern);
+            if (\mb_ereg_search()) {
+                $matches[$counter] = $sub;
+            }
+            ++$counter;
+        }
+
+        self::cleanup();
+
+        return $matches;
+    }
+
     /**
      * @param $pattern
      */

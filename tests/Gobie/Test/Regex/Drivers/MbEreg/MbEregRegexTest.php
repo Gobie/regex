@@ -142,6 +142,27 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @dataProvider provideGrep
+     */
+    public function testShouldGrep($pattern, $subject, $expectedResult)
+    {
+        $this->assertSame($expectedResult, MbEregRegex::grep($pattern, $subject));
+    }
+
+    /**
+     * @dataProvider provideReplaceCompilationError
+     */
+    public function testShouldGrepAndFailWithCompilationError($pattern, $exceptionMessage)
+    {
+        try {
+            MbEregRegex::grep($pattern, array(self::SUBJECT));
+            $this->fail('Compilation exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
     public function provideMatch()
     {
         return array(
@@ -244,8 +265,17 @@ class MbEregRegexTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'space separated' => array('\s', self::SUBJECT, array('Hello', 'World')),
-            'on l'   => array('l', self::SUBJECT, array('He', '', 'o Wor', 'd')),
+            'on l'            => array('l', self::SUBJECT, array('He', '', 'o Wor', 'd')),
             'no split'        => array('\d', self::SUBJECT, array('Hello World')),
+        );
+    }
+
+    public function provideGrep()
+    {
+        return array(
+            'all'             => array('.', array('a', 'b', 'c'), array('a', 'b', 'c')),
+            'space separated' => array('\s', array('a b', 'bc', 'c d'), array('a b', 2 => 'c d')),
+            'none'            => array('\d', array('a b', 'bc', 'c d'), array()),
         );
     }
 
