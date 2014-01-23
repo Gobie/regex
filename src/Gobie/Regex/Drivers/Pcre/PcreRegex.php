@@ -84,13 +84,31 @@ class PcreRegex
         return $res;
     }
 
-    public static function replaceCallback($pattern, $callback, $subject)
+    /**
+     * Regular expression replace using callback and return replaced.
+     *
+     * Compilation errors are caught by using patterns in preg_match.
+     *
+     * @param string|array $pattern  Pattern or array of patterns
+     * @param callable     $callback Replace callback
+     * @param string|array $subject  Subject or array of subjects
+     * @param int          $limit    Limit of replacements
+     * @return string|array Replaced subject or array of subjects
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-replace-callback.php
+     */
+    public static function replaceCallback($pattern, $callback, $subject, $limit = -1)
     {
-        self::match($pattern, '');
-        $res = \preg_replace_callback($pattern, $callback, $subject);
+        self::prepare($pattern);
+        foreach ((array) $pattern as $pat) {
+            preg_match($pat, '');
+        }
+        \restore_error_handler();
+
+        $res = \preg_replace_callback($pattern, $callback, $subject, $limit);
 
         if ($res === null && preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), $pattern);
+            throw new PcreRegexException(null, preg_last_error(), implode(', ', (array) $pattern));
         }
 
         return $res;

@@ -168,9 +168,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideReplaceCallback
      */
-    public function testShouldReplaceCallback($pattern, $callback, $subject, $expectedResult)
+    public function testShouldReplaceCallback($pattern, $callback, $subject, $limit, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::replaceCallback($pattern, $callback, $subject));
+        $this->assertSame($expectedResult, PcreRegex::replaceCallback($pattern, $callback, $subject, $limit));
     }
 
     /**
@@ -483,6 +483,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return 'Good day';
                 },
                 self::SUBJECT,
+                -1,
                 'Good day'
             ),
             'lowercase to uppercase' => array(
@@ -491,6 +492,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return \strtoupper($matches[0]);
                 },
                 self::SUBJECT,
+                -1,
                 'HELLO WORLD'
             ),
             'full replace by groups' => array(
@@ -499,6 +501,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return $matches[1] . '-' . $matches[2];
                 },
                 self::SUBJECT,
+                -1,
                 'Hello-World'
             ),
             'replace each char'      => array(
@@ -507,6 +510,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return ord($matches[0]);
                 },
                 self::SUBJECT,
+                -1,
                 '721011081081113287111114108100'
             ),
             'no match'               => array(
@@ -515,9 +519,36 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                     return '';
                 },
                 self::SUBJECT,
+                -1,
                 'Hello World'
             ),
-
+            'array of patterns'      => array(
+                array('/[A-Z]/', '/[a-z]/'),
+                function ($matches) {
+                    return ord($matches[0]);
+                },
+                self::SUBJECT,
+                -1,
+                '72101108108111 87111114108100'
+            ),
+            'array of subjects'      => array(
+                '/t(\d+)/',
+                function ($matches) {
+                    return 's' . $matches[1];
+                },
+                array('t1', 'u2', 't3'),
+                -1,
+                array('s1', 'u2', 's3')
+            ),
+            'use limit'              => array(
+                '/l/',
+                function ($matches) {
+                    return '*';
+                },
+                self::SUBJECT,
+                2,
+                'He**o World'
+            ),
         );
     }
 
