@@ -64,10 +64,21 @@ class PcreRegex
         return \array_filter($matches);
     }
 
-    public static function replace($pattern, $replacement, $subject)
+    /**
+     * Regular expression replace and return replaced.
+     *
+     * @param string|array $pattern     Pattern or array of patterns
+     * @param string|array $replacement Replacement or array of replacements
+     * @param string|array $subject     Subject or array of subjects
+     * @param int          $limit       Limit of replacements
+     * @return string|array Replaced subject or array of subjects
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-replace.php
+     */
+    public static function replace($pattern, $replacement, $subject, $limit = -1)
     {
         self::prepare($pattern);
-        $res = \preg_replace($pattern, $replacement, $subject);
+        $res = \preg_replace($pattern, $replacement, $subject, $limit);
         self::cleanup($pattern);
 
         return $res;
@@ -116,7 +127,7 @@ class PcreRegex
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
             restore_error_handler();
-            throw new PcreRegexException($errstr, null, $pattern);
+            throw new PcreRegexException($errstr, null, implode(', ', (array) $pattern));
         });
     }
 
@@ -125,7 +136,7 @@ class PcreRegex
         restore_error_handler();
 
         if (preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), $pattern);
+            throw new PcreRegexException(null, preg_last_error(), implode(', ', (array) $pattern));
         }
     }
 }

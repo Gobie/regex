@@ -121,9 +121,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideReplace
      */
-    public function testShouldReplace($pattern, $replacement, $subject, $expectedResult)
+    public function testShouldReplace($pattern, $replacement, $subject, $limit, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::replace($pattern, $replacement, $subject));
+        $this->assertSame($expectedResult, PcreRegex::replace($pattern, $replacement, $subject, $limit));
     }
 
     /**
@@ -147,6 +147,19 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
         try {
             PcreRegex::replace($pattern, '', $subject);
             $this->fail('Runtime exception should have been thrown');
+        } catch (RegexException $ex) {
+            $this->assertSame($exceptionMessage, $ex->getShortMessage());
+        }
+    }
+
+    /**
+     * @dataProvider provideReplaceError
+     */
+    public function testShouldReplaceAndFail($pattern, $replacement, $subject, $limit, $exceptionMessage)
+    {
+        try {
+            var_dump(PcreRegex::replace($pattern, $replacement, $subject, $limit));
+            $this->fail('Exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
         }
@@ -426,10 +439,38 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideReplace()
     {
         return array(
-            'full replace'      => array('/^Hello\sWorld$/', 'Good day', self::SUBJECT, 'Good day'),
-            'multiple replaces' => array('/l/', '*', self::SUBJECT, 'He**o Wor*d'),
-            '2 replaces'        => array('/[A-Z]/', '$', self::SUBJECT, '$ello $orld'),
-            'no match'          => array('/HelloWorld/', '', self::SUBJECT, 'Hello World'),
+            'no match'          => array('/HelloWorld/', '', self::SUBJECT, -1, 'Hello World'),
+            'full replace'      => array('/^Hello\sWorld$/', 'Good day', self::SUBJECT, -1, 'Good day'),
+            'multiple replaces' => array('/l/', '*', self::SUBJECT, -1, 'He**o Wor*d'),
+            'array of patterns' => array(
+                array('/[A-Z]/', '/[a-z]/'),
+                array('U', 'u'),
+                self::SUBJECT,
+                -1,
+                'Uuuuu Uuuuu'
+            ),
+            'array of subjects' => array('/t(\d+)/', 's\\1', array('t1', 'u2', 't3'), -1, array('s1', 'u2', 's3')),
+            'use limit'         => array('/l/', '*', self::SUBJECT, 2, 'He**o World'),
+        );
+    }
+
+    public function provideReplaceError()
+    {
+        return array(
+            'string pattern and array replacement' => array(
+                '/[A-Z]/',
+                array(),
+                '',
+                -1,
+                'Parameter mismatch, pattern is a string while replacement is an array; pattern: /[A-Z]/'
+            ),
+            'test'                                 => array(
+                array('/[A-Z]/', '*', '/[a-z]/', '+'),
+                '',
+                '',
+                -1,
+                'No ending delimiter \'*\' found; pattern: /[A-Z]/, *, /[a-z]/, +'
+            ),
         );
     }
 
