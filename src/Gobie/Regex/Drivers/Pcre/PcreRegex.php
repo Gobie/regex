@@ -114,10 +114,21 @@ class PcreRegex
         return $res;
     }
 
-    public static function split($pattern, $subject)
+    /**
+     * Regular expression split and return all parts.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param int    $limit   Limit
+     * @param int    $flags   Flags defaults to PREG_SPLIT_DELIM_CAPTURE
+     * @return array Array of splitted parts, array with original string otherwise
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-split.php
+     */
+    public static function split($pattern, $subject, $limit = -1, $flags = \PREG_SPLIT_DELIM_CAPTURE)
     {
         self::prepare($pattern);
-        $res = \preg_split($pattern, $subject, -1, \PREG_SPLIT_DELIM_CAPTURE);
+        $res = \preg_split($pattern, $subject, $limit, $flags);
         self::cleanup($pattern);
 
         return $res;

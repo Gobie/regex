@@ -215,9 +215,9 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSplit
      */
-    public function testShouldSplit($pattern, $subject, $expectedResult)
+    public function testShouldSplit($pattern, $subject, $limit, $flags, $expectedResult)
     {
-        $this->assertSame($expectedResult, PcreRegex::split($pattern, $subject));
+        $this->assertSame($expectedResult, PcreRegex::split($pattern, $subject, $limit, $flags));
     }
 
     /**
@@ -569,13 +569,37 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function provideSplit()
     {
         return array(
-            'space separated' => array('/\s/', self::SUBJECT, array('Hello', 'World')),
-            'on characters'   => array(
+            'space separated'   => array('/\s/', self::SUBJECT, -1, 0, array('Hello', 'World')),
+            'on characters'     => array(
                 '/(?<!^)(?!$)/',
                 self::SUBJECT,
-                array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd',)
+                -1,
+                0,
+                array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
             ),
-            'no split'        => array('/\d/', self::SUBJECT, array('Hello World')),
+            'no split'          => array('/\d/', self::SUBJECT, -1, 0, array('Hello World')),
+            'use limit'         => array('/\s/', self::SUBJECT, 1, 0, array('Hello World')),
+            'no empty'          => array(
+                '//',
+                self::SUBJECT,
+                -1,
+                PREG_SPLIT_NO_EMPTY,
+                array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
+            ),
+            'delimiter capture' => array(
+                '/(\s)/',
+                self::SUBJECT,
+                -1,
+                PREG_SPLIT_DELIM_CAPTURE,
+                array('Hello', ' ', 'World')
+            ),
+            'offset capture'    => array(
+                '/(\s)/',
+                self::SUBJECT,
+                -1,
+                PREG_SPLIT_OFFSET_CAPTURE,
+                array(array('Hello', 0), array('World', 6))
+            ),
         );
     }
 
