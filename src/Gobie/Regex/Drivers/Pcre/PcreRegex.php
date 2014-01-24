@@ -108,7 +108,7 @@ class PcreRegex
         $res = \preg_replace_callback($pattern, $callback, $subject, $limit);
 
         if ($res === null && preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), implode(', ', (array) $pattern));
+            throw new PcreRegexException(null, preg_last_error(), $pattern);
         }
 
         return $res;
@@ -177,7 +177,7 @@ class PcreRegex
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
             restore_error_handler();
-            throw new PcreRegexException($errstr, null, implode(', ', (array) $pattern));
+            throw new PcreRegexException($errstr, null, $pattern);
         });
     }
 
@@ -186,7 +186,7 @@ class PcreRegex
         restore_error_handler();
 
         if (preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), implode(', ', (array) $pattern));
+            throw new PcreRegexException(null, preg_last_error(), $pattern);
         }
     }
 }

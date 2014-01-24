@@ -12,7 +12,7 @@ class RegexException extends \Exception
         }
 
         if ($pattern !== null) {
-            $message .= '; pattern: ' . $pattern;
+            $message .= '; pattern: ' . implode(', ', (array) $pattern);
         }
 
         parent::__construct($message, $code);
