@@ -158,7 +158,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
     public function testShouldReplaceAndFail($pattern, $replacement, $subject, $limit, $exceptionMessage)
     {
         try {
-            var_dump(PcreRegex::replace($pattern, $replacement, $subject, $limit));
+            PcreRegex::replace($pattern, $replacement, $subject, $limit);
             $this->fail('Exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());
