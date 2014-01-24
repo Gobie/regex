@@ -14,12 +14,6 @@ abstract class RegexBaseTest extends \PHPUnit_Framework_TestCase
      */
     public static $method;
 
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-        ini_set('pcre.backtrack_limit', 100);
-    }
-
     /**
      * @dataProvider provideExecuteAndAssert
      */
