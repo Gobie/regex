@@ -153,10 +153,21 @@ class PcreRegex
         return $res;
     }
 
-    public static function filter($pattern, $replacement, $subject)
+    /**
+     * Regular expression filter and return only replaced.
+     *
+     * @param string|array $pattern     Pattern or array of patterns
+     * @param string|array $replacement Replacement or array of replacements
+     * @param string|array $subject     Subject or array of subjects
+     * @param int          $limit       Limit of replacements
+     * @return string|array Replaced subject or array of subjects
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-filter.php
+     */
+    public static function filter($pattern, $replacement, $subject, $limit = -1)
     {
         self::prepare($pattern);
-        $res = \preg_filter($pattern, $replacement, $subject);
+        $res = \preg_filter($pattern, $replacement, $subject, $limit);
         self::cleanup($pattern);
 
         return $res;

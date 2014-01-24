@@ -22,17 +22,21 @@ class PcreRegexFilterTest extends PcreRegexBaseTest
     public function provideExecuteAndAssert()
     {
         return array(
-            'all'             => array(
+            'all'                                 => array(
                 array('/./', '-', array('a', 'b', 'c')),
                 array('-', '-', '-')
             ),
-            'space separated' => array(
+            'space separated'                     => array(
                 array('/\s/', '-', array('a b', 'bc', 'c d')),
                 array('a-b', 2 => 'c-d')
             ),
-            'none'            => array(
+            'none'                                => array(
                 array('/\d/', '', array('a b', 'bc', 'c d')),
                 array()
+            ),
+            'space separated and replace limit 1' => array(
+                array('/\s/', '-', array('a b', 'bc', 'c d e'), 1),
+                array('a-b', 2 => 'c-d e')
             ),
         );
     }
