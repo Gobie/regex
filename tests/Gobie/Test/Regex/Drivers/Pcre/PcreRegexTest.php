@@ -464,7 +464,7 @@ class PcreRegexTest extends \PHPUnit_Framework_TestCase
                 -1,
                 'Parameter mismatch, pattern is a string while replacement is an array; pattern: /[A-Z]/'
             ),
-            'test'                                 => array(
+            'incorrect patterns in array'          => array(
                 array('/[A-Z]/', '*', '/[a-z]/', '+'),
                 '',
                 '',
