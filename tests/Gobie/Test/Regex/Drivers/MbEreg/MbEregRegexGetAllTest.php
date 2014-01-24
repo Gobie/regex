@@ -1,0 +1,49 @@
+<?php
+
+namespace Gobie\Test\Regex\Drivers\MbEreg;
+
+/**
+ * @requires extension mbstring
+ */
+class MbEregRegexGetAllTest extends MbEregRegexBaseTest
+{
+
+    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'getAll');
+
+    public static $subject = 'Hello World';
+
+    public function provideExecuteAndAssert()
+    {
+        return array(
+            'full match'       => array(
+                array('^Hello\sWorld$', self::$subject),
+                array(array('Hello World'))
+            ),
+            'multiple matches' => array(
+                array('l', self::$subject),
+                array(array('l', 'l', 'l'))
+            ),
+            '2 subgroups'      => array(
+                array('(.)\s(.)', self::$subject),
+                array(array('o W'), array('o'), array('W'))
+            ),
+            '2 matches'        => array(
+                array('[A-Z]', self::$subject),
+                array(array('H', 'W'))
+            ),
+            'all'              => array(
+                array('(.)(\w+)(.)', self::$subject),
+                array(
+                    array('Hello ', 'World'),
+                    array('H', 'W'),
+                    array('ello', 'orl'),
+                    array(' ', 'd')
+                )
+            ),
+            'no match'         => array(
+                array('HelloWorld', self::$subject),
+                array(array())
+            ),
+        );
+    }
+}
