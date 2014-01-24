@@ -134,10 +134,20 @@ class PcreRegex
         return $res;
     }
 
-    public static function grep($pattern, $subject)
+    /**
+     * Regular expression grep and return matching items.
+     *
+     * @param string $pattern Pattern
+     * @param array  $subject Array of subjects
+     * @param int    $flags   Flags
+     * @return array Array with items that matches given pattern, empty array otherwise
+     * @throws PcreRegexException When compilation or runtime error occurs
+     * @link http://php.net/manual/en/function.preg-grep.php
+     */
+    public static function grep($pattern, $subject, $flags = 0)
     {
         self::prepare($pattern);
-        $res = \preg_grep($pattern, $subject);
+        $res = \preg_grep($pattern, $subject, $flags);
         self::cleanup($pattern);
 
         return $res;

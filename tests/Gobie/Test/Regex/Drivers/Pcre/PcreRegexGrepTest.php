@@ -19,17 +19,21 @@ class PcreRegexGrepTest extends PcreRegexBaseTest
     public function provideExecuteAndAssert()
     {
         return array(
-            'all'             => array(
-                array('/./', array('a', 'b', 'c')),
+            'all'                    => array(
+                array('/./', array('a', 'b', 'c'), 0),
                 array('a', 'b', 'c')
             ),
-            'space separated' => array(
-                array('/\s/', array('a b', 'bc', 'c d')),
+            'space separated'        => array(
+                array('/\s/', array('a b', 'bc', 'c d'), 0),
                 array('a b', 2 => 'c d')
             ),
-            'none'            => array(
-                array('/\d/', array('a b', 'bc', 'c d')),
+            'none'                   => array(
+                array('/\d/', array('a b', 'bc', 'c d'), 0),
                 array()
+            ),
+            'space separated invert' => array(
+                array('/\s/', array('a b', 'bc', 'c d'), PREG_GREP_INVERT),
+                array(1 => 'bc')
             ),
         );
     }
