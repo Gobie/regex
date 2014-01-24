@@ -17,9 +17,9 @@ class PcreRegex
      */
     public static function match($pattern, $subject, $offset = 0)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = preg_match($pattern, $subject, $matches, 0, $offset);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return (bool) $res;
     }
@@ -37,9 +37,9 @@ class PcreRegex
      */
     public static function get($pattern, $subject, $flags = 0, $offset = 0)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         preg_match($pattern, $subject, $matches, $flags, $offset);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return $matches;
     }
@@ -57,9 +57,9 @@ class PcreRegex
      */
     public static function getAll($pattern, $subject, $flags = \PREG_PATTERN_ORDER, $offset = 0)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         preg_match_all($pattern, $subject, $matches, $flags, $offset);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return \array_filter($matches);
     }
@@ -77,9 +77,9 @@ class PcreRegex
      */
     public static function replace($pattern, $replacement, $subject, $limit = -1)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \preg_replace($pattern, $replacement, $subject, $limit);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return $res;
     }
@@ -99,7 +99,7 @@ class PcreRegex
      */
     public static function replaceCallback($pattern, $callback, $subject, $limit = -1)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         foreach ((array) $pattern as $pat) {
             preg_match($pat, '');
         }
@@ -127,9 +127,9 @@ class PcreRegex
      */
     public static function split($pattern, $subject, $limit = -1, $flags = \PREG_SPLIT_DELIM_CAPTURE)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \preg_split($pattern, $subject, $limit, $flags);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return $res;
     }
@@ -146,9 +146,9 @@ class PcreRegex
      */
     public static function grep($pattern, $subject, $flags = 0)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \preg_grep($pattern, $subject, $flags);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return $res;
     }
@@ -166,14 +166,14 @@ class PcreRegex
      */
     public static function filter($pattern, $replacement, $subject, $limit = -1)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \preg_filter($pattern, $replacement, $subject, $limit);
-        self::cleanup($pattern);
+        static::cleanup($pattern);
 
         return $res;
     }
 
-    private static function prepare($pattern)
+    protected static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
             restore_error_handler();
@@ -181,7 +181,7 @@ class PcreRegex
         });
     }
 
-    private static function cleanup($pattern)
+    protected static function cleanup($pattern)
     {
         restore_error_handler();
 

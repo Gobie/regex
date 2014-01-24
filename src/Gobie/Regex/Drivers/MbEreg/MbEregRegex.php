@@ -9,27 +9,27 @@ class MbEregRegex
 
     public static function match($pattern, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         \mb_ereg_search_init($subject, $pattern);
         $res = \mb_ereg_search();
-        self::cleanup();
+        static::cleanup();
 
         return (bool) $res;
     }
 
     public static function get($pattern, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         \mb_ereg_search_init($subject, $pattern);
         $matches = \mb_ereg_search_regs();
-        self::cleanup();
+        static::cleanup();
 
         return $matches ? : array();
     }
 
     public static function getAll($pattern, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
 
         $position   = 0;
         $subjectLen = \mb_strlen($subject);
@@ -54,45 +54,45 @@ class MbEregRegex
             $position = \mb_ereg_search_getpos();
         }
 
-        self::cleanup();
+        static::cleanup();
 
         return $matches;
     }
 
     public static function replace($pattern, $replacement, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \mb_ereg_replace($pattern, $replacement, $subject);
-        self::cleanup();
+        static::cleanup();
 
         return $res;
     }
 
     public static function replaceCallback($pattern, $callback, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \mb_ereg_replace_callback($pattern, $callback, $subject);
-        self::cleanup();
+        static::cleanup();
 
         return $res;
     }
 
     public static function split($pattern, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
         $res = \mb_split($pattern, $subject);
-        self::cleanup();
+        static::cleanup();
 
         return $res;
     }
 
     public static function grep($pattern, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
 
         $matches = array();
         $counter = 0;
-        foreach ((array)$subject as $sub) {
+        foreach ((array) $subject as $sub) {
             \mb_ereg_search_init($sub, $pattern);
             if (\mb_ereg_search()) {
                 $matches[$counter] = $sub;
@@ -100,18 +100,18 @@ class MbEregRegex
             ++$counter;
         }
 
-        self::cleanup();
+        static::cleanup();
 
         return $matches;
     }
 
     public static function filter($pattern, $replacement, $subject)
     {
-        self::prepare($pattern);
+        static::prepare($pattern);
 
         $matches = array();
         $counter = 0;
-        foreach ((array)$subject as $sub) {
+        foreach ((array) $subject as $sub) {
             \mb_ereg_search_init($sub, $pattern);
             if (\mb_ereg_search()) {
                 $matches[$counter] = \mb_ereg_replace($pattern, $replacement, $sub);
@@ -119,7 +119,7 @@ class MbEregRegex
             ++$counter;
         }
 
-        self::cleanup();
+        static::cleanup();
 
         return $matches;
     }
@@ -127,7 +127,7 @@ class MbEregRegex
     /**
      * @param $pattern
      */
-    private static function prepare($pattern)
+    protected static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
             restore_error_handler();
@@ -135,7 +135,7 @@ class MbEregRegex
         });
     }
 
-    private static function cleanup()
+    protected static function cleanup()
     {
         restore_error_handler();
     }
