@@ -1,5 +1,6 @@
 .idea/
 .vagrant/
 vendor/
+composer.lock
 phpunit.xml
 Vagrantfile
