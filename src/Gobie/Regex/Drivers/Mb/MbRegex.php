@@ -19,10 +19,20 @@ use Gobie\Regex\RegexException;
 class MbRegex
 {
 
-    public static function match($pattern, $subject)
+    /**
+     * Regular expression match and return if pattern matches given subject.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param string $option  Option
+     * @return bool True if pattern matches given subject, false otherwise
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-search.php
+     */
+    public static function match($pattern, $subject, $option = "")
     {
         static::prepare($pattern);
-        \mb_ereg_search_init($subject, $pattern);
+        \mb_ereg_search_init($subject, $pattern, $option);
         $res = \mb_ereg_search();
         static::cleanup();
 
