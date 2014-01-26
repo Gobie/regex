@@ -62,7 +62,7 @@ class RegexFacadeTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(RegexFacade::PCRE, 'foo', 'Method \Gobie\Regex\Drivers\Pcre\PcreRegex::foo not implemented'),
-            array(RegexFacade::MB_EREG, 'bar', 'Method \Gobie\Regex\Drivers\MbEreg\MbEregRegex::bar not implemented'),
+            array(RegexFacade::MB_EREG, 'bar', 'Method \Gobie\Regex\Drivers\Mb\MbRegex::bar not implemented'),
         );
     }
 }

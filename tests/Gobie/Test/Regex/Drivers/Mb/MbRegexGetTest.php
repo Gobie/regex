@@ -1,14 +1,14 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  */
-class MbEregRegexMatchTest extends MbEregRegexBaseTest
+class MbRegexGetTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'match');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'get');
 
     public static $subject = 'Hello World';
 
@@ -17,19 +17,19 @@ class MbEregRegexMatchTest extends MbEregRegexBaseTest
         return array(
             'simple hello world' => array(
                 array('Hello\sWorld', self::$subject),
-                true
+                array('Hello World')
             ),
             'single match'       => array(
                 array('l', self::$subject),
-                true
+                array('l')
             ),
             '2 subgroups'        => array(
                 array('(Hello)\s(World)', self::$subject),
-                true
+                array('Hello World', 'Hello', 'World')
             ),
             'no match'           => array(
                 array('HelloWorld', self::$subject),
-                false
+                array()
             ),
         );
     }

@@ -1,14 +1,14 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  */
-class MbEregRegexReplaceTest extends MbEregRegexBaseTest
+class MbRegexReplaceTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'replace');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'replace');
 
     public static $subject = 'Hello World';
 

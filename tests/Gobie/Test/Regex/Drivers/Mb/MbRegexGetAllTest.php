@@ -1,14 +1,14 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  */
-class MbEregRegexGetAllTest extends MbEregRegexBaseTest
+class MbRegexGetAllTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'getAll');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'getAll');
 
     public static $subject = 'Hello World';
 

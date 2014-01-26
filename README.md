@@ -17,7 +17,7 @@ is deprecated and mbstring extension with its `mb_ereg_*` functions as an option
 Regex library implements wrappers for
 
  - **PCRE** library via PcreRegex class
- - **mbstring** extension via MbEregRegex class
+ - **mbstring** extension via MbRegex class
 
 Installation
 ------------
@@ -157,13 +157,13 @@ Specific library can add another arguments to signature or handle more types.
 To accomplish this API, some methods had to be created in userland code.
 
 > For instance mbstring doesn't have corresponding functions for PCRE functions `preg_match_all()`, `preg_grep()` or `preg_filter()`,
-> thus methods like `MbEregRegex::getAll()`, `MbEregRegex::grep()` and `MbEregRegex::filter()` had to be created using mbstring primitives.
+> thus methods like `MbRegex::getAll()`, `MbRegex::grep()` and `MbRegex::filter()` had to be created using mbstring primitives.
 
 Requirements
 ------------
 
 PHP 5.3.3 or above. Unit tests are regularly run against latest 5.3, 5.4, 5.5 and HHVM.
-For `mb_ereg_replace_callback()` and thus for usage of `MbEregRegex::replaceCallback()` PHP 5.4 and above is required.
+For `mb_ereg_replace_callback()` and thus for usage of `MbRegex::replaceCallback()` PHP 5.4 and above is required.
 
 Note on HHVM
 ------------

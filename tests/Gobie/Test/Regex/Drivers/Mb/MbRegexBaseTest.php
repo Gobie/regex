@@ -1,10 +1,10 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 use Gobie\Test\Regex\RegexBaseTest;
 
-abstract class MbEregRegexBaseTest extends RegexBaseTest
+abstract class MbRegexBaseTest extends RegexBaseTest
 {
     public function provideCompilationError()
     {

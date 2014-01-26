@@ -1,14 +1,14 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  */
-class MbEregRegexSplitTest extends MbEregRegexBaseTest
+class MbRegexSplitTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'split');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'split');
 
     public static $subject = 'Hello World';
 

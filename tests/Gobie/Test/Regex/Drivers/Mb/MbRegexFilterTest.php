@@ -1,14 +1,14 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  */
-class MbEregRegexFilterTest extends MbEregRegexBaseTest
+class MbRegexFilterTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'filter');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'filter');
 
     protected function executeAndFail($method, $args, $exceptionMessage)
     {

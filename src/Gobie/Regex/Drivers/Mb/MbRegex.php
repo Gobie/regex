@@ -1,10 +1,10 @@
 <?php
 
-namespace Gobie\Regex\Drivers\MbEreg;
+namespace Gobie\Regex\Drivers\Mb;
 
 use Gobie\Regex\RegexException;
 
-class MbEregRegex
+class MbRegex
 {
 
     public static function match($pattern, $subject)

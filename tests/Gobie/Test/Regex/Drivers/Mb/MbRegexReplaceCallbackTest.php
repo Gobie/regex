@@ -1,15 +1,15 @@
 <?php
 
-namespace Gobie\Test\Regex\Drivers\MbEreg;
+namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
  * @requires function mb_ereg_replace_callback
  */
-class MbEregRegexReplaceCallbackTest extends MbEregRegexBaseTest
+class MbRegexReplaceCallbackTest extends MbRegexBaseTest
 {
 
-    public static $method = array('\Gobie\Regex\Drivers\MbEreg\MbEregRegex', 'replaceCallback');
+    public static $method = array('\Gobie\Regex\Drivers\Mb\MbRegex', 'replaceCallback');
 
     public static $subject = 'Hello World';
 

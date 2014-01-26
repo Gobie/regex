@@ -6,7 +6,7 @@ class RegexFacade
 {
 
     const PCRE = '\Gobie\Regex\Drivers\Pcre\PcreRegex';
-    const MB_EREG = '\Gobie\Regex\Drivers\MbEreg\MbEregRegex';
+    const MB_EREG = '\Gobie\Regex\Drivers\Mb\MbRegex';
 
     private $driverClass;
 
