@@ -2,6 +2,20 @@
 
 namespace Gobie\Regex\Drivers\Pcre;
 
+/**
+ * Wrapper around PCRE library.
+ *
+ * It is meant to be replaceable for PCRE functions.
+ *
+ * Usage:
+ * <code>
+ * if ($matches = PcreRegex::getAll($pattern, $subject)) {
+ *   // do stuff here with $matches
+ * }
+ * </code>
+ *
+ * @link http://php.net/pcre
+ */
 class PcreRegex
 {
 
@@ -180,6 +194,11 @@ class PcreRegex
         return $res;
     }
 
+    /**
+     * Prepare error handler for catching compilation errors.
+     *
+     * @param string|array $pattern Pattern or array of patterns
+     */
     protected static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
@@ -188,11 +207,20 @@ class PcreRegex
         });
     }
 
+    /**
+     * Clean up after self::prepare().
+     */
     protected static function cleanup()
     {
         restore_error_handler();
     }
 
+    /**
+     * Handle runtime errors in PCRE.
+     *
+     * @param string|array $pattern Pattern or array of patterns
+     * @throws PcreRegexException When compilation error occurs
+     */
     protected static function handleError($pattern)
     {
         if (preg_last_error()) {
