@@ -84,10 +84,10 @@ class PcreRegex
     /**
      * Regular expression replace and return replaced.
      *
-     * @param string|array $pattern     Pattern or array of patterns
-     * @param string|array $replacement Replacement or array of replacements
-     * @param string|array $subject     Subject or array of subjects
-     * @param int          $limit       Limit of replacements
+     * @param string|string[] $pattern     Pattern or array of patterns
+     * @param string|string[] $replacement Replacement or array of replacements
+     * @param string|string[] $subject     Subject or array of subjects
+     * @param int             $limit       Limit of replacements
      * @return string|array Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/manual/en/function.preg-replace.php
@@ -107,10 +107,10 @@ class PcreRegex
      *
      * Compilation errors are caught by using patterns in preg_match.
      *
-     * @param string|array $pattern  Pattern or array of patterns
-     * @param callable     $callback Replace callback
-     * @param string|array $subject  Subject or array of subjects
-     * @param int          $limit    Limit of replacements
+     * @param string|string[] $pattern  Pattern or array of patterns
+     * @param callable        $callback Replace callback
+     * @param string|string[] $subject  Subject or array of subjects
+     * @param int             $limit    Limit of replacements
      * @return string|array Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/manual/en/function.preg-replace-callback.php
@@ -156,10 +156,10 @@ class PcreRegex
     /**
      * Regular expression grep and return matching items.
      *
-     * @param string $pattern Pattern
-     * @param array  $subject Array of subjects
-     * @param int    $flags   Flags
-     * @return array Array with items that matches given pattern, empty array otherwise
+     * @param string   $pattern Pattern
+     * @param string[] $subject Array of subjects
+     * @param int      $flags   Flags
+     * @return string[] Array with items that matches given pattern, empty array otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/manual/en/function.preg-grep.php
      */
@@ -176,10 +176,10 @@ class PcreRegex
     /**
      * Regular expression filter and return only replaced.
      *
-     * @param string|array $pattern     Pattern or array of patterns
-     * @param string|array $replacement Replacement or array of replacements
-     * @param string|array $subject     Subject or array of subjects
-     * @param int          $limit       Limit of replacements
+     * @param string|string[] $pattern     Pattern or array of patterns
+     * @param string|string[] $replacement Replacement or array of replacements
+     * @param string|string[] $subject     Subject or array of subjects
+     * @param int             $limit       Limit of replacements
      * @return string|array Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/manual/en/function.preg-filter.php
@@ -197,11 +197,11 @@ class PcreRegex
     /**
      * Prepare error handler for catching compilation errors.
      *
-     * @param string|array $pattern Pattern or array of patterns
+     * @param string|string[] $pattern Pattern or array of patterns
      */
     protected static function prepare($pattern)
     {
-        \set_error_handler(function ($_, $errstr) use ($pattern) {
+        \set_error_handler(function ($errno, $errstr) use ($pattern) {
             \restore_error_handler();
             throw new PcreRegexException($errstr, null, $pattern);
         });
@@ -218,7 +218,7 @@ class PcreRegex
     /**
      * Handle runtime errors in PCRE.
      *
-     * @param string|array $pattern Pattern or array of patterns
+     * @param string|string[] $pattern Pattern or array of patterns
      * @throws PcreRegexException When runtime error occurs
      */
     protected static function handleError($pattern)
