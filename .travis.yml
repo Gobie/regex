@@ -11,6 +11,7 @@ matrix:
 
 install:
   - composer install --prefer-source --no-interaction --dev
+  - wget https://scrutinizer-ci.com/ocular.phar
 
 script:
   - mkdir -p build/logs
@@ -18,3 +19,4 @@ script:
 
 after_script:
   - php vendor/bin/coveralls -v
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
