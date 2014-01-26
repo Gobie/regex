@@ -32,7 +32,7 @@ class PcreRegex
     public static function match($pattern, $subject, $offset = 0)
     {
         static::prepare($pattern);
-        $res = preg_match($pattern, $subject, $matches, 0, $offset);
+        $res = \preg_match($pattern, $subject, $matches, 0, $offset);
         static::cleanup();
         static::handleError($pattern);
 
@@ -53,7 +53,7 @@ class PcreRegex
     public static function get($pattern, $subject, $flags = 0, $offset = 0)
     {
         static::prepare($pattern);
-        preg_match($pattern, $subject, $matches, $flags, $offset);
+        \preg_match($pattern, $subject, $matches, $flags, $offset);
         static::cleanup();
         static::handleError($pattern);
 
@@ -74,7 +74,7 @@ class PcreRegex
     public static function getAll($pattern, $subject, $flags = \PREG_PATTERN_ORDER, $offset = 0)
     {
         static::prepare($pattern);
-        preg_match_all($pattern, $subject, $matches, $flags, $offset);
+        \preg_match_all($pattern, $subject, $matches, $flags, $offset);
         static::cleanup();
         static::handleError($pattern);
 
@@ -119,7 +119,7 @@ class PcreRegex
     {
         static::prepare($pattern);
         foreach ((array) $pattern as $pat) {
-            preg_match($pat, '');
+            \preg_match($pat, '');
         }
         static::cleanup();
 
@@ -201,7 +201,7 @@ class PcreRegex
      */
     protected static function prepare($pattern)
     {
-        set_error_handler(function ($_, $errstr) use ($pattern) {
+        \set_error_handler(function ($_, $errstr) use ($pattern) {
             static::cleanup();
             throw new PcreRegexException($errstr, null, $pattern);
         });
@@ -212,19 +212,19 @@ class PcreRegex
      */
     protected static function cleanup()
     {
-        restore_error_handler();
+        \restore_error_handler();
     }
 
     /**
      * Handle runtime errors in PCRE.
      *
      * @param string|array $pattern Pattern or array of patterns
-     * @throws PcreRegexException When compilation error occurs
+     * @throws PcreRegexException When runtime error occurs
      */
     protected static function handleError($pattern)
     {
-        if (preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), $pattern);
+        if ($error = \preg_last_error()) {
+            throw new PcreRegexException(null, $error, $pattern);
         }
     }
 }

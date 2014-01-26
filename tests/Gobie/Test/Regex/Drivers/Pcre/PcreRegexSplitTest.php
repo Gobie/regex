@@ -29,15 +29,15 @@ class PcreRegexSplitTest extends PcreRegexBaseTest
                 array('Hello World')
             ),
             'no empty'          => array(
-                array('//', self::$subject, -1, PREG_SPLIT_NO_EMPTY),
+                array('//', self::$subject, -1, \PREG_SPLIT_NO_EMPTY),
                 array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
             ),
             'delimiter capture' => array(
-                array('/(\s)/', self::$subject, -1, PREG_SPLIT_DELIM_CAPTURE),
+                array('/(\s)/', self::$subject, -1, \PREG_SPLIT_DELIM_CAPTURE),
                 array('Hello', ' ', 'World')
             ),
             'offset capture'    => array(
-                array('/(\s)/', self::$subject, -1, PREG_SPLIT_OFFSET_CAPTURE),
+                array('/(\s)/', self::$subject, -1, \PREG_SPLIT_OFFSET_CAPTURE),
                 array(array('Hello', 0), array('World', 6))
             ),
         );

@@ -9,7 +9,7 @@ abstract class PcreRegexBaseTest extends RegexBaseTest
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        ini_set('pcre.backtrack_limit', 100);
+        \ini_set('pcre.backtrack_limit', 100);
     }
 
     public function provideCompilationError()

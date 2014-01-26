@@ -38,7 +38,7 @@ abstract class RegexBaseTest extends \PHPUnit_Framework_TestCase
     protected function executeAndFail($method, $args, $exceptionMessage)
     {
         try {
-            call_user_func_array($method, $args);
+            \call_user_func_array($method, $args);
             $this->fail('Exception should have been thrown');
         } catch (RegexException $ex) {
             $this->assertSame($exceptionMessage, $ex->getShortMessage());

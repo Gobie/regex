@@ -58,7 +58,7 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
                 array(array(array('H', 0), array('W', 6)))
             ),
             'offset capture; set order' => array(
-                array('/[A-Z]/', self::$subject, \PREG_OFFSET_CAPTURE | PREG_SET_ORDER, 0),
+                array('/[A-Z]/', self::$subject, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER, 0),
                 array(array(array('H', 0)), array(array('W', 6)))
             ),
         );

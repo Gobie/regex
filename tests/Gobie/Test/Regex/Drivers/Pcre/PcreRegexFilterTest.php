@@ -13,7 +13,7 @@ class PcreRegexFilterTest extends PcreRegexBaseTest
     protected function executeAndFail($method, $args, $exceptionMessage)
     {
         // Add replacement as second argument between pattern and subject
-        array_splice($args, 1, 0, array(''));
+        \array_splice($args, 1, 0, array(''));
         parent::executeAndFail($method, $args, $exceptionMessage);
     }
 

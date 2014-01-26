@@ -12,7 +12,7 @@ class RegexException extends \RuntimeException
         }
 
         if ($pattern !== null) {
-            $message .= '; pattern: ' . implode(', ', (array) $pattern);
+            $message .= '; pattern: ' . \implode(', ', (array) $pattern);
         }
 
         parent::__construct($message, $code);
@@ -21,8 +21,8 @@ class RegexException extends \RuntimeException
     public function getShortMessage()
     {
         $msg = $this->getMessage();
-        if (strpos($msg, '(): ') !== false) {
-            list(, $msg) = explode('(): ', $msg);
+        if (\strpos($msg, '(): ') !== false) {
+            list(, $msg) = \explode('(): ', $msg);
         }
 
         return $msg;

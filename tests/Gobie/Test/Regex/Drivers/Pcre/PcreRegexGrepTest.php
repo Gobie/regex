@@ -30,7 +30,7 @@ class PcreRegexGrepTest extends PcreRegexBaseTest
                 array()
             ),
             'space separated invert' => array(
-                array('/\s/', array('a b', 'bc', 'c d'), PREG_GREP_INVERT),
+                array('/\s/', array('a b', 'bc', 'c d'), \PREG_GREP_INVERT),
                 array(1 => 'bc')
             ),
         );

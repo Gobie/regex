@@ -22,7 +22,7 @@ class PcreRegexReplaceCallbackTest extends PcreRegexBaseTest
     protected function executeAndFail($method, $args, $exceptionMessage)
     {
         // Add callback as second argument between pattern and subject
-        array_splice($args, 1, 0, array(
+        \array_splice($args, 1, 0, array(
             function () {
             }
         ));
@@ -69,7 +69,7 @@ class PcreRegexReplaceCallbackTest extends PcreRegexBaseTest
                 array(
                     '/./',
                     function ($matches) {
-                        return ord($matches[0]);
+                        return \ord($matches[0]);
                     },
                     self::$subject,
                     -1
@@ -91,7 +91,7 @@ class PcreRegexReplaceCallbackTest extends PcreRegexBaseTest
                 array(
                     array('/[A-Z]/', '/[a-z]/'),
                     function ($matches) {
-                        return ord($matches[0]);
+                        return \ord($matches[0]);
                     },
                     self::$subject,
                     -1
