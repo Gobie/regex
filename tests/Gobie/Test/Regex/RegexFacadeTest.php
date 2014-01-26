@@ -1,6 +1,6 @@
 <?php
 
-namespace Gobie\Test\RegexFacade;
+namespace Gobie\Test\Regex;
 
 use Gobie\Regex\RegexFacade;
 
