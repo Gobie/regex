@@ -19,7 +19,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         $res = preg_match($pattern, $subject, $matches, 0, $offset);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return (bool) $res;
     }
@@ -39,7 +40,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         preg_match($pattern, $subject, $matches, $flags, $offset);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return $matches;
     }
@@ -59,7 +61,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         preg_match_all($pattern, $subject, $matches, $flags, $offset);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return \array_filter($matches);
     }
@@ -79,7 +82,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         $res = \preg_replace($pattern, $replacement, $subject, $limit);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return $res;
     }
@@ -103,12 +107,12 @@ class PcreRegex
         foreach ((array) $pattern as $pat) {
             preg_match($pat, '');
         }
-        \restore_error_handler();
+        static::cleanup();
 
         $res = \preg_replace_callback($pattern, $callback, $subject, $limit);
 
-        if ($res === null && preg_last_error()) {
-            throw new PcreRegexException(null, preg_last_error(), $pattern);
+        if ($res === null) {
+            static::handleError($pattern);
         }
 
         return $res;
@@ -129,7 +133,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         $res = \preg_split($pattern, $subject, $limit, $flags);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return $res;
     }
@@ -148,7 +153,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         $res = \preg_grep($pattern, $subject, $flags);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return $res;
     }
@@ -168,7 +174,8 @@ class PcreRegex
     {
         static::prepare($pattern);
         $res = \preg_filter($pattern, $replacement, $subject, $limit);
-        static::cleanup($pattern);
+        static::cleanup();
+        static::handleError($pattern);
 
         return $res;
     }
@@ -176,15 +183,18 @@ class PcreRegex
     protected static function prepare($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
-            restore_error_handler();
+            static::cleanup();
             throw new PcreRegexException($errstr, null, $pattern);
         });
     }
 
-    protected static function cleanup($pattern)
+    protected static function cleanup()
     {
         restore_error_handler();
+    }
 
+    protected static function handleError($pattern)
+    {
         if (preg_last_error()) {
             throw new PcreRegexException(null, preg_last_error(), $pattern);
         }

@@ -200,17 +200,15 @@ For instance triggering errors instead of throwing exceptions can be implemented
         protected static function prepare($pattern)
         {
             set_error_handler(function ($_, $errstr) use ($pattern) {
-                restore_error_handler();
+                static::cleanup();
                 trigger_error($errstr . '; ' . $pattern, E_USER_WARNING);
             });
         }
 
-        protected static function cleanup($pattern)
+        protected static function handleError($pattern)
         {
-            restore_error_handler();
-
-            if (preg_last_error()) {
-                trigger_error(PcreRegexException::$messages[preg_last_error()] . '; ' . $pattern, E_USER_WARNING);
+            if ($error = preg_last_error()) {
+                trigger_error(PcreRegexException::$messages[$error] . '; ' . $pattern, E_USER_WARNING);
             }
         }
     }
@@ -220,7 +218,8 @@ For instance triggering errors instead of throwing exceptions can be implemented
     class NoErrorHandlingPcreRegex extends PcreRegex
     {
         protected static function prepare($pattern) {}
-        protected static function cleanup($pattern) {}
+        protected static function cleanup() {}
+        protected static function handleError($pattern) {}
     }
 
 Contribute
