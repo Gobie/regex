@@ -5,6 +5,13 @@ namespace Gobie\Regex;
 class RegexException extends \RuntimeException
 {
 
+    /**
+     * If pattern is provided, it is appended to the message.
+     *
+     * @param string $message Message
+     * @param int    $code    Code
+     * @param string $pattern Pattern
+     */
     public function __construct($message, $code = null, $pattern = null)
     {
         if (!$message) {
@@ -18,6 +25,17 @@ class RegexException extends \RuntimeException
         parent::__construct($message, $code);
     }
 
+    /**
+     * Return exception message without function name.
+     *
+     * Usual exception message looks like this:
+     * <pre>
+     * preg_match(): Some error occured
+     * </pre>
+     * So we strip the "function(): " part.
+     *
+     * @return string
+     */
     public function getShortMessage()
     {
         $msg = $this->getMessage();
