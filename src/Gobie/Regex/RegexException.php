@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex;
 
-class RegexException extends \Exception
+class RegexException extends \RuntimeException
 {
 
     public function __construct($message, $code = null, $pattern = null)
