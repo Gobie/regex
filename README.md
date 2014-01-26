@@ -8,11 +8,11 @@ Regex
 
 **Regex** is PHP library containing lightweight wrappers around regular expression libraries and extensions for day to day use.
 We try to **resolve error related issues** those libraries expose and which they handle rather peculiarly.
-We also gave a shot to **unifying API** they provide so library is meant to be [drop-in replacement](#unified-api) for
+We also gave a shot at **unifying API** they provide so library is meant to be [drop-in replacement](#unified-api) for
 their existing counterparts for most of the usages.
 
 Currently the most used regular expression library is PCRE. Since POSIX Extended implementation with its `ereg_*` functions
-is deprecated and mbstring extension with its `mb_ereg_*` functions as an optional extension is not available everywhere.
+is deprecated and mbstring extension with its `mb_ereg_*` functions, as an optional extension, is not available everywhere.
 
 Regex library implements wrappers for
 
@@ -37,8 +37,8 @@ When you're done just run `php composer.phar install` and the package is ready t
 Why should I care? / What problem does it solve?
 ------------------------------------------------
 
-Regular expression libraries provide us set of functions we have to deal with.
-They are somewhat similar and yet each slightly different from each other in covered functionality and error handling.
+Regular expression libraries provide us with set of functions we have to deal with.
+They are somewhat similar and yet each slightly different in covered functionality and error handling.
 
 Take for instance PCRE library. Usual code seen in applications using it is
 
@@ -46,12 +46,13 @@ Take for instance PCRE library. Usual code seen in applications using it is
         // do something with $matches if used at all
     }
 
-This code is **always** correct as long as `$pattern` is not dynamically created and matching can never hit backtracking
-or recursion limit and `$subject` is well formed UTF-8 (if UTF-8 is used) and *planets stay in conjunction*.
+This code is correct as long as `$pattern` is not dynamically created and matching can never hit backtracking
+or recursion limit and `$subject` as well as `$pattern` are well formed UTF-8 strings (if UTF-8 is used).
 
-Two types of errors can happen here. We speak about compilation errors which trigger E_WARNING like backtracking and
-recursion limit and input errors. Next there are runtime errors which are dealt with with `preg_last_error()`.
-That is a lot of error handling to take care about.
+Two types of errors can happen here. We speak about compilation errors which trigger E_WARNING like input errors.
+Next there are runtime errors which we can deal with using `preg_last_error()` function.
+Those are hitting backtracking or recursion limit and encoding issues.
+But only if compilation error didn't happen, otherwise this function is unreliable as it doesn't clear its state.
 
 More robust and less error-prone version:
 
@@ -69,16 +70,18 @@ More robust and less error-prone version:
         // deal with runtime error
     }
 
-Sometimes it is even crazier for example using `preg_replace_callback()` is just weird unless you want to make debugging difficult.
+That's a lot of error handling to take care about, but it can be even more complicated.
+
+For example using `preg_replace_callback()` naively can make your life harder and put your debugging skills to test.
 Usual code using it:
 
     if ($res = preg_replace_callback($pattern, $callback, $subject)) {
         // do something with $res
     }
 
-Lots can happen here. Compilation and runtime error like above, but there can also be triggered errors from within `$callback`.
-We can't just cover it by error handler since errors from within callback are not supposed to be caught by regex error handling.
-So the correct solution which would catch compilation and runtime errors, but let other errors come through, could look like this:
+Lots can happen here, compilation and runtime errors shown above and also errors triggered from within `$callback`.
+We just can't cover it with error handler, since errors from within callback are not supposed to be caught by regex error handling.
+So the correct solution, which would catch compilation and runtime errors, but let the rest come through, could look like this:
 
     set_error_handler(function () {
         // deal with compilation error
@@ -183,7 +186,6 @@ It is meant to be used as drop-in replacement for current usage of library/exten
 **But I want to use this as dependency in object oriented style, can I?**
 
 No problem, for that case we have `RegexFacade` which just redirects object calls to given wrapper.
-Usage looks like this
 
     $regex = new RegexFacade(RegexFacade::PCRE);
     if ($regex->match($pattern, $subject)) {
@@ -192,8 +194,8 @@ Usage looks like this
 
 **But I don't want to use exceptions to handle regex errors. Why? I got my reasons. What can I do?**
 
-Wrappers are prepared to be extended to overwrite error handling the you want.
-For instance triggering errors instead of throwing exceptions can be implemented this way
+Wrappers are prepared to be extended to overwrite error handling parts the way you want.
+For instance triggering errors instead of throwing exceptions can be implemented this way:
 
     class MyPcreRegex extends PcreRegex
     {
