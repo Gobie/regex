@@ -1,6 +1,6 @@
 <?php
 
-namespace Gobie\Test\Regex\Pcre;
+namespace Gobie\Test\Regex\Drivers\Pcre;
 
 use Gobie\Test\Regex\RegexBaseTest;
 

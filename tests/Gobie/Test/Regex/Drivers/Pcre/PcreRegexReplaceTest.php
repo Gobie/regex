@@ -2,8 +2,6 @@
 
 namespace Gobie\Test\Regex\Drivers\Pcre;
 
-use Gobie\Test\Regex\Pcre\PcreRegexBaseTest;
-
 class PcreRegexReplaceTest extends PcreRegexBaseTest
 {
 
