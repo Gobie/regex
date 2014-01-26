@@ -4,6 +4,18 @@ namespace Gobie\Regex\Drivers\Mb;
 
 use Gobie\Regex\RegexException;
 
+/**
+ * Wrapper around mbstring extension.
+ *
+ * Usage:
+ * <code>
+ * if ($matches = MbRegex::getAll($pattern, $subject)) {
+ *   // do stuff here with $matches
+ * }
+ * </code>
+ *
+ * @link http://www.php.net/manual/en/book.mbstring.php
+ */
 class MbRegex
 {
 
@@ -122,7 +134,9 @@ class MbRegex
     }
 
     /**
-     * @param $pattern
+     * Prepare error handler for catching compilation errors.
+     *
+     * @param string|array $pattern Pattern or array of patterns
      */
     protected static function prepare($pattern)
     {
@@ -132,6 +146,9 @@ class MbRegex
         });
     }
 
+    /**
+     * Clean up after self::prepare().
+     */
     protected static function cleanup()
     {
         \restore_error_handler();
