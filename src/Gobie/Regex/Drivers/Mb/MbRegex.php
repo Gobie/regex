@@ -130,7 +130,7 @@ class MbRegex
     protected static function prepare($pattern)
     {
         \set_error_handler(function ($_, $errstr) use ($pattern) {
-            restore_error_handler();
+            self::cleanup();
             throw new RegexException($errstr, null, $pattern);
         });
     }
