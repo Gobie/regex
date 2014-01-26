@@ -41,9 +41,6 @@ class MbRegex
 
             $result = \mb_ereg_search_regs();
             if ($result === false) {
-                if (!$matches) {
-                    $matches[] = array();
-                }
                 break;
             }
 

@@ -42,7 +42,7 @@ class MbRegexGetAllTest extends MbRegexBaseTest
             ),
             'no match'         => array(
                 array('HelloWorld', self::$subject),
-                array(array())
+                array()
             ),
         );
     }
