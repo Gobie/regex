@@ -202,13 +202,13 @@ class PcreRegex
     protected static function prepare($pattern)
     {
         \set_error_handler(function ($_, $errstr) use ($pattern) {
-            static::cleanup();
+            \restore_error_handler();
             throw new PcreRegexException($errstr, null, $pattern);
         });
     }
 
     /**
-     * Clean up after self::prepare().
+     * Clean up after prepare().
      */
     protected static function cleanup()
     {

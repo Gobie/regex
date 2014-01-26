@@ -151,13 +151,13 @@ class MbRegex
     protected static function prepare($pattern)
     {
         \set_error_handler(function ($_, $errstr) use ($pattern) {
-            self::cleanup();
+            \restore_error_handler();
             throw new RegexException($errstr, null, $pattern);
         });
     }
 
     /**
-     * Clean up after self::prepare().
+     * Clean up after prepare().
      */
     protected static function cleanup()
     {
