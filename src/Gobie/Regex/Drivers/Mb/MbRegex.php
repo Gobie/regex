@@ -98,10 +98,21 @@ class MbRegex
         return $matches;
     }
 
-    public static function replace($pattern, $replacement, $subject)
+    /**
+     * Regular expression replace and return replaced.
+     *
+     * @param string $pattern     Pattern
+     * @param string $replacement Replacement
+     * @param string $subject     Subject
+     * @param string $option      Option
+     * @return string Replaced subject
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-replace.php
+     */
+    public static function replace($pattern, $replacement, $subject, $option = "")
     {
         static::prepare($pattern);
-        $res = \mb_ereg_replace($pattern, $replacement, $subject);
+        $res = \mb_ereg_replace($pattern, $replacement, $subject, $option);
         static::cleanup();
 
         return $res;

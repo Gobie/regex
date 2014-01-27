@@ -42,6 +42,10 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array('HelloWorld', '', self::$subject),
                 'Hello World'
             ),
+            'ignore case'      => array(
+                array('L', '*', self::$subject, 'i'),
+                'He**o Wor*d'
+            ),
         );
     }
 }
