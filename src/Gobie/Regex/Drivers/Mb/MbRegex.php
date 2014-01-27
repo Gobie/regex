@@ -59,7 +59,17 @@ class MbRegex
         return $matches ? : array();
     }
 
-    public static function getAll($pattern, $subject)
+    /**
+     * Global regular expression match and return all matches.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param string $option  Option
+     * @return array Array of matches that match given subject, empty array otherwise
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-search-regs.php
+     */
+    public static function getAll($pattern, $subject, $option = "")
     {
         static::prepare($pattern);
 
@@ -67,7 +77,7 @@ class MbRegex
         $subjectLen = \mb_strlen($subject);
         $matches    = array();
 
-        \mb_ereg_search_init($subject, $pattern);
+        \mb_ereg_search_init($subject, $pattern, $option);
         while ($position !== false && $position < $subjectLen) {
             \mb_ereg_search_setpos($position);
 
