@@ -125,7 +125,7 @@ Every error is handled by exception derived from `RegexException`. Example of th
     }
 
     // replace with callback
-    if ($res = PcreRegex::replaceCallback($pattern, $callback, $subject)) {
+    if ($res = PcreRegex::replace($pattern, $callback, $subject)) {
         // do something with $res
     }
 
@@ -147,14 +147,13 @@ Unified API
 Regular expression libraries provide variety of functions, but they are not replaceable out of the box.
 So we tried to unify API across those libraries. There are several methods implemented with basic signature.
 
- - `(bool) match((string) $pattern, (string) $subject)`
- - `(array) get((string) $pattern, (string) $subject)`
- - `(array) getAll((string) $pattern, (string) $subject)`
- - `(string|array) replace((string|array) $pattern, (string|array) $replacement, (string|array) $subject)`
- - `(string|array) replaceCallback((string|array) ($pattern, (callable) $callback, (string|array) $subject)`
- - `(array) split((string) $pattern, (string) $subject)`
- - `(array) grep((string) $pattern, (array) $subject)`
- - `(string|array) filter((string|array) $pattern, (string|array) $replacement, (string|array) $subject)`
+ - `match($pattern, $subject)`
+ - `get($pattern, $subject)`
+ - `getAll($pattern, $subject)`
+ - `replace($pattern, $replacement, $subject)`
+ - `split($pattern, $subject)`
+ - `grep($pattern, $subject)`
+ - `filter($pattern, $replacement, $subject)`
 
 Specific library can add another arguments to signature or handle more types.
 
@@ -170,7 +169,7 @@ Requirements
 ------------
 
 PHP 5.3.3 or above. Unit tests are regularly run against latest 5.3, 5.4, 5.5 and HHVM.
-For `mb_ereg_replace_callback()` and thus for usage of `MbRegex::replaceCallback()` PHP 5.4 and above is required.
+For `mb_ereg_replace_callback()` and thus for usage of `MbRegex::replace()` PHP 5.4 and above is required.
 
 Note on HHVM
 ------------
