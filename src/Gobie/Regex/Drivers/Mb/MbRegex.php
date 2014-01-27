@@ -14,7 +14,7 @@ use Gobie\Regex\RegexException;
  * }
  * </code>
  *
- * @link http://www.php.net/manual/en/book.mbstring.php
+ * @link http://php.net/book.mbstring.php
  */
 class MbRegex
 {
@@ -156,11 +156,11 @@ class MbRegex
     /**
      * Prepare error handler for catching compilation errors.
      *
-     * @param string|array $pattern Pattern or array of patterns
+     * @param string|string[] $pattern Pattern or array of patterns
      */
     protected static function prepare($pattern)
     {
-        \set_error_handler(function ($_, $errstr) use ($pattern) {
+        \set_error_handler(function ($errno, $errstr) use ($pattern) {
             \restore_error_handler();
             throw new RegexException($errstr, null, $pattern);
         });

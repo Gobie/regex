@@ -30,7 +30,7 @@ class RegexException extends \RuntimeException
      *
      * Usual exception message looks like this:
      * <pre>
-     * preg_match(): Some error occured
+     * preg_match(): Some error occurred
      * </pre>
      * So we strip the "function(): " part.
      *
