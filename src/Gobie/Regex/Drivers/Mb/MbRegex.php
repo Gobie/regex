@@ -2,8 +2,6 @@
 
 namespace Gobie\Regex\Drivers\Mb;
 
-use Gobie\Regex\RegexException;
-
 /**
  * Wrapper around mbstring extension.
  *
@@ -26,7 +24,7 @@ class MbRegex
      * @param string $subject Subject
      * @param string $option  Option
      * @return bool True if pattern matches given subject, false otherwise
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      */
     public static function match($pattern, $subject, $option = "")
@@ -46,7 +44,7 @@ class MbRegex
      * @param string $subject Subject
      * @param string $option  Option
      * @return array Array with first match that matches given subject, empty array otherwise
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
     public static function get($pattern, $subject, $option = "")
@@ -66,7 +64,7 @@ class MbRegex
      * @param string $subject Subject
      * @param string $option  Option
      * @return array Array of matches that match given subject, empty array otherwise
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
     public static function getAll($pattern, $subject, $option = "")
@@ -106,7 +104,7 @@ class MbRegex
      * @param string|string[] $subject     Subject or array of subjects
      * @param string          $option      Option
      * @return string|string[] Replaced subject or array of subjects
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-replace.php
      */
     public static function replace($pattern, $replacement, $subject, $option = "")
@@ -151,7 +149,7 @@ class MbRegex
      * @param string   $subject  Subject
      * @param string   $option   Option
      * @return string Replaced subject
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-replace-callback.php
      */
     public static function replaceCallback($pattern, $callback, $subject, $option = "")
@@ -170,7 +168,7 @@ class MbRegex
      * @param string $subject Subject
      * @param int    $limit   Limit
      * @return string[] Array of splitted parts, array with original string otherwise
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-split.php
      */
     public static function split($pattern, $subject, $limit = -1)
@@ -189,7 +187,7 @@ class MbRegex
      * @param string|string[] $subject Subject or array of subjects
      * @param string          $option  Option
      * @return string[] Array with items that matches given pattern, empty array otherwise
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      */
     public static function grep($pattern, $subject, $option = "")
@@ -219,7 +217,7 @@ class MbRegex
      * @param string|string[] $subject     Subject or array of subjects
      * @param string          $option      Option
      * @return string[] Array of replaced subjects
-     * @throws RegexException When compilation error occurs
+     * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      * @link http://php.net/function.mb-ereg-replace.php
      */
@@ -251,7 +249,7 @@ class MbRegex
     {
         \set_error_handler(function ($errno, $errstr) use ($pattern) {
             \restore_error_handler();
-            throw new RegexException($errstr, null, $pattern);
+            throw new MbRegexException($errstr, null, $pattern);
         });
     }
 
