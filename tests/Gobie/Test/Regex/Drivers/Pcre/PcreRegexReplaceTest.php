@@ -51,6 +51,10 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 array('/l/', '*', self::$subject, 2),
                 'He**o World'
             ),
+            'empty patterns'    => array(
+                array(array(), array(), self::$subject),
+                self::$subject
+            ),
         );
     }
 

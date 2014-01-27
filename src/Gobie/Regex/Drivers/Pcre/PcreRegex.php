@@ -88,7 +88,7 @@ class PcreRegex
      * @param string|string[] $replacement Replacement or array of replacements
      * @param string|string[] $subject     Subject or array of subjects
      * @param int             $limit       Limit of replacements
-     * @return string|array Replaced subject or array of subjects
+     * @return string|string[] Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-replace.php
      */
