@@ -118,10 +118,21 @@ class MbRegex
         return $res;
     }
 
-    public static function replaceCallback($pattern, $callback, $subject)
+    /**
+     * Regular expression replace using callback and return replaced.
+     *
+     * @param string   $pattern  Pattern
+     * @param callable $callback Replace callback
+     * @param string   $subject  Subject
+     * @param string   $option   Option
+     * @return string Replaced subject
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-replace-callback.php
+     */
+    public static function replaceCallback($pattern, $callback, $subject, $option = "")
     {
         static::prepare($pattern);
-        $res = \mb_ereg_replace_callback($pattern, $callback, $subject);
+        $res = \mb_ereg_replace_callback($pattern, $callback, $subject, $option);
         static::cleanup();
 
         return $res;

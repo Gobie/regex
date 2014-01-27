@@ -76,6 +76,17 @@ class MbRegexReplaceCallbackTest extends MbRegexBaseTest
                 ),
                 'Hello World'
             ),
+            'ignore case'            => array(
+                array(
+                    '[a-z]',
+                    function ($matches) {
+                        return \strtolower($matches[0]);
+                    },
+                    self::$subject,
+                    'i'
+                ),
+                'hello world'
+            ),
         );
     }
 }
