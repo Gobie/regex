@@ -101,21 +101,46 @@ class MbRegex
     /**
      * Regular expression replace and return replaced.
      *
-     * @param string $pattern     Pattern
-     * @param string $replacement Replacement
-     * @param string $subject     Subject
-     * @param string $option      Option
-     * @return string Replaced subject
+     * @param string|string[] $pattern     Pattern or array of patterns
+     * @param string|string[] $replacement Replacement or array of replacements
+     * @param string|string[] $subject     Subject or array of subjects
+     * @param string          $option      Option
+     * @return string|string[] Replaced subject or array of subjects
      * @throws RegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-replace.php
      */
     public static function replace($pattern, $replacement, $subject, $option = "")
     {
         static::prepare($pattern);
-        $res = \mb_ereg_replace($pattern, $replacement, $subject, $option);
+
+        if (\is_array($pattern)) {
+            if (\is_array($replacement)) {
+                $replacement = \array_pad($replacement, \count($pattern), '');
+            } else {
+                $replacement = \array_fill(0, \count($pattern), $replacement);
+            }
+        } else {
+            if (\is_array($replacement)) {
+                \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
+            }
+
+            $pattern     = (array) $pattern;
+            $replacement = (array) $replacement;
+        }
+
+        $result = array();
+        foreach ((array) $subject as $subjectPart) {
+            $replacementPart = \reset($replacement);
+            foreach ($pattern as $patternPart) {
+                $subjectPart     = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
+                $replacementPart = \next($replacement);
+            }
+            $result[] = $subjectPart;
+        }
+
         static::cleanup();
 
-        return $res;
+        return \is_array($subject) ? ($result ? : $subject) : (\reset($result) ? : $subject);
     }
 
     /**
