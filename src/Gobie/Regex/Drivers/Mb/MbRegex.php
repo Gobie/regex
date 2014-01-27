@@ -39,10 +39,20 @@ class MbRegex
         return (bool) $res;
     }
 
-    public static function get($pattern, $subject)
+    /**
+     * Regular expression match and return first match.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param string $option  Option
+     * @return array Array with first match that matches given subject, empty array otherwise
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-search-regs.php
+     */
+    public static function get($pattern, $subject, $option = "")
     {
         static::prepare($pattern);
-        \mb_ereg_search_init($subject, $pattern);
+        \mb_ereg_search_init($subject, $pattern, $option);
         $matches = \mb_ereg_search_regs();
         static::cleanup();
 

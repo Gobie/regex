@@ -31,6 +31,10 @@ class MbRegexGetTest extends MbRegexBaseTest
                 array('HelloWorld', self::$subject),
                 array()
             ),
+            'ignore case'        => array(
+                array('L', self::$subject, 'i'),
+                array('l')
+            ),
         );
     }
 }
