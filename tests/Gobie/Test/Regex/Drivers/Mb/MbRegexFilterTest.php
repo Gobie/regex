@@ -32,6 +32,14 @@ class MbRegexFilterTest extends MbRegexBaseTest
                 array('\d', '', array('a b', 'bc', 'c d')),
                 array()
             ),
+            'string subject' => array(
+                array('B', 'X', 'a b', 'i'),
+                array('a X')
+            ),
+            'ignore case' => array(
+                array('B', 'X', array('a b', 'bc', 'c d'), 'i'),
+                array('a X', 'Xc')
+            ),
         );
     }
 }

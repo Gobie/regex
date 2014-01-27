@@ -186,16 +186,28 @@ class MbRegex
         return $matches;
     }
 
-    public static function filter($pattern, $replacement, $subject)
+    /**
+     * Regular expression filter and return only replaced.
+     *
+     * @param string          $pattern     Pattern
+     * @param string          $replacement Replacement
+     * @param string|string[] $subject     Subject or array of subjects
+     * @param string          $option      Option
+     * @return string[] Array of replaced subjects
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-search.php
+     * @link http://php.net/function.mb-ereg-replace.php
+     */
+    public static function filter($pattern, $replacement, $subject, $option = "")
     {
         static::prepare($pattern);
 
         $matches = array();
         $counter = 0;
         foreach ((array) $subject as $sub) {
-            \mb_ereg_search_init($sub, $pattern);
+            \mb_ereg_search_init($sub, $pattern, $option);
             if (\mb_ereg_search()) {
-                $matches[$counter] = \mb_ereg_replace($pattern, $replacement, $sub);
+                $matches[$counter] = \mb_ereg_replace($pattern, $replacement, $sub, $option);
             }
             ++$counter;
         }
