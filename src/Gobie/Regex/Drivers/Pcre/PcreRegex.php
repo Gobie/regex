@@ -84,50 +84,39 @@ class PcreRegex
     /**
      * Regular expression replace and return replaced.
      *
-     * @param string|string[] $pattern     Pattern or array of patterns
-     * @param string|string[] $replacement Replacement or array of replacements
-     * @param string|string[] $subject     Subject or array of subjects
-     * @param int             $limit       Limit of replacements
+     * @param string|string[]          $pattern     Pattern or array of patterns
+     * @param string|callable|string[] $replacement Replacement (string or callable) or array of string replacements
+     * @param string|string[]          $subject     Subject or array of subjects
+     * @param int                      $limit       Limit of replacements
      * @return string|string[] Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-replace.php
+     * @link http://php.net/function.preg-replace-callback.php
      */
     public static function replace($pattern, $replacement, $subject, $limit = -1)
     {
         static::prepare($pattern);
+
+        if (\is_callable($replacement)) {
+            foreach ((array) $pattern as $patternPart) {
+                \preg_match($patternPart, '');
+            }
+
+            static::cleanup();
+
+            $res = \preg_replace_callback($pattern, $replacement, $subject, $limit);
+
+            if ($res === null) {
+                static::handleError($pattern);
+            }
+
+            return $res;
+        }
+
         $res = \preg_replace($pattern, $replacement, $subject, $limit);
+
         static::cleanup();
         static::handleError($pattern);
-
-        return $res;
-    }
-
-    /**
-     * Regular expression replace using callback and return replaced.
-     *
-     * Compilation errors are caught by using patterns in preg_match.
-     *
-     * @param string|string[] $pattern  Pattern or array of patterns
-     * @param callable        $callback Replace callback
-     * @param string|string[] $subject  Subject or array of subjects
-     * @param int             $limit    Limit of replacements
-     * @return string|array Replaced subject or array of subjects
-     * @throws PcreRegexException When compilation or runtime error occurs
-     * @link http://php.net/function.preg-replace-callback.php
-     */
-    public static function replaceCallback($pattern, $callback, $subject, $limit = -1)
-    {
-        static::prepare($pattern);
-        foreach ((array) $pattern as $pat) {
-            \preg_match($pat, '');
-        }
-        static::cleanup();
-
-        $res = \preg_replace_callback($pattern, $callback, $subject, $limit);
-
-        if ($res === null) {
-            static::handleError($pattern);
-        }
 
         return $res;
     }
