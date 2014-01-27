@@ -138,10 +138,20 @@ class MbRegex
         return $res;
     }
 
-    public static function split($pattern, $subject)
+    /**
+     * Regular expression split and return all parts.
+     *
+     * @param string $pattern Pattern
+     * @param string $subject Subject
+     * @param int    $limit   Limit
+     * @return string[] Array of splitted parts, array with original string otherwise
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-split.php
+     */
+    public static function split($pattern, $subject, $limit = -1)
     {
         static::prepare($pattern);
-        $res = \mb_split($pattern, $subject);
+        $res = \mb_split($pattern, $subject, $limit);
         static::cleanup();
 
         return $res;

@@ -27,6 +27,10 @@ class MbRegexSplitTest extends MbRegexBaseTest
                 array('\d', self::$subject),
                 array('Hello World')
             ),
+            'limit 3'         => array(
+                array('l', self::$subject, 3),
+                array('He', '', 'o World')
+            ),
         );
     }
 }
