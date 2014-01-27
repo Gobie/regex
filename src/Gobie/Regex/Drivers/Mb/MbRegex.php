@@ -99,13 +99,14 @@ class MbRegex
     /**
      * Regular expression replace and return replaced.
      *
-     * @param string|string[] $pattern     Pattern or array of patterns
-     * @param string|string[] $replacement Replacement or array of replacements
-     * @param string|string[] $subject     Subject or array of subjects
-     * @param string          $option      Option
+     * @param string|string[]         $pattern     Pattern or array of patterns
+     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @param string|string[]         $subject     Subject or array of subjects
+     * @param string                  $option      Option
      * @return string|string[] Replaced subject or array of subjects
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-replace.php
+     * @link http://php.net/function.mb-ereg-replace-callback.php
      */
     public static function replace($pattern, $replacement, $subject, $option = "")
     {
@@ -130,7 +131,11 @@ class MbRegex
         foreach ((array) $subject as $subjectPart) {
             $replacementPart = \reset($replacement);
             foreach ($pattern as $patternPart) {
-                $subjectPart     = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
+                if (\is_callable($replacementPart)) {
+                    $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
+                } else {
+                    $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
+                }
                 $replacementPart = \next($replacement);
             }
             $result[] = $subjectPart;
@@ -139,26 +144,6 @@ class MbRegex
         static::cleanup();
 
         return \is_array($subject) ? ($result ? : $subject) : (\reset($result) ? : $subject);
-    }
-
-    /**
-     * Regular expression replace using callback and return replaced.
-     *
-     * @param string   $pattern  Pattern
-     * @param callable $callback Replace callback
-     * @param string   $subject  Subject
-     * @param string   $option   Option
-     * @return string Replaced subject
-     * @throws MbRegexException When compilation error occurs
-     * @link http://php.net/function.mb-ereg-replace-callback.php
-     */
-    public static function replaceCallback($pattern, $callback, $subject, $option = "")
-    {
-        static::prepare($pattern);
-        $res = \mb_ereg_replace_callback($pattern, $callback, $subject, $option);
-        static::cleanup();
-
-        return $res;
     }
 
     /**

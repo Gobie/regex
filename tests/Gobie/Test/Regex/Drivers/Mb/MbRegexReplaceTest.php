@@ -4,6 +4,7 @@ namespace Gobie\Test\Regex\Drivers\Mb;
 
 /**
  * @requires extension mbstring
+ * @requires function mb_ereg_replace_callback
  */
 class MbRegexReplaceTest extends MbRegexBaseTest
 {
@@ -73,6 +74,80 @@ class MbRegexReplaceTest extends MbRegexBaseTest
             'empty [] of patterns'                        => array(
                 array(array(), array(), self::$subject),
                 self::$subject
+            ),
+            'full replace with callback'                  => array(
+                array(
+                    '^Hello\sWorld$',
+                    function () {
+                        return 'Good day';
+                    },
+                    self::$subject
+                ),
+                'Good day'
+            ),
+            'lowercase to uppercase with callback'        => array(
+                array(
+                    '[a-z]',
+                    function ($matches) {
+                        return \strtoupper($matches[0]);
+                    },
+                    self::$subject
+                ),
+                'HELLO WORLD'
+            ),
+            'full replace by groups with callback'        => array(
+                array(
+                    '^(\w+)\s(\w+)$',
+                    function ($matches) {
+                        return $matches[1] . '-' . $matches[2];
+                    },
+                    self::$subject
+                ),
+                'Hello-World'
+            ),
+            'replace each char with callback'             => array(
+                array(
+                    '.',
+                    function ($matches) {
+                        return \ord($matches[0]);
+                    },
+                    self::$subject
+                ),
+                '721011081081113287111114108100'
+            ),
+            'no match with callback'                      => array(
+                array(
+                    'HelloWorld',
+                    function () {
+                        return '';
+                    },
+                    self::$subject
+                ),
+                'Hello World'
+            ),
+            'ignore case with callback'                   => array(
+                array(
+                    '[a-z]',
+                    function ($matches) {
+                        return \strtolower($matches[0]);
+                    },
+                    self::$subject,
+                    'i'
+                ),
+                'hello world'
+            ),
+            'mixed replacements'                          => array(
+                array(
+                    array('[A-Z]', '[a-z]'),
+                    array(
+                        function ($matches) {
+                            return \strtolower($matches[0]);
+                        },
+                        '-'
+                    ),
+                    array(self::$subject, \strrev(self::$subject))
+                ),
+                array('----- -----', '----- -----')
             ),
         );
     }
