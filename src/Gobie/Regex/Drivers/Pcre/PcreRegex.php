@@ -128,7 +128,7 @@ class PcreRegex
      * @param string $subject Subject
      * @param int    $limit   Limit
      * @param int    $flags   Flags defaults to PREG_SPLIT_DELIM_CAPTURE
-     * @return array Array of splitted parts, array with original string otherwise
+     * @return array Array of split parts, array with original string otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-split.php
      */

@@ -152,7 +152,7 @@ class MbRegex
      * @param string $pattern Pattern
      * @param string $subject Subject
      * @param int    $limit   Limit
-     * @return string[] Array of splitted parts, array with original string otherwise
+     * @return string[] Array of split parts, array with original string otherwise
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-split.php
      */
