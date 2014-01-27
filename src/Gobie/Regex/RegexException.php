@@ -8,9 +8,9 @@ class RegexException extends \RuntimeException
     /**
      * If pattern is provided, it is appended to the message.
      *
-     * @param string $message Message
-     * @param int    $code    Code
-     * @param string $pattern Pattern
+     * @param string          $message Message
+     * @param int             $code    Code
+     * @param string|string[] $pattern Pattern
      */
     public function __construct($message, $code = null, $pattern = null)
     {

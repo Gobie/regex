@@ -28,13 +28,13 @@ class RegexExceptionTest extends \PHPUnit_Framework_TestCase
     public function provideMessage()
     {
         return array(
-            'nothing' => array(
+            'nothing'             => array(
                 null,
                 null,
                 null,
                 'Unknown error'
             ),
-            'only message' => array(
+            'only message'        => array(
                 'message',
                 null,
                 null,
@@ -46,7 +46,7 @@ class RegexExceptionTest extends \PHPUnit_Framework_TestCase
                 '/+/',
                 'message; pattern: /+/'
             ),
-            'only pattern' => array(
+            'only pattern'        => array(
                 null,
                 null,
                 '/+/',
@@ -58,7 +58,7 @@ class RegexExceptionTest extends \PHPUnit_Framework_TestCase
     public function provideShortMessage()
     {
         return array(
-            'with function name' => array(
+            'with function name'    => array(
                 'mb_ereg(): mbregex compile err: something incorrect',
                 null,
                 '[a-z',
