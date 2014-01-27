@@ -32,6 +32,14 @@ class MbRegexGrepTest extends MbRegexBaseTest
                 array('\d', array('a b', 'bc', 'c d')),
                 array()
             ),
+            'string subject'  => array(
+                array('b', 'a b'),
+                array('a b')
+            ),
+            'ignore case'     => array(
+                array('B', array('a b', 'bc', 'c d'), 'i'),
+                array('a b', 'bc')
+            ),
         );
     }
 }

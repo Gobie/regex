@@ -157,14 +157,24 @@ class MbRegex
         return $res;
     }
 
-    public static function grep($pattern, $subject)
+    /**
+     * Regular expression grep and return matching items.
+     *
+     * @param string          $pattern Pattern
+     * @param string|string[] $subject Subject or array of subjects
+     * @param string          $option  Option
+     * @return string[] Array with items that matches given pattern, empty array otherwise
+     * @throws RegexException When compilation error occurs
+     * @link http://php.net/function.mb-ereg-search.php
+     */
+    public static function grep($pattern, $subject, $option = "")
     {
         static::prepare($pattern);
 
         $matches = array();
         $counter = 0;
         foreach ((array) $subject as $sub) {
-            \mb_ereg_search_init($sub, $pattern);
+            \mb_ereg_search_init($sub, $pattern, $option);
             if (\mb_ereg_search()) {
                 $matches[$counter] = $sub;
             }
