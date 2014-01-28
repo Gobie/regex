@@ -15,23 +15,23 @@ class MbRegexMatchTest extends MbRegexBaseTest
     public function provideExecuteAndAssert()
     {
         return array(
-            'simple hello world' => array(
+            'full match'   => array(
                 array('Hello\sWorld', self::$subject),
                 true
             ),
-            'single match'       => array(
+            'single match' => array(
                 array('l', self::$subject),
                 true
             ),
-            '2 subgroups'        => array(
+            '2 subgroups'  => array(
                 array('(Hello)\s(World)', self::$subject),
                 true
             ),
-            'no match'           => array(
+            'no match'     => array(
                 array('HelloWorld', self::$subject),
                 false
             ),
-            'ignore case'        => array(
+            'ignore case'  => array(
                 array('L', self::$subject, 'i'),
                 true
             ),

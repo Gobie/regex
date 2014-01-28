@@ -27,10 +27,6 @@ class MbRegexGetAllTest extends MbRegexBaseTest
                 array('(.)\s(.)', self::$subject),
                 array(array('o W'), array('o'), array('W'))
             ),
-            '2 matches'        => array(
-                array('[A-Z]', self::$subject),
-                array(array('H', 'W'))
-            ),
             'all'              => array(
                 array('(.)(\w+)(.)', self::$subject),
                 array(

@@ -15,19 +15,15 @@ class MbRegexSplitTest extends MbRegexBaseTest
     public function provideExecuteAndAssert()
     {
         return array(
-            'space separated' => array(
-                array('\s', self::$subject),
-                array('Hello', 'World')
-            ),
-            'on l'            => array(
+            'on l'     => array(
                 array('l', self::$subject),
                 array('He', '', 'o Wor', 'd')
             ),
-            'no split'        => array(
+            'no split' => array(
                 array('\d', self::$subject),
                 array('Hello World')
             ),
-            'limit 3'         => array(
+            'limit 3'  => array(
                 array('l', self::$subject, 3),
                 array('He', '', 'o World')
             ),

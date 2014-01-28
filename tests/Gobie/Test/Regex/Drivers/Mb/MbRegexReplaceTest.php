@@ -46,10 +46,6 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array('Hello\sWorld', 'Good day', self::$subject),
                 'Good day'
             ),
-            'multiple matches'                            => array(
-                array('l', '*', self::$subject),
-                'He**o Wor*d'
-            ),
             'empty pattern'                               => array(
                 array('', '-', self::$subject),
                 '-H-e-l-l-o- -W-o-r-l-d-'
@@ -74,10 +70,6 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array(array('[A-Z]', '[a-z]'), 'U', self::$subject),
                 'UUUUU UUUUU'
             ),
-            '[] of subjects'                              => array(
-                array('[A-Z]', 'U', array(self::$subject, \strrev(self::$subject))),
-                array('Uello Uorld', 'dlroU olleU')
-            ),
             '[] of patterns & replacements & subjects'    => array(
                 array(array('[A-Z]', '[a-z]'), array('U', 'u'), array(self::$subject, \strrev(self::$subject))),
                 array('Uuuuu Uuuuu', 'uuuuU uuuuU')
@@ -85,26 +77,6 @@ class MbRegexReplaceTest extends MbRegexBaseTest
             'empty [] of patterns'                        => array(
                 array(array(), array(), self::$subject),
                 self::$subject
-            ),
-            'full replace with callback'                  => array(
-                array(
-                    '^Hello\sWorld$',
-                    function () {
-                        return 'Good day';
-                    },
-                    self::$subject
-                ),
-                'Good day'
-            ),
-            'lowercase to uppercase with callback'        => array(
-                array(
-                    '[a-z]',
-                    function ($matches) {
-                        return \strtoupper($matches[0]);
-                    },
-                    self::$subject
-                ),
-                'HELLO WORLD'
             ),
             'full replace by groups with callback'        => array(
                 array(
@@ -115,16 +87,6 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                     self::$subject
                 ),
                 'Hello-World'
-            ),
-            'replace each char with callback'             => array(
-                array(
-                    '.',
-                    function ($matches) {
-                        return \ord($matches[0]);
-                    },
-                    self::$subject
-                ),
-                '721011081081113287111114108100'
             ),
             'no match with callback'                      => array(
                 array(

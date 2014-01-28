@@ -28,7 +28,7 @@ class PcreRegexSplitTest extends PcreRegexBaseTest
                 array('/\s/', self::$subject, 1, 0),
                 array('Hello World')
             ),
-            'no empty'          => array(
+            'on each'          => array(
                 array('//', self::$subject, -1, \PREG_SPLIT_NO_EMPTY),
                 array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
             ),

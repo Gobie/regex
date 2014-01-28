@@ -84,28 +84,6 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 ),
                 array('----- -----', '----- -----')
             ),
-            'full replace with callback'           => array(
-                array(
-                    '/^Hello\sWorld$/',
-                    function () {
-                        return 'Good day';
-                    },
-                    self::$subject,
-                    -1
-                ),
-                'Good day'
-            ),
-            'lowercase to uppercase with callback' => array(
-                array(
-                    '/[a-z]/',
-                    function ($matches) {
-                        return \strtoupper($matches[0]);
-                    },
-                    self::$subject,
-                    -1
-                ),
-                'HELLO WORLD'
-            ),
             'full replace by groups with callback' => array(
                 array(
                     '/^(\w+)\s(\w+)$/',
@@ -116,17 +94,6 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                     -1
                 ),
                 'Hello-World'
-            ),
-            'replace each char with callback'      => array(
-                array(
-                    '/./',
-                    function ($matches) {
-                        return \ord($matches[0]);
-                    },
-                    self::$subject,
-                    -1
-                ),
-                '721011081081113287111114108100'
             ),
             'no match with callback'               => array(
                 array(

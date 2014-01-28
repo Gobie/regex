@@ -24,10 +24,6 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
                 array('/(.)\s(.)/', self::$subject, 0, 0),
                 array(array('o W'), array('o'), array('W'))
             ),
-            '2 matches'                 => array(
-                array('/[A-Z]/', self::$subject, 0, 0),
-                array(array('H', 'W'))
-            ),
             'all'                       => array(
                 array('/(.)(\w+)(.)/', self::$subject, 0, 0),
                 array(
@@ -63,5 +59,4 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
             ),
         );
     }
-
 }
