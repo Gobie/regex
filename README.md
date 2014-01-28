@@ -2,10 +2,10 @@ Regex
 =====
 
 [![Build Status](https://travis-ci.org/Gobie/regex.png?branch=master)](https://travis-ci.org/Gobie/regex)
-[![Code Coverage](https://scrutinizer-ci.com/g/Gobie/regex/badges/coverage.png?s=c12d12883e1b74978c84eca09da4ee23e1868c67)](https://scrutinizer-ci.com/g/Gobie/regex/)
+[![Code Coverage](https://scrutinizer-ci.com/g/Gobie/regex/badges/coverage.png?s=6db26bc2741b7f0f5183f7afc50dcf306fbaabfc)](https://scrutinizer-ci.com/g/Gobie/regex/)
 [![Latest Stable Version](https://poser.pugx.org/gobie/regex/v/stable.png)](https://packagist.org/packages/gobie/regex)
 [![Total Downloads](https://poser.pugx.org/gobie/regex/downloads.png)](https://packagist.org/packages/gobie/regex)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Gobie/regex/badges/quality-score.png?s=e5c26668118e4678d46dcae4e0beb134f77c3eba)](https://scrutinizer-ci.com/g/Gobie/regex/)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Gobie/regex/badges/quality-score.png?s=0763e8dbf2953b656057f638413d6ab86a4d3be8)](https://scrutinizer-ci.com/g/Gobie/regex/)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b90f6621-642e-491a-af0c-84e2e68bbb10/mini.png)](https://insight.sensiolabs.com/projects/b90f6621-642e-491a-af0c-84e2e68bbb10)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Gobie/regex/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/c4598e4dbfeea15c383c64690dffad95 "githalytics.com")](http://githalytics.com/Gobie/regex)
