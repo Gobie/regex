@@ -145,9 +145,9 @@ class PcreRegex
     /**
      * Regular expression grep and return matching items.
      *
-     * @param string   $pattern Pattern
-     * @param string[] $subject Array of subjects
-     * @param int      $flags   Flags
+     * @param string          $pattern Pattern
+     * @param string|string[] $subject Subject or array of subjects
+     * @param int             $flags   Flags
      * @return string[] Array with items that matches given pattern, empty array otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-grep.php
@@ -155,7 +155,7 @@ class PcreRegex
     public static function grep($pattern, $subject, $flags = 0)
     {
         static::prepare($pattern);
-        $res = \preg_grep($pattern, $subject, $flags);
+        $res = \preg_grep($pattern, (array) $subject, $flags);
         static::cleanup();
         static::handleError($pattern);
 

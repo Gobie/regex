@@ -33,6 +33,10 @@ class PcreRegexGrepTest extends PcreRegexBaseTest
                 array('/\s/', array('a b', 'bc', 'c d'), \PREG_GREP_INVERT),
                 array(1 => 'bc')
             ),
+            'string subject'         => array(
+                array('/\s/', 'a b'),
+                array('a b')
+            ),
         );
     }
 }
