@@ -186,32 +186,51 @@ class MbRegex
     /**
      * Regular expression filter and return only replaced.
      *
-     * @param string          $pattern     Pattern
-     * @param string          $replacement Replacement
-     * @param string|string[] $subject     Subject or array of subjects
-     * @param string          $option      Option
-     * @return string[] Array of replaced subjects
+     * Warning, take care that callback does not trigger any errors or the PHP will just die with some weird exit code.
+     *
+     * @param string|string[]         $pattern     Pattern or array of patterns
+     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @param string|string[]         $subject     Subject or array of subjects
+     * @param string                  $option      Option
+     * @return string[] Array of filtered subjects
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      * @link http://php.net/function.mb-ereg-replace.php
+     * @link http://php.net/function.mb-ereg-replace-callback.php
      */
     public static function filter($pattern, $replacement, $subject, $option = "")
     {
         static::prepare($pattern);
 
-        $matches = array();
+        self::prepareReplaceArgs($pattern, $replacement);
+
+        $result  = array();
         $counter = 0;
-        foreach ((array) $subject as $sub) {
-            \mb_ereg_search_init($sub, $pattern, $option);
-            if (\mb_ereg_search()) {
-                $matches[$counter] = \mb_ereg_replace($pattern, $replacement, $sub, $option);
+        foreach ((array) $subject as $subjectPart) {
+            $replaced        = false;
+            $replacementPart = \reset($replacement);
+            foreach ($pattern as $patternPart) {
+                \mb_ereg_search_init($subjectPart, $patternPart, $option);
+                if (\mb_ereg_search()) {
+                    if (\is_callable($replacementPart)) {
+                        $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
+                    } else {
+                        $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
+                    }
+                    $replaced = true;
+                }
+                $replacementPart = \next($replacement);
+            }
+
+            if ($replaced) {
+                $result[$counter] = $subjectPart;
             }
             ++$counter;
         }
 
         static::cleanup();
 
-        return $matches;
+        return $result;
     }
 
     /**
