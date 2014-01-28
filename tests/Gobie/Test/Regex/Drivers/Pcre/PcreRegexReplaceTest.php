@@ -19,19 +19,30 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
         \call_user_func_array(self::$method, array($pattern, $callback, $subject));
     }
 
-    /**
-     * @dataProvider provideReplaceError
-     */
-    public function testShouldReplaceAndFail($args, $exceptionMessage)
+    public function provideCompilationError()
     {
-        parent::executeAndFail(self::$method, $args, $exceptionMessage);
-    }
+        $original = parent::provideCompilationError();
 
-    protected function executeAndFail($method, $args, $exceptionMessage)
-    {
-        // Add replacement as second argument between pattern and subject
-        \array_splice($args, 1, 0, array(''));
-        parent::executeAndFail($method, $args, $exceptionMessage);
+        $specificData = array(
+            'string pattern and array replacement' => array(
+                array(
+                    '/[A-Z]/',
+                    array(),
+                    ''
+                ),
+                'Parameter mismatch, pattern is a string while replacement is an array; pattern: /[A-Z]/'
+            ),
+            'incorrect patterns in array'          => array(
+                array(
+                    array('/[A-Z]/', '*', '/[a-z]/', '+'),
+                    '',
+                    ''
+                ),
+                'No ending delimiter \'*\' found; pattern: /[A-Z]/, *, /[a-z]/, +'
+            ),
+        );
+
+        return $this->addCallback($original) + $specificData;
     }
 
     public function provideExecuteAndAssert()
@@ -160,28 +171,6 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                     2
                 ),
                 'He**o World'
-            ),
-        );
-    }
-
-    public function provideReplaceError()
-    {
-        return array(
-            'string pattern and array replacement' => array(
-                array(
-                    '/[A-Z]/',
-                    array(),
-                    ''
-                ),
-                'Parameter mismatch, pattern is a string while replacement is an array; pattern: /[A-Z]/'
-            ),
-            'incorrect patterns in array'          => array(
-                array(
-                    array('/[A-Z]/', '*', '/[a-z]/', '+'),
-                    '',
-                    ''
-                ),
-                'No ending delimiter \'*\' found; pattern: /[A-Z]/, *, /[a-z]/, +'
             ),
         );
     }
