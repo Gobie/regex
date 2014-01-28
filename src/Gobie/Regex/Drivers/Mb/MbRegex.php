@@ -99,6 +99,8 @@ class MbRegex
     /**
      * Regular expression replace and return replaced.
      *
+     * Warning, take care that callback does not trigger any errors or the PHP will just die with some weird exit code.
+     *
      * @param string|string[]         $pattern     Pattern or array of patterns
      * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
      * @param string|string[]         $subject     Subject or array of subjects
@@ -112,20 +114,7 @@ class MbRegex
     {
         static::prepare($pattern);
 
-        if (\is_array($pattern)) {
-            if (\is_array($replacement)) {
-                $replacement = \array_pad($replacement, \count($pattern), '');
-            } else {
-                $replacement = \array_fill(0, \count($pattern), $replacement);
-            }
-        } else {
-            if (\is_array($replacement)) {
-                \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
-            }
-
-            $pattern     = (array) $pattern;
-            $replacement = (array) $replacement;
-        }
+        self::prepareReplaceArgs($pattern, $replacement);
 
         $result = array();
         foreach ((array) $subject as $subjectPart) {
@@ -244,5 +233,29 @@ class MbRegex
     protected static function cleanup()
     {
         \restore_error_handler();
+    }
+
+    /**
+     * Prepare arguments for replace-like methods.
+     *
+     * @param string|string[]         $pattern     Pattern or array of patterns
+     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     */
+    private static function prepareReplaceArgs(&$pattern, &$replacement)
+    {
+        if (\is_array($pattern)) {
+            if (\is_array($replacement)) {
+                $replacement = \array_pad($replacement, \count($pattern), '');
+            } else {
+                $replacement = \array_fill(0, \count($pattern), $replacement);
+            }
+        } else {
+            if (\is_array($replacement)) {
+                \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
+            }
+
+            $pattern     = (array) $pattern;
+            $replacement = (array) $replacement;
+        }
     }
 }
