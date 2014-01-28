@@ -31,7 +31,7 @@ class MbRegexMatchTest extends MbRegexBaseTest
                 array('HelloWorld', self::$subject),
                 false
             ),
-            'ignore case'       => array(
+            'ignore case'        => array(
                 array('L', self::$subject, 'i'),
                 true
             ),
