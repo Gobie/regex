@@ -19,9 +19,9 @@ class PcreRegexException extends RegexException
     /**
      * If code is provided, but no message, it uses default PREG error messages.
      *
-     * @param string          $message Message
-     * @param int             $code    Code
-     * @param string|string[] $pattern Pattern
+     * @param string               $message Message
+     * @param int|null             $code    Code
+     * @param string|string[]|null $pattern Pattern
      */
     public function __construct($message, $code = null, $pattern = null)
     {

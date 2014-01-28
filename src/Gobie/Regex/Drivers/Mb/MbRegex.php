@@ -43,7 +43,7 @@ class MbRegex
      * @param string $pattern Pattern
      * @param string $subject Subject
      * @param string $option  Option
-     * @return array Array with first match that matches given subject, empty array otherwise
+     * @return string[] Array with first match that matches given subject, empty array otherwise
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
@@ -63,7 +63,7 @@ class MbRegex
      * @param string $pattern Pattern
      * @param string $subject Subject
      * @param string $option  Option
-     * @return array Array of matches that match given subject, empty array otherwise
+     * @return string[][] Array of matches that match given subject, empty array otherwise
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
@@ -102,7 +102,7 @@ class MbRegex
      * Warning, take care that callback does not trigger any errors or the PHP will just die with some weird exit code.
      *
      * @param string|string[]         $pattern     Pattern or array of patterns
-     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @param callable|string|mixed[] $replacement Replacement (string or callback) or array of replacements
      * @param string|string[]         $subject     Subject or array of subjects
      * @param string                  $option      Option
      * @return string|string[] Replaced subject or array of subjects
@@ -189,7 +189,7 @@ class MbRegex
      * Warning, take care that callback does not trigger any errors or the PHP will just die with some weird exit code.
      *
      * @param string|string[]         $pattern     Pattern or array of patterns
-     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @param callable|string|mixed[] $replacement Replacement (string or callback) or array of replacements
      * @param string|string[]         $subject     Subject or array of subjects
      * @param string                  $option      Option
      * @return string[] Array of filtered subjects
@@ -258,7 +258,7 @@ class MbRegex
      * Prepare arguments for replace-like methods.
      *
      * @param string|string[]         $pattern     Pattern or array of patterns
-     * @param string|callable|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @param callable|string|mixed[] $replacement Replacement (string or callback) or array of replacements
      */
     private static function prepareReplaceArgs(&$pattern, &$replacement)
     {

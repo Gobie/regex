@@ -46,7 +46,7 @@ class PcreRegex
      * @param string $subject Subject
      * @param int    $flags   Flags
      * @param int    $offset  Offset
-     * @return array Array with first match that matches given subject, empty array otherwise
+     * @return string[] Array with first match that matches given subject, empty array otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-match.php
      */
@@ -67,7 +67,7 @@ class PcreRegex
      * @param string $subject Subject
      * @param int    $flags   Flags
      * @param int    $offset  Offset
-     * @return array Array of matches that match given subject, empty array otherwise
+     * @return string[][] Array of matches that match given subject, empty array otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-match-all.php
      */
@@ -85,7 +85,7 @@ class PcreRegex
      * Regular expression replace and return replaced.
      *
      * @param string|string[]          $pattern     Pattern or array of patterns
-     * @param string|callable|string[] $replacement Replacement (string or callable) or array of string replacements
+     * @param callable|string|string[] $replacement Replacement (string or callable) or array of string replacements
      * @param string|string[]          $subject     Subject or array of subjects
      * @param int                      $limit       Limit of replacements
      * @return string|string[] Replaced subject or array of subjects
@@ -128,7 +128,7 @@ class PcreRegex
      * @param string $subject Subject
      * @param int    $limit   Limit
      * @param int    $flags   Flags defaults to PREG_SPLIT_DELIM_CAPTURE
-     * @return array Array of split parts, array with original string otherwise
+     * @return string[] Array of split parts, array with original string otherwise
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-split.php
      */
@@ -169,7 +169,7 @@ class PcreRegex
      * @param string|string[] $replacement Replacement or array of replacements
      * @param string|string[] $subject     Subject or array of subjects
      * @param int             $limit       Limit of replacements
-     * @return string|array Replaced subject or array of subjects
+     * @return string|string[] Replaced subject or array of subjects
      * @throws PcreRegexException When compilation or runtime error occurs
      * @link http://php.net/function.preg-filter.php
      */
