@@ -49,23 +49,23 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
     {
         return array(
             'no match'                             => array(
-                array('/HelloWorld/', '', self::$subject, -1),
+                array('/HelloWorld/', '', self::$subject),
                 'Hello World'
             ),
             'full replace'                         => array(
-                array('/^Hello\sWorld$/', 'Good day', self::$subject, -1),
+                array('/^Hello\sWorld$/', 'Good day', self::$subject),
                 'Good day'
             ),
             'multiple replaces'                    => array(
-                array('/l/', '*', self::$subject, -1),
+                array('/l/', '*', self::$subject),
                 'He**o Wor*d'
             ),
             'array of patterns'                    => array(
-                array(array('/[A-Z]/', '/[a-z]/'), array('U', 'u'), self::$subject, -1),
+                array(array('/[A-Z]/', '/[a-z]/'), array('U', 'u'), self::$subject),
                 'Uuuuu Uuuuu'
             ),
             'array of subjects'                    => array(
-                array('/t(\d+)/', 's\\1', array('t1', 'u2', 't3'), -1),
+                array('/t(\d+)/', 's\\1', array('t1', 'u2', 't3')),
                 array('s1', 'u2', 's3')
             ),
             'use limit'                            => array(
@@ -84,14 +84,21 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 ),
                 array('----- -----', '----- -----')
             ),
+            'string callback replacement'          => array(
+                array('/l/', 'strlen', self::$subject),
+                'Hestrlenstrleno Worstrlend'
+            ),
+            'array like callback replacement'          => array(
+                array(array('/H/', '/W/'), array('PcreRegex', 'test'), self::$subject),
+                'PcreRegexello testorld'
+            ),
             'full replace by groups with callback' => array(
                 array(
                     '/^(\w+)\s(\w+)$/',
                     function ($matches) {
                         return $matches[1] . '-' . $matches[2];
                     },
-                    self::$subject,
-                    -1
+                    self::$subject
                 ),
                 'Hello-World'
             ),
@@ -101,8 +108,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                     function () {
                         return '';
                     },
-                    self::$subject,
-                    -1
+                    self::$subject
                 ),
                 'Hello World'
             ),
@@ -112,8 +118,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                     function ($matches) {
                         return \ord($matches[0]);
                     },
-                    self::$subject,
-                    -1
+                    self::$subject
                 ),
                 '72101108108111 87111114108100'
             ),
@@ -123,8 +128,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                     function ($matches) {
                         return 's' . $matches[1];
                     },
-                    array('t1', 'u2', 't3'),
-                    -1
+                    array('t1', 'u2', 't3')
                 ),
                 array('s1', 'u2', 's3')
             ),

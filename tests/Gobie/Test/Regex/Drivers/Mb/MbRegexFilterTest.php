@@ -72,6 +72,14 @@ class MbRegexFilterTest extends MbRegexBaseTest
                 array(array(), array(), array('a b', 'b c', 'c d')),
                 array()
             ),
+            'string callback replacement'      => array(
+                array('a', 'strlen', array('a b', 'b c', 'c d')),
+                array('strlen b')
+            ),
+            'array like callback replacement'  => array(
+                array(array('a', 'b'), array('PcreRegex', 'test'), array('a b', 'b c', 'c d')),
+                array('PcreRegex test', 'test c')
+            ),
             'replacement with callback'        => array(
                 array(
                     'b',

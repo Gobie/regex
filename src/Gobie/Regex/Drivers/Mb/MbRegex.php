@@ -120,7 +120,7 @@ class MbRegex
         foreach ((array) $subject as $subjectPart) {
             $replacementPart = \reset($replacement);
             foreach ($pattern as $patternPart) {
-                if (\is_callable($replacementPart)) {
+                if ((\is_object($replacementPart) || \is_array($replacementPart)) && \is_callable($replacementPart)) {
                     $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
                 } else {
                     $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
@@ -212,7 +212,9 @@ class MbRegex
             foreach ($pattern as $patternPart) {
                 \mb_ereg_search_init($subjectPart, $patternPart, $option);
                 if (\mb_ereg_search()) {
-                    if (\is_callable($replacementPart)) {
+                    if ((\is_object($replacementPart) || \is_array($replacementPart))
+                        && \is_callable($replacementPart)
+                    ) {
                         $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
                     } else {
                         $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);

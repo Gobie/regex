@@ -97,7 +97,7 @@ class PcreRegex
     {
         static::prepare($pattern);
 
-        if (\is_callable($replacement)) {
+        if ((\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)) {
             foreach ((array) $pattern as $patternPart) {
                 \preg_match($patternPart, '');
             }

@@ -78,6 +78,14 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array(array(), array(), self::$subject),
                 self::$subject
             ),
+            'string callback replacement'                 => array(
+                array('l', 'strlen', self::$subject),
+                'Hestrlenstrleno Worstrlend'
+            ),
+            'array like callback replacement'             => array(
+                array(array('H', 'W'), array('PcreRegex', 'test'), self::$subject),
+                'PcreRegexello testorld'
+            ),
             'full replace by groups with callback'        => array(
                 array(
                     '^(\w+)\s(\w+)$',
