@@ -15,8 +15,9 @@ We try to **resolve error related issues** those libraries expose and which they
 We also gave a shot at **unifying API** they provide so library is meant to be [drop-in replacement](#unified-api) for
 their existing counterparts for most of the usages.
 
-Currently the most used regular expression library is PCRE. Since POSIX Extended implementation with its `ereg_*` functions
-is deprecated and mbstring extension with its `mb_ereg_*` functions, as an optional extension, is not available everywhere.
+Currently the most popular regular expression library is PCRE with its `preg_*` functions.
+Mbstring extension with its `mb_ereg_*` functions as an optional extension is not available everywhere.
+POSIX Extended implementation with its `ereg_*` functions is deprecated as of PHP 5.3.0 and should not be used.
 
 Regex library implements wrappers for
 
@@ -44,7 +45,7 @@ Why should I care? / What problem does it solve?
 Regular expression libraries provide us with set of functions we have to deal with.
 They are somewhat similar and yet each slightly different in covered functionality and error handling.
 
-Take for instance PCRE library. Usual code seen in applications using it is
+Take for instance PCRE library. Common code seen in applications is
 
     if (preg_match($pattern, $subject, $matches)) {
         // do something with $matches if used at all
@@ -54,8 +55,8 @@ This code is correct as long as `$pattern` is not dynamically created and matchi
 or recursion limit and `$subject` as well as `$pattern` are well formed UTF-8 strings (if UTF-8 is used).
 
 Two types of errors can happen here. We speak about compilation errors which trigger E_WARNING like input errors.
-Next there are runtime errors which we can deal with using `preg_last_error()` function.
-Those are hitting backtracking or recursion limit and encoding issues.
+And runtime errors like hitting backtracking or recursion limit or encoding issues.
+We can deal with those using `preg_last_error()` function.
 But only if compilation error didn't happen, otherwise this function is unreliable as it doesn't clear its state.
 
 More robust and less error-prone version:
@@ -74,17 +75,17 @@ More robust and less error-prone version:
         // deal with runtime error
     }
 
-That's a lot of error handling to take care about, but it can be even more complicated.
+That's a lot of error handling to take care about, but it gets even more complicated.
 
-For example using `preg_replace_callback()` naively can make your life harder and put your debugging skills to test.
-Usual code using it:
+For instance using `preg_replace_callback()` naively can make your life harder and put your debugging skills to test.
+Usually, you use it the simplest way:
 
     if ($res = preg_replace_callback($pattern, $callback, $subject)) {
         // do something with $res
     }
 
 Lots can happen here, compilation and runtime errors shown above and also errors triggered from within `$callback`.
-We just can't cover it with error handler, since errors from within callback are not supposed to be caught by regex error handling.
+We just can't cover it with error handler like above, since errors from within callback should not be caught by regex error handling.
 So the correct solution, which would catch compilation and runtime errors, but let the rest come through, could look like this:
 
     set_error_handler(function () {
@@ -109,7 +110,8 @@ Usage / Here comes the solution
 -------------------------------
 
 This library solves error handling problem by doing all the heavy lifting in reusable manner.
-Every error is handled by exception derived from `RegexException`. Example of the same code as above using Regex library:
+Every error is handled by exception derived from `\Gobie\Regex\RegexException`.
+Example of the similar code as above using Regex library:
 
     use Gobie\Regex\Drivers\Pcre\PcreRegex;
     use Gobie\Regex\Drivers\Pcre\PcreRegexException;
@@ -145,7 +147,7 @@ Unified API
 -----------
 
 Regular expression libraries provide variety of functions, but they are not replaceable out of the box.
-So we tried to unify API across those libraries. There are several methods implemented with basic signature.
+So we tried to unify API across those libraries. There are several methods implemented with basic signature in all wrappers.
 
  - `match($pattern, $subject)`
  - `get($pattern, $subject)`
@@ -175,18 +177,18 @@ Note on HHVM
 ------------
 
 Functions `preg_filter()` and `mb_ereg_replace_callback()` are not to date supported.
-Some error messages have different format, mostly just added pattern which caused error.
+Some error messages have different format, mostly just added pattern which causes unit test error.
 Backtracking and recursion error messages are completely different and much more descriptive.
-You can found out about these minor differences in unit test reports on [travis-ci](https://travis-ci.org/Gobie/regex).
+You can find out about these differences in unit test reports on [travis-ci](https://travis-ci.org/Gobie/regex).
 
 FAQ
 ---
 
-**Why is it implemented via static methods instead of nice object oriented way we all do and love?**
+**Why is it implemented via static methods instead of nice object oriented way we all use and love?**
 
 It is meant to be used as drop-in replacement for current usage of library/extension functions.
 
-**But I want to use this as dependency in object oriented style, can I?**
+**But I want to use it as dependency in object oriented style, can I?**
 
 No problem, for that case we have `RegexFacade` which just redirects object calls to given wrapper.
 
@@ -195,17 +197,23 @@ No problem, for that case we have `RegexFacade` which just redirects object call
         // do something
     }
 
+    // is equivalent to
+
+    if (PcreRegex::match($pattern, $subject)) {
+        // do something
+    }
+
 **But I don't want to use exceptions to handle regex errors. Why? I got my reasons. What can I do?**
 
-Wrappers are prepared to be extended to overwrite error handling parts the way you want.
+Wrappers are prepared to be extended to overwrite anything the way you want.
 For instance triggering errors instead of throwing exceptions can be implemented this way:
 
-    class MyPcreRegex extends PcreRegex
+    class MyErrorHandlingPcreRegex extends PcreRegex
     {
         protected static function prepare($pattern)
         {
             set_error_handler(function ($_, $errstr) use ($pattern) {
-                static::cleanup();
+                static::cleanup(); // or \restore_error_handler() for < 5.4
                 trigger_error($errstr . '; ' . $pattern, E_USER_WARNING);
             });
         }
@@ -231,4 +239,5 @@ Contribute
 ----------
 
 Contributions are always welcome as well as any questions or issues.
-Unit testing is done via `phpunit` with configuration file `tests/complete.phpunit.xml`.
+
+Unit and integration testing is done via `phpunit` with configuration file `tests/complete.phpunit.xml`.
