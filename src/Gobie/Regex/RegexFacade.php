@@ -10,7 +10,7 @@ class RegexFacade
 
     const PCRE = '\Gobie\Regex\Drivers\Pcre\PcreRegex';
 
-    const MB_EREG = '\Gobie\Regex\Drivers\Mb\MbRegex';
+    const MB = '\Gobie\Regex\Drivers\Mb\MbRegex';
 
     /**
      * Class name of regex driver.
