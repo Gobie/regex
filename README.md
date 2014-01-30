@@ -247,7 +247,7 @@ We think that added functionality and usable error handling quite compensates th
 
 > We also added string functions for comparison. They could accomplish roughly the same tasks in those test scenarios.
 
-    Gobie\Test\Bench\PcreBench
+    Gobie\Bench\PcreBench
         Method Name              Iterations    Average Time      Ops/second
         ----------------------  ------------  --------------    -------------
         libraryMatch          : [10,000    ] [0.0000313593864] [31,888.37900]
@@ -281,7 +281,7 @@ You can run the benchmark yourself
 
     $ cd project_root
     $ composer install
-    $ php vendor/athletic/athletic/bin/athletic -p tests/Gobie/Test/Bench -b tests/bootstrap.php
+    $ php vendor/athletic/athletic/bin/athletic -p tests/Gobie/Bench -b tests/bootstrap.php
 
 Contribute
 ----------
