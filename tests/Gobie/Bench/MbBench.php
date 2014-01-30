@@ -3,9 +3,9 @@
 namespace Gobie\Bench;
 
 use Athletic\AthleticEvent;
-use Gobie\Regex\Drivers\Pcre\PcreRegex;
+use Gobie\Regex\Drivers\Mb\MbRegex;
 
-class PcreBench extends AthleticEvent
+class MbBench extends AthleticEvent
 {
     private $subject = 'Hello World';
 
@@ -13,7 +13,7 @@ class PcreBench extends AthleticEvent
 
     private $replacement = '-';
 
-    private $pattern = '/l/';
+    private $pattern = 'l';
 
     /**
      * @iterations 10000
@@ -21,7 +21,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryMatch()
     {
-        return PcreRegex::match($this->pattern, $this->subject);
+        return MbRegex::match($this->pattern, $this->subject);
     }
 
     /**
@@ -30,7 +30,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryGet()
     {
-        $matches = PcreRegex::get($this->pattern, $this->subject);
+        $matches = MbRegex::get($this->pattern, $this->subject);
 
         return $matches;
     }
@@ -41,7 +41,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryGetAll()
     {
-        $matches = PcreRegex::getAll($this->pattern, $this->subject);
+        $matches = MbRegex::getAll($this->pattern, $this->subject);
 
         return $matches;
     }
@@ -52,7 +52,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryReplace()
     {
-        $res = PcreRegex::replace($this->pattern, $this->replacement, $this->subject);
+        $res = MbRegex::replace($this->pattern, $this->replacement, $this->subject);
 
         return $res;
     }
@@ -64,7 +64,7 @@ class PcreBench extends AthleticEvent
     public function libraryReplaceCallback()
     {
         $replacement = $this->replacement;
-        $res         = PcreRegex::replace($this->pattern, function () use ($replacement) {
+        $res         = MbRegex::replace($this->pattern, function () use ($replacement) {
             return $replacement;
         }, $this->subject);
 
@@ -77,7 +77,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryGrep()
     {
-        $res = PcreRegex::grep($this->pattern, $this->subjectArray);
+        $res = MbRegex::grep($this->pattern, $this->subjectArray);
 
         return $res;
     }
@@ -88,7 +88,7 @@ class PcreBench extends AthleticEvent
      */
     public function libraryFilter()
     {
-        $res = PcreRegex::filter($this->pattern, $this->replacement, $this->subjectArray);
+        $res = MbRegex::filter($this->pattern, $this->replacement, $this->subjectArray);
 
         return $res;
     }
@@ -99,7 +99,7 @@ class PcreBench extends AthleticEvent
      */
     public function librarySplit()
     {
-        $res = PcreRegex::split($this->pattern, $this->subject);
+        $res = MbRegex::split($this->pattern, $this->subject);
 
         return $res;
     }
@@ -110,7 +110,7 @@ class PcreBench extends AthleticEvent
      */
     public function nativeMatch()
     {
-        return \preg_match($this->pattern, $this->subject);
+        return \mb_ereg_match($this->pattern, $this->subject);
     }
 
     /**
@@ -119,18 +119,7 @@ class PcreBench extends AthleticEvent
      */
     public function nativeGet()
     {
-        \preg_match($this->pattern, $this->subject, $matches);
-
-        return $matches;
-    }
-
-    /**
-     * @iterations 10000
-     * @group      native
-     */
-    public function nativeGetAll()
-    {
-        \preg_match_all($this->pattern, $this->subject, $matches);
+        \mb_ereg($this->pattern, $this->subject, $matches);
 
         return $matches;
     }
@@ -141,7 +130,7 @@ class PcreBench extends AthleticEvent
      */
     public function nativeReplace()
     {
-        $res = \preg_replace($this->pattern, $this->replacement, $this->subject);
+        $res = \mb_ereg_replace($this->pattern, $this->replacement, $this->subject);
 
         return $res;
     }
@@ -153,7 +142,7 @@ class PcreBench extends AthleticEvent
     public function nativeReplaceCallback()
     {
         $replacement = $this->replacement;
-        $res         = \preg_replace_callback($this->pattern, function () use ($replacement) {
+        $res         = \mb_ereg_replace_callback($this->pattern, function () use ($replacement) {
             return $replacement;
         }, $this->subject);
 
@@ -164,31 +153,9 @@ class PcreBench extends AthleticEvent
      * @iterations 10000
      * @group      native
      */
-    public function nativeGrep()
-    {
-        $res = \preg_grep($this->pattern, $this->subjectArray);
-
-        return $res;
-    }
-
-    /**
-     * @iterations 10000
-     * @group      native
-     */
-    public function nativeFilter()
-    {
-        $res = \preg_filter($this->pattern, $this->replacement, $this->subjectArray);
-
-        return $res;
-    }
-
-    /**
-     * @iterations 10000
-     * @group      native
-     */
     public function nativeSplit()
     {
-        $res = \preg_split($this->pattern, $this->subject);
+        $res = \mb_split($this->pattern, $this->subject);
 
         return $res;
     }
