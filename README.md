@@ -276,38 +276,63 @@ But there are times we need regular expressions.
 So we did a little benchmarking to show you, what does our abstraction take out of performance of using native functions.
 We think that added functionality and usable error handling quite compensates the lost performance but decide for yourself.
 
-> We also added string functions for comparison. They could accomplish roughly the same tasks in those test scenarios.
+> MbBench is missing some native function benchmarks as they don't have native implementation.
+
+> StringBench was added for comparison. It could accomplish roughly the same tasks in testing scenarios.
 
 ```
+Gobie\Bench\MbBench
+    Method Name              Iterations    Average Time      Ops/second
+    ----------------------  ------------  --------------    -------------
+    libraryMatch          : [10,000    ] [0.0000252296209] [39,635.95024]
+    libraryGet            : [10,000    ] [0.0000270466089] [36,973.21179]
+    libraryGetAll         : [10,000    ] [0.0000665599585] [15,024.04784]
+    libraryReplace        : [10,000    ] [0.0000590241909] [16,942.20598]
+    libraryReplaceCallback: [10,000    ] [0.0000805493355] [12,414.75171]
+    libraryGrep           : [10,000    ] [0.0000354112625] [28,239.60314]
+    libraryFilter         : [10,000    ] [0.0000871953726] [11,468.49850]
+    librarySplit          : [10,000    ] [0.0000985779762] [10,144.25370]
+
+    nativeMatch           : [10,000    ] [0.0000034259081] [291,893.41165]
+    nativeGet             : [10,000    ] [0.0000050207376] [199,173.92027]
+    nativeReplace         : [10,000    ] [0.0000085228920] [117,331.06558]
+    nativeReplaceCallback : [10,000    ] [0.0000239482880] [ 41,756.63837]
+    nativeSplit           : [10,000    ] [0.0000068708181] [145,543.07506]
+
+
 Gobie\Bench\PcreBench
     Method Name              Iterations    Average Time      Ops/second
     ----------------------  ------------  --------------    -------------
-    libraryMatch          : [10,000    ] [0.0000313593864] [31,888.37900]
-    libraryGet            : [10,000    ] [0.0000360656977] [27,727.17747]
-    libraryGetAll         : [10,000    ] [0.0000360173225] [27,764.41805]
-    libraryReplace        : [10,000    ] [0.0000367946148] [27,177.89018]
-    libraryReplaceCallback: [10,000    ] [0.0000537220478] [18,614.33137]
-    libraryGrep           : [10,000    ] [0.0000340729952] [29,348.75536]
-    libraryFilter         : [10,000    ] [0.0000365005255] [27,396.86585]
-    librarySplit          : [10,000    ] [0.0000345862627] [28,913.21357]
+    libraryMatch          : [10,000    ] [0.0000344554901] [29,022.95096]
+    libraryGet            : [10,000    ] [0.0000327244282] [30,558.21158]
+    libraryGetAll         : [10,000    ] [0.0000381940365] [26,182.09784]
+    libraryReplace        : [10,000    ] [0.0000430052996] [23,252.94813]
+    libraryReplaceCallback: [10,000    ] [0.0000728453159] [13,727.71862]
+    libraryGrep           : [10,000    ] [0.0000342110157] [29,230.35109]
+    libraryFilter         : [10,000    ] [0.0000352864027] [28,339.52807]
+    librarySplit          : [10,000    ] [0.0000331200361] [30,193.20378]
 
-    nativeMatch           : [10,000    ] [0.0000058207989] [171,797.72428]
-    nativeGet             : [10,000    ] [0.0000064183235] [155,803.92565]
-    nativeGetAll          : [10,000    ] [0.0000080312252] [124,514.00310]
-    nativeReplace         : [10,000    ] [0.0000087450981] [114,349.77481]
-    nativeReplaceCallback : [10,000    ] [0.0000220663786] [ 45,317.81215]
-    nativeGrep            : [10,000    ] [0.0000065322161] [153,087.40387]
-    nativeFilter          : [10,000    ] [0.0000103927851] [ 96,220.59852]
-    nativeSplit           : [10,000    ] [0.0000072141409] [138,616.64403]
+    nativeMatch           : [10,000    ] [0.0000061690331] [162,099.95826]
+    nativeGet             : [10,000    ] [0.0000071261883] [140,327.47395]
+    nativeGetAll          : [10,000    ] [0.0000095671892] [104,523.90743]
+    nativeReplace         : [10,000    ] [0.0000074643373] [133,970.36512]
+    nativeReplaceCallback : [10,000    ] [0.0000232770443] [ 42,960.78090]
+    nativeGrep            : [10,000    ] [0.0000091099977] [109,769.51120]
+    nativeFilter          : [10,000    ] [0.0000103915691] [ 96,231.85746]
+    nativeSplit           : [10,000    ] [0.0000077021599] [129,833.71098]
 
-    stringMatch           : [10,000    ] [0.0000032505751] [307,637.87324]
-    stringGet             : [10,000    ] [0.0000055107594] [181,463.19515]
-    stringGetAll          : [10,000    ] [0.0000081443071] [122,785.15327]
-    stringReplace         : [10,000    ] [0.0000044827461] [223,077.54494]
-    stringReplaceCallback : [10,000    ] [0.0000128215075] [ 77,993.94912]
-    stringGrep            : [10,000    ] [0.0000074849844] [133,600.81289]
-    stringFilter          : [10,000    ] [0.0000091922045] [108,787.83242]
-    stringSplit           : [10,000    ] [0.0000038187742] [261,864.13271]
+
+Gobie\Bench\StringBench
+    Method Name             Iterations    Average Time      Ops/second
+    ---------------------  ------------  --------------    -------------
+    stringMatch          : [10,000    ] [0.0000034402609] [290,675.62979]
+    stringGet            : [10,000    ] [0.0000050993204] [196,104.56282]
+    stringGetAll         : [10,000    ] [0.0000067927361] [147,216.08379]
+    stringReplace        : [10,000    ] [0.0000036442518] [274,404.74711]
+    stringReplaceCallback: [10,000    ] [0.0000126019001] [ 79,353.11279]
+    stringGrep           : [10,000    ] [0.0000082664728] [120,970.57865]
+    stringFilter         : [10,000    ] [0.0000143237352] [ 69,814.19186]
+    stringSplit          : [10,000    ] [0.0000041101217] [243,301.79650]
 ```
 
 You can run the benchmark yourself
