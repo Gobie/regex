@@ -141,14 +141,48 @@ class MbRegex
      * @param string $pattern Pattern
      * @param string $subject Subject
      * @param int    $limit   Limit
+     * @param string $option  Option
      * @return string[] Array of split parts, array with original string otherwise
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-split.php
      */
-    public static function split($pattern, $subject, $limit = -1)
+    public static function split($pattern, $subject, $option = '', $limit = -1)
     {
         static::setUp($pattern);
-        $res = \mb_split($pattern, $subject, $limit);
+
+        $position     = 0;
+        $lastPosition = 0;
+        $counter      = 0;
+        $res          = array();
+        $subjectLen   = \mb_strlen($subject);
+
+        do {
+            \mb_ereg_search_init($subject, $pattern, $option);
+            \mb_ereg_search_setpos($position);
+
+            $matches = \mb_ereg_search_regs();
+            if ($matches === false) {
+                break;
+            }
+
+            $position = \mb_ereg_search_getpos();
+            if ($position === false) {
+                break;
+            }
+
+            $resultLen    = \mb_strlen($matches[0]);
+            $res[]        = \mb_substr($subject, $lastPosition, $position - $resultLen - $lastPosition);
+            $lastPosition = $position;
+
+            if ($limit !== -1 && ++$counter >= $limit - 1) {
+                break;
+            }
+        } while ($position < $subjectLen);
+
+        if ($lastPosition <= $subjectLen) {
+            $res[] = \mb_substr($subject, $lastPosition);
+        }
+
         static::tearDown();
 
         return $res;
