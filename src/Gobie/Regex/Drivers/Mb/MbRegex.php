@@ -29,10 +29,10 @@ class MbRegex
      */
     public static function match($pattern, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         \mb_ereg_search_init($subject, $pattern, $option);
         $res = \mb_ereg_search();
-        static::cleanup();
+        static::tearDown();
 
         return (bool) $res;
     }
@@ -49,10 +49,10 @@ class MbRegex
      */
     public static function get($pattern, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         \mb_ereg_search_init($subject, $pattern, $option);
         $matches = \mb_ereg_search_regs();
-        static::cleanup();
+        static::tearDown();
 
         return $matches ? : array();
     }
@@ -69,7 +69,7 @@ class MbRegex
      */
     public static function getAll($pattern, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
 
         $position   = 0;
         $subjectLen = \mb_strlen($subject);
@@ -91,7 +91,7 @@ class MbRegex
             $position = \mb_ereg_search_getpos();
         }
 
-        static::cleanup();
+        static::tearDown();
 
         return $matches;
     }
@@ -112,7 +112,7 @@ class MbRegex
      */
     public static function replace($pattern, $replacement, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
 
         self::prepareReplaceArgs($pattern, $replacement);
 
@@ -130,7 +130,7 @@ class MbRegex
             $result[] = $subjectPart;
         }
 
-        static::cleanup();
+        static::tearDown();
 
         return \is_array($subject) ? ($result ? : $subject) : (\reset($result) ? : $subject);
     }
@@ -147,9 +147,9 @@ class MbRegex
      */
     public static function split($pattern, $subject, $limit = -1)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         $res = \mb_split($pattern, $subject, $limit);
-        static::cleanup();
+        static::tearDown();
 
         return $res;
     }
@@ -166,7 +166,7 @@ class MbRegex
      */
     public static function grep($pattern, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
 
         $matches = array();
         $counter = 0;
@@ -178,7 +178,7 @@ class MbRegex
             ++$counter;
         }
 
-        static::cleanup();
+        static::tearDown();
 
         return $matches;
     }
@@ -200,7 +200,7 @@ class MbRegex
      */
     public static function filter($pattern, $replacement, $subject, $option = "")
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
 
         self::prepareReplaceArgs($pattern, $replacement);
 
@@ -230,7 +230,7 @@ class MbRegex
             ++$counter;
         }
 
-        static::cleanup();
+        static::tearDown();
 
         return $result;
     }
@@ -240,7 +240,7 @@ class MbRegex
      *
      * @param string|string[] $pattern Pattern or array of patterns
      */
-    protected static function prepare($pattern)
+    protected static function setUp($pattern)
     {
         \set_error_handler(function ($errno, $errstr) use ($pattern) {
             \restore_error_handler();
@@ -249,9 +249,9 @@ class MbRegex
     }
 
     /**
-     * Clean up after prepare().
+     * Clean up after setUp().
      */
-    protected static function cleanup()
+    protected static function tearDown()
     {
         \restore_error_handler();
     }

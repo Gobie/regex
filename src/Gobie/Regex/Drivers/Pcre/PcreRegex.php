@@ -31,9 +31,9 @@ class PcreRegex
      */
     public static function match($pattern, $subject, $offset = 0)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         $res = \preg_match($pattern, $subject, $matches, 0, $offset);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return (bool) $res;
@@ -52,9 +52,9 @@ class PcreRegex
      */
     public static function get($pattern, $subject, $flags = 0, $offset = 0)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         \preg_match($pattern, $subject, $matches, $flags, $offset);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return $matches;
@@ -73,9 +73,9 @@ class PcreRegex
      */
     public static function getAll($pattern, $subject, $flags = \PREG_PATTERN_ORDER, $offset = 0)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         \preg_match_all($pattern, $subject, $matches, $flags, $offset);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return \array_filter($matches);
@@ -95,14 +95,14 @@ class PcreRegex
      */
     public static function replace($pattern, $replacement, $subject, $limit = -1)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
 
         if ((\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)) {
             foreach ((array) $pattern as $patternPart) {
                 \preg_match($patternPart, '');
             }
 
-            static::cleanup();
+            static::tearDown();
 
             $res = \preg_replace_callback($pattern, $replacement, $subject, $limit);
 
@@ -115,7 +115,7 @@ class PcreRegex
 
         $res = \preg_replace($pattern, $replacement, $subject, $limit);
 
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return $res;
@@ -134,9 +134,9 @@ class PcreRegex
      */
     public static function split($pattern, $subject, $limit = -1, $flags = \PREG_SPLIT_DELIM_CAPTURE)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         $res = \preg_split($pattern, $subject, $limit, $flags);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return $res;
@@ -154,9 +154,9 @@ class PcreRegex
      */
     public static function grep($pattern, $subject, $flags = 0)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         $res = \preg_grep($pattern, (array) $subject, $flags);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return $res;
@@ -175,9 +175,9 @@ class PcreRegex
      */
     public static function filter($pattern, $replacement, $subject, $limit = -1)
     {
-        static::prepare($pattern);
+        static::setUp($pattern);
         $res = \preg_filter($pattern, $replacement, $subject, $limit);
-        static::cleanup();
+        static::tearDown();
         static::handleError($pattern);
 
         return $res;
@@ -188,7 +188,7 @@ class PcreRegex
      *
      * @param string|string[] $pattern Pattern or array of patterns
      */
-    protected static function prepare($pattern)
+    protected static function setUp($pattern)
     {
         \set_error_handler(function ($errno, $errstr) use ($pattern) {
             \restore_error_handler();
@@ -197,9 +197,9 @@ class PcreRegex
     }
 
     /**
-     * Clean up after prepare().
+     * Clean up after setUp().
      */
-    protected static function cleanup()
+    protected static function tearDown()
     {
         \restore_error_handler();
     }

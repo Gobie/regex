@@ -224,10 +224,10 @@ For instance triggering errors instead of throwing exceptions can be implemented
 ```php
 class MyErrorHandlingPcreRegex extends PcreRegex
 {
-    protected static function prepare($pattern)
+    protected static function setUp($pattern)
     {
         set_error_handler(function ($_, $errstr) use ($pattern) {
-            static::cleanup(); // or \restore_error_handler() for < 5.4
+            static::tearDown(); // or \restore_error_handler() for < 5.4
             trigger_error($errstr . '; ' . $pattern, E_USER_WARNING);
         });
     }
@@ -246,8 +246,8 @@ class MyErrorHandlingPcreRegex extends PcreRegex
 ```php
 class NoErrorHandlingPcreRegex extends PcreRegex
 {
-    protected static function prepare($pattern) {}
-    protected static function cleanup() {}
+    protected static function setUp($pattern) {}
+    protected static function tearDown() {}
     protected static function handleError($pattern) {}
 }
 ```
