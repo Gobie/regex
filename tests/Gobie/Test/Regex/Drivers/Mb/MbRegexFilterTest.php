@@ -80,6 +80,14 @@ class MbRegexFilterTest extends MbRegexBaseTest
                 array(array('a', 'b'), array('PcreRegex', 'test'), array('a b', 'b c', 'c d')),
                 array('PcreRegex test', 'test c')
             ),
+            'array callback replacement'       => array(
+                array(
+                    array('a', 'b'),
+                    array('\Gobie\Test\Regex\Drivers\Mb\MbRegexFilterTest', 'dataMethod'),
+                    array('a b', 'b c', 'c d')
+                ),
+                array('DATA DATA', 'DATA c')
+            ),
             'replacement with callback'        => array(
                 array(
                     'b',
@@ -91,5 +99,10 @@ class MbRegexFilterTest extends MbRegexBaseTest
                 array('a X')
             ),
         );
+    }
+
+    public static function dataMethod()
+    {
+        return 'DATA';
     }
 }

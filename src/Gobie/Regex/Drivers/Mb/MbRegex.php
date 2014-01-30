@@ -264,19 +264,22 @@ class MbRegex
      */
     private static function prepareReplaceArgs(&$pattern, &$replacement)
     {
-        if (\is_array($pattern)) {
-            if (\is_array($replacement)) {
-                $replacement = \array_pad($replacement, \count($pattern), '');
-            } else {
-                $replacement = \array_fill(0, \count($pattern), $replacement);
-            }
-        } else {
-            if (\is_array($replacement)) {
-                \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
-            }
+        $isPatternArray     = \is_array($pattern);
+        $isReplacementArray = \is_array($replacement) && !\is_callable($replacement);
 
+        if (!$isPatternArray && $isReplacementArray) {
+            \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
+        }
+
+        if (!$isPatternArray) {
             $pattern     = (array) $pattern;
             $replacement = (array) $replacement;
+
+            return;
         }
+
+        $replacement = $isReplacementArray
+            ? \array_pad($replacement, \count($pattern), '')
+            : \array_fill(0, \count($pattern), $replacement);
     }
 }

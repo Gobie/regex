@@ -88,9 +88,17 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 array('/l/', 'strlen', self::$subject),
                 'Hestrlenstrleno Worstrlend'
             ),
-            'array like callback replacement'          => array(
+            'array like callback replacement'      => array(
                 array(array('/H/', '/W/'), array('PcreRegex', 'test'), self::$subject),
                 'PcreRegexello testorld'
+            ),
+            'array callback replacement'           => array(
+                array(
+                    array('/H/', '/W/'),
+                    array('\Gobie\Test\Regex\Drivers\Pcre\PcreRegexReplaceTest', 'dataMethod'),
+                    self::$subject
+                ),
+                'DATAello DATAorld'
             ),
             'full replace by groups with callback' => array(
                 array(
@@ -159,5 +167,10 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 self::$subject
             ),
         );
+    }
+
+    public static function dataMethod()
+    {
+        return 'DATA';
     }
 }

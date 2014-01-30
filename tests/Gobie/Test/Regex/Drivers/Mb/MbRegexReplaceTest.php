@@ -86,6 +86,14 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array(array('H', 'W'), array('PcreRegex', 'test'), self::$subject),
                 'PcreRegexello testorld'
             ),
+            'array callback replacement'                  => array(
+                array(
+                    array('H', 'W'),
+                    array('\Gobie\Test\Regex\Drivers\Mb\MbRegexReplaceTest', 'dataMethod'),
+                    self::$subject
+                ),
+                'DATAello DATAorld'
+            ),
             'full replace by groups with callback'        => array(
                 array(
                     '^(\w+)\s(\w+)$',
@@ -131,5 +139,10 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                 array('----- -----', '----- -----')
             ),
         );
+    }
+
+    public static function dataMethod()
+    {
+        return 'DATA';
     }
 }
