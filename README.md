@@ -235,6 +235,54 @@ For instance triggering errors instead of throwing exceptions can be implemented
         protected static function handleError($pattern) {}
     }
 
+Performance
+-----------
+
+Performance is one of the main reasons we try to avoid regular expressions as much as possible.
+It is much more efficient to use string function like `strpos`, `substr`, `str_replace`, `explode`, etc if possible.
+
+But there are times we need regular expressions.
+So we did a little benchmarking to show you, what does our abstraction take out of performance of using native functions.
+We think that added functionality and usable error handling quite compensates the lost performance but decide for yourself.
+
+> We also added string functions for comparison. They could accomplish roughly the same tasks in those test scenarios.
+
+    Gobie\Test\Bench\PcreBench
+        Method Name              Iterations    Average Time      Ops/second
+        ----------------------  ------------  --------------    -------------
+        libraryMatch          : [10,000    ] [0.0000313593864] [31,888.37900]
+        libraryGet            : [10,000    ] [0.0000360656977] [27,727.17747]
+        libraryGetAll         : [10,000    ] [0.0000360173225] [27,764.41805]
+        libraryReplace        : [10,000    ] [0.0000367946148] [27,177.89018]
+        libraryReplaceCallback: [10,000    ] [0.0000537220478] [18,614.33137]
+        libraryGrep           : [10,000    ] [0.0000340729952] [29,348.75536]
+        libraryFilter         : [10,000    ] [0.0000365005255] [27,396.86585]
+        librarySplit          : [10,000    ] [0.0000345862627] [28,913.21357]
+
+        nativeMatch           : [10,000    ] [0.0000058207989] [171,797.72428]
+        nativeGet             : [10,000    ] [0.0000064183235] [155,803.92565]
+        nativeGetAll          : [10,000    ] [0.0000080312252] [124,514.00310]
+        nativeReplace         : [10,000    ] [0.0000087450981] [114,349.77481]
+        nativeReplaceCallback : [10,000    ] [0.0000220663786] [ 45,317.81215]
+        nativeGrep            : [10,000    ] [0.0000065322161] [153,087.40387]
+        nativeFilter          : [10,000    ] [0.0000103927851] [ 96,220.59852]
+        nativeSplit           : [10,000    ] [0.0000072141409] [138,616.64403]
+
+        stringMatch           : [10,000    ] [0.0000032505751] [307,637.87324]
+        stringGet             : [10,000    ] [0.0000055107594] [181,463.19515]
+        stringGetAll          : [10,000    ] [0.0000081443071] [122,785.15327]
+        stringReplace         : [10,000    ] [0.0000044827461] [223,077.54494]
+        stringReplaceCallback : [10,000    ] [0.0000128215075] [ 77,993.94912]
+        stringGrep            : [10,000    ] [0.0000074849844] [133,600.81289]
+        stringFilter          : [10,000    ] [0.0000091922045] [108,787.83242]
+        stringSplit           : [10,000    ] [0.0000038187742] [261,864.13271]
+
+You can run the benchmark yourself
+
+    $ cd project_root
+    $ composer install
+    $ php vendor/athletic/athletic/bin/athletic -p tests/Gobie/Test/Bench -b tests/bootstrap.php
+
 Contribute
 ----------
 
