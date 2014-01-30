@@ -31,11 +31,13 @@ Download and install composer from `http://www.getcomposer.org/download`
 
 Add the following to your project `composer.json` file
 
-    {
-        "require": {
-            "gobie/regex": "dev-master"
-        }
+```json
+{
+    "require": {
+        "gobie/regex": "dev-master"
     }
+}
+```
 
 When you're done just run `php composer.phar install` and the package is ready to be used.
 
@@ -47,9 +49,11 @@ They are somewhat similar and yet each slightly different in covered functionali
 
 Take for instance PCRE library. Common code seen in applications is
 
-    if (preg_match($pattern, $subject, $matches)) {
-        // do something with $matches if used at all
-    }
+```php
+if (preg_match($pattern, $subject, $matches)) {
+    // do something with $matches if used at all
+}
+```
 
 This code is correct as long as `$pattern` is not dynamically created and matching can never hit backtracking
 or recursion limit and `$subject` as well as `$pattern` are well formed UTF-8 strings (if UTF-8 is used).
@@ -61,46 +65,52 @@ But only if compilation error didn't happen, otherwise this function is unreliab
 
 More robust and less error-prone version:
 
-    set_error_handler(function () {
-        // deal with compilation error
-    });
+```php
+set_error_handler(function () {
+    // deal with compilation error
+});
 
-    if (preg_match($pattern, $subject, $matches)) {
-        // do something with $matches if used at all
-    }
+if (preg_match($pattern, $subject, $matches)) {
+    // do something with $matches if used at all
+}
 
-    restore_error_handler();
+restore_error_handler();
 
-    if (preg_last_error()) {
-        // deal with runtime error
-    }
+if (preg_last_error()) {
+    // deal with runtime error
+}
+```
 
 That's a lot of error handling to take care about, but it gets even more complicated.
 
 For instance using `preg_replace_callback()` naively can make your life harder and put your debugging skills to test.
 Usually, you use it the simplest way:
 
-    if ($res = preg_replace_callback($pattern, $callback, $subject)) {
-        // do something with $res
-    }
+```php
+if ($res = preg_replace_callback($pattern, $callback, $subject)) {
+    // do something with $res
+}
+```
 
 Lots can happen here, compilation and runtime errors shown above and also errors triggered from within `$callback`.
 We just can't cover it with error handler like above, since errors from within callback should not be caught by regex error handling.
 So the correct solution, which would catch compilation and runtime errors, but let the rest come through, could look like this:
 
-    set_error_handler(function () {
-        // deal with compilation error
-    });
+```php
+set_error_handler(function () {
+    // deal with compilation error
+});
 
-    preg_match($pattern, '');
+preg_match($pattern, '');
 
-    restore_error_handler();
+restore_error_handler();
 
-    $res = preg_replace_callback($pattern, $callback, $subject);
+$res = preg_replace_callback($pattern, $callback, $subject);
 
-    if ($res === null && preg_last_error()) {
-        // deal with runtime error
-    }
+if ($res === null && preg_last_error()) {
+    // deal with runtime error
+}
+```
 
 > Not to mention handling more complex cases like array of patterns.
 
@@ -113,33 +123,34 @@ This library solves error handling problem by doing all the heavy lifting in reu
 Every error is handled by exception derived from `\Gobie\Regex\RegexException`.
 Example of the similar code as above using Regex library:
 
-    use Gobie\Regex\Drivers\Pcre\PcreRegex;
-    use Gobie\Regex\Drivers\Pcre\PcreRegexException;
+```php
+use Gobie\Regex\Drivers\Pcre\PcreRegex;
+use Gobie\Regex\Drivers\Pcre\PcreRegexException;
 
-    // matching
+// matching
+if (PcreRegex::match($pattern, $subject)) {
+    // do something
+}
+
+// matching and parsing
+if ($matches = PcreRegex::get($pattern, $subject)) {
+    // do something with $matches
+}
+
+// replace with callback
+if ($res = PcreRegex::replace($pattern, $callback, $subject)) {
+    // do something with $res
+}
+
+// error handling
+try {
     if (PcreRegex::match($pattern, $subject)) {
         // do something
     }
-
-    // matching and parsing
-    if ($matches = PcreRegex::get($pattern, $subject)) {
-        // do something with $matches
-    }
-
-    // replace with callback
-    if ($res = PcreRegex::replace($pattern, $callback, $subject)) {
-        // do something with $res
-    }
-
-    // error handling
-    try {
-        if (PcreRegex::match($pattern, $subject)) {
-            // do something
-        }
-    } catch (PcreRegexException $e) {
-        // handle error
-    }
-
+} catch (PcreRegexException $e) {
+    // handle error
+}
+```
 
 **Once again quite readable with all the error handling you need.**
 
@@ -192,48 +203,54 @@ It is meant to be used as drop-in replacement for current usage of library/exten
 
 No problem, for that case we have `RegexFacade` which just redirects object calls to given wrapper.
 
-    $regex = new RegexFacade(RegexFacade::PCRE);
-    if ($regex->match($pattern, $subject)) {
-        // do something
-    }
+```php
+$regex = new RegexFacade(RegexFacade::PCRE);
+if ($regex->match($pattern, $subject)) {
+    // do something
+}
 
-    // is equivalent to
+// is equivalent to
 
-    if (PcreRegex::match($pattern, $subject)) {
-        // do something
-    }
+if (PcreRegex::match($pattern, $subject)) {
+    // do something
+}
+```
 
 **But I don't want to use exceptions to handle regex errors. Why? I got my reasons. What can I do?**
 
 Wrappers are prepared to be extended to overwrite anything the way you want.
 For instance triggering errors instead of throwing exceptions can be implemented this way:
 
-    class MyErrorHandlingPcreRegex extends PcreRegex
+```php
+class MyErrorHandlingPcreRegex extends PcreRegex
+{
+    protected static function prepare($pattern)
     {
-        protected static function prepare($pattern)
-        {
-            set_error_handler(function ($_, $errstr) use ($pattern) {
-                static::cleanup(); // or \restore_error_handler() for < 5.4
-                trigger_error($errstr . '; ' . $pattern, E_USER_WARNING);
-            });
-        }
+        set_error_handler(function ($_, $errstr) use ($pattern) {
+            static::cleanup(); // or \restore_error_handler() for < 5.4
+            trigger_error($errstr . '; ' . $pattern, E_USER_WARNING);
+        });
+    }
 
-        protected static function handleError($pattern)
-        {
-            if ($error = preg_last_error()) {
-                trigger_error(PcreRegexException::$messages[$error] . '; ' . $pattern, E_USER_WARNING);
-            }
+    protected static function handleError($pattern)
+    {
+        if ($error = preg_last_error()) {
+            trigger_error(PcreRegexException::$messages[$error] . '; ' . $pattern, E_USER_WARNING);
         }
     }
+}
+```
 
 **I just want to use unified API without the error handling.**
 
-    class NoErrorHandlingPcreRegex extends PcreRegex
-    {
-        protected static function prepare($pattern) {}
-        protected static function cleanup() {}
-        protected static function handleError($pattern) {}
-    }
+```php
+class NoErrorHandlingPcreRegex extends PcreRegex
+{
+    protected static function prepare($pattern) {}
+    protected static function cleanup() {}
+    protected static function handleError($pattern) {}
+}
+```
 
 Performance
 -----------
@@ -247,41 +264,45 @@ We think that added functionality and usable error handling quite compensates th
 
 > We also added string functions for comparison. They could accomplish roughly the same tasks in those test scenarios.
 
-    Gobie\Bench\PcreBench
-        Method Name              Iterations    Average Time      Ops/second
-        ----------------------  ------------  --------------    -------------
-        libraryMatch          : [10,000    ] [0.0000313593864] [31,888.37900]
-        libraryGet            : [10,000    ] [0.0000360656977] [27,727.17747]
-        libraryGetAll         : [10,000    ] [0.0000360173225] [27,764.41805]
-        libraryReplace        : [10,000    ] [0.0000367946148] [27,177.89018]
-        libraryReplaceCallback: [10,000    ] [0.0000537220478] [18,614.33137]
-        libraryGrep           : [10,000    ] [0.0000340729952] [29,348.75536]
-        libraryFilter         : [10,000    ] [0.0000365005255] [27,396.86585]
-        librarySplit          : [10,000    ] [0.0000345862627] [28,913.21357]
+```
+Gobie\Bench\PcreBench
+    Method Name              Iterations    Average Time      Ops/second
+    ----------------------  ------------  --------------    -------------
+    libraryMatch          : [10,000    ] [0.0000313593864] [31,888.37900]
+    libraryGet            : [10,000    ] [0.0000360656977] [27,727.17747]
+    libraryGetAll         : [10,000    ] [0.0000360173225] [27,764.41805]
+    libraryReplace        : [10,000    ] [0.0000367946148] [27,177.89018]
+    libraryReplaceCallback: [10,000    ] [0.0000537220478] [18,614.33137]
+    libraryGrep           : [10,000    ] [0.0000340729952] [29,348.75536]
+    libraryFilter         : [10,000    ] [0.0000365005255] [27,396.86585]
+    librarySplit          : [10,000    ] [0.0000345862627] [28,913.21357]
 
-        nativeMatch           : [10,000    ] [0.0000058207989] [171,797.72428]
-        nativeGet             : [10,000    ] [0.0000064183235] [155,803.92565]
-        nativeGetAll          : [10,000    ] [0.0000080312252] [124,514.00310]
-        nativeReplace         : [10,000    ] [0.0000087450981] [114,349.77481]
-        nativeReplaceCallback : [10,000    ] [0.0000220663786] [ 45,317.81215]
-        nativeGrep            : [10,000    ] [0.0000065322161] [153,087.40387]
-        nativeFilter          : [10,000    ] [0.0000103927851] [ 96,220.59852]
-        nativeSplit           : [10,000    ] [0.0000072141409] [138,616.64403]
+    nativeMatch           : [10,000    ] [0.0000058207989] [171,797.72428]
+    nativeGet             : [10,000    ] [0.0000064183235] [155,803.92565]
+    nativeGetAll          : [10,000    ] [0.0000080312252] [124,514.00310]
+    nativeReplace         : [10,000    ] [0.0000087450981] [114,349.77481]
+    nativeReplaceCallback : [10,000    ] [0.0000220663786] [ 45,317.81215]
+    nativeGrep            : [10,000    ] [0.0000065322161] [153,087.40387]
+    nativeFilter          : [10,000    ] [0.0000103927851] [ 96,220.59852]
+    nativeSplit           : [10,000    ] [0.0000072141409] [138,616.64403]
 
-        stringMatch           : [10,000    ] [0.0000032505751] [307,637.87324]
-        stringGet             : [10,000    ] [0.0000055107594] [181,463.19515]
-        stringGetAll          : [10,000    ] [0.0000081443071] [122,785.15327]
-        stringReplace         : [10,000    ] [0.0000044827461] [223,077.54494]
-        stringReplaceCallback : [10,000    ] [0.0000128215075] [ 77,993.94912]
-        stringGrep            : [10,000    ] [0.0000074849844] [133,600.81289]
-        stringFilter          : [10,000    ] [0.0000091922045] [108,787.83242]
-        stringSplit           : [10,000    ] [0.0000038187742] [261,864.13271]
+    stringMatch           : [10,000    ] [0.0000032505751] [307,637.87324]
+    stringGet             : [10,000    ] [0.0000055107594] [181,463.19515]
+    stringGetAll          : [10,000    ] [0.0000081443071] [122,785.15327]
+    stringReplace         : [10,000    ] [0.0000044827461] [223,077.54494]
+    stringReplaceCallback : [10,000    ] [0.0000128215075] [ 77,993.94912]
+    stringGrep            : [10,000    ] [0.0000074849844] [133,600.81289]
+    stringFilter          : [10,000    ] [0.0000091922045] [108,787.83242]
+    stringSplit           : [10,000    ] [0.0000038187742] [261,864.13271]
+```
 
 You can run the benchmark yourself
 
-    $ cd project_root
-    $ composer install
-    $ php vendor/athletic/athletic/bin/athletic -p tests/Gobie/Bench -b tests/bootstrap.php
+```shell
+$ cd project_root
+$ composer install
+$ php vendor/athletic/athletic/bin/athletic -p tests/Gobie/Bench -b tests/bootstrap.php
+```
 
 Contribute
 ----------
