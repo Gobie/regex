@@ -19,9 +19,9 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
         \call_user_func_array(self::$method, array($pattern, $callback, $subject));
     }
 
-    public function provideCompilationError()
+    public function provideErrorBehavior()
     {
-        $original = parent::provideCompilationError();
+        $original = parent::provideErrorBehavior();
 
         $specificData = array(
             'string pattern and array replacement' => array(
@@ -45,7 +45,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
         return $this->addCallback($original) + $specificData;
     }
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'no match'                             => array(
@@ -60,15 +60,15 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 array('/l/', '*', self::$subject),
                 'He**o Wor*d'
             ),
-            'array of patterns'                    => array(
+            '[] of patterns'                       => array(
                 array(array('/[A-Z]/', '/[a-z]/'), array('U', 'u'), self::$subject),
                 'Uuuuu Uuuuu'
             ),
-            'array of subjects'                    => array(
+            '[] of subjects'                       => array(
                 array('/t(\d+)/', 's\\1', array('t1', 'u2', 't3')),
                 array('s1', 'u2', 's3')
             ),
-            'use limit'                            => array(
+            'limit 2'                              => array(
                 array('/l/', '*', self::$subject, 2),
                 'He**o World'
             ),
@@ -88,11 +88,11 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 array('/l/', 'strlen', self::$subject),
                 'Hestrlenstrleno Worstrlend'
             ),
-            'array like callback replacement'      => array(
+            '[] like callback replacement'         => array(
                 array(array('/H/', '/W/'), array('PcreRegex', 'test'), self::$subject),
                 'PcreRegexello testorld'
             ),
-            'array callback replacement'           => array(
+            '[] callback replacement'              => array(
                 array(
                     array('/H/', '/W/'),
                     array('\Gobie\Test\Regex\Drivers\Pcre\PcreRegexReplaceTest', 'dataMethod'),
@@ -100,27 +100,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 ),
                 'DATAello DATAorld'
             ),
-            'full replace by groups with callback' => array(
-                array(
-                    '/^(\w+)\s(\w+)$/',
-                    function ($matches) {
-                        return $matches[1] . '-' . $matches[2];
-                    },
-                    self::$subject
-                ),
-                'Hello-World'
-            ),
-            'no match with callback'               => array(
-                array(
-                    '/HelloWorld/',
-                    function () {
-                        return '';
-                    },
-                    self::$subject
-                ),
-                'Hello World'
-            ),
-            'array of patterns with callback'      => array(
+            '[] of patterns with callback'         => array(
                 array(
                     array('/[A-Z]/', '/[a-z]/'),
                     function ($matches) {
@@ -130,7 +110,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 ),
                 '72101108108111 87111114108100'
             ),
-            'array of subjects with callback'      => array(
+            '[] of subjects with callback'         => array(
                 array(
                     '/t(\d+)/',
                     function ($matches) {
@@ -140,7 +120,7 @@ class PcreRegexReplaceTest extends PcreRegexBaseTest
                 ),
                 array('s1', 'u2', 's3')
             ),
-            'use limit with callback'              => array(
+            'limit with callback'                  => array(
                 array(
                     '/l/',
                     function ($matches) {

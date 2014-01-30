@@ -9,23 +9,23 @@ class PcreRegexMatchTest extends PcreRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'full match'           => array(
-                array('/^Hello\sWorld$/', self::$subject, 0),
+                array('/^Hello\sWorld$/', self::$subject),
                 true
             ),
             'single match'         => array(
-                array('/l/', self::$subject, 0),
+                array('/l/', self::$subject),
                 true
             ),
             '2 subgroups'          => array(
-                array('/(Hello)\s(World)/', self::$subject, 0),
+                array('/(Hello)\s(World)/', self::$subject),
                 true
             ),
             'no match'             => array(
-                array('/HelloWorld/', self::$subject, 0),
+                array('/HelloWorld/', self::$subject),
                 false
             ),
             'e at offset 1'        => array(
@@ -34,10 +34,6 @@ class PcreRegexMatchTest extends PcreRegexBaseTest
             ),
             'e not after offset 2' => array(
                 array('/e/', self::$subject, 2),
-                false
-            ),
-            'e not after H'        => array(
-                array('/(?<!H)e/', self::$subject, 1),
                 false
             ),
         );

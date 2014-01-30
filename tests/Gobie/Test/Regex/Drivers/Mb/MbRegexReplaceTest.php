@@ -13,9 +13,9 @@ class MbRegexReplaceTest extends MbRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideCompilationError()
+    public function provideErrorBehavior()
     {
-        $original = parent::provideCompilationError();
+        $original = parent::provideErrorBehavior();
 
         $specificData = array(
             'string pattern and array replacement' => array(
@@ -39,7 +39,7 @@ class MbRegexReplaceTest extends MbRegexBaseTest
         return $this->addCallback($original) + $specificData;
     }
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'full replace'                                => array(
@@ -103,27 +103,6 @@ class MbRegexReplaceTest extends MbRegexBaseTest
                     self::$subject
                 ),
                 'Hello-World'
-            ),
-            'no match with callback'                      => array(
-                array(
-                    'HelloWorld',
-                    function () {
-                        return '';
-                    },
-                    self::$subject
-                ),
-                'Hello World'
-            ),
-            'ignore case with callback'                   => array(
-                array(
-                    '[a-z]',
-                    function ($matches) {
-                        return \strtolower($matches[0]);
-                    },
-                    self::$subject,
-                    'i'
-                ),
-                'hello world'
             ),
             'mixed replacements'                          => array(
                 array(

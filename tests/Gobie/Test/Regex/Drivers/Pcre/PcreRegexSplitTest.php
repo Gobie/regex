@@ -9,26 +9,22 @@ class PcreRegexSplitTest extends PcreRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'space separated'   => array(
-                array('/\s/', self::$subject, -1, 0),
+                array('/\s/', self::$subject),
                 array('Hello', 'World')
             ),
-            'on characters'     => array(
-                array('/(?<!^)(?!$)/', self::$subject, -1, 0),
-                array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
-            ),
             'no split'          => array(
-                array('/\d/', self::$subject, -1, 0),
+                array('/\d/', self::$subject),
                 array('Hello World')
             ),
-            'use limit'         => array(
-                array('/\s/', self::$subject, 1, 0),
+            'limit 1'         => array(
+                array('/\s/', self::$subject, 1),
                 array('Hello World')
             ),
-            'on each'          => array(
+            'split no empty'          => array(
                 array('//', self::$subject, -1, \PREG_SPLIT_NO_EMPTY),
                 array('H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd')
             ),

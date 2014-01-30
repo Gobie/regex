@@ -9,23 +9,15 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'full match'                => array(
-                array('/^Hello\sWorld$/', self::$subject, 0, 0),
-                array(array('Hello World'))
-            ),
             'multiple matches'          => array(
-                array('/l/', self::$subject, 0, 0),
+                array('/l/', self::$subject),
                 array(array('l', 'l', 'l'))
             ),
-            '2 subgroups'               => array(
-                array('/(.)\s(.)/', self::$subject, 0, 0),
-                array(array('o W'), array('o'), array('W'))
-            ),
             'all'                       => array(
-                array('/(.)(\w+)(.)/', self::$subject, 0, 0),
+                array('/(.)(\w+)(.)/', self::$subject),
                 array(
                     array('Hello ', 'World'),
                     array('H', 'W'),
@@ -34,7 +26,7 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
                 )
             ),
             'no match'                  => array(
-                array('/HelloWorld/', self::$subject, 0, 0),
+                array('/HelloWorld/', self::$subject),
                 array()
             ),
             'uppercase after offset 1'  => array(
@@ -42,7 +34,7 @@ class PcreRegexGetAllTest extends PcreRegexBaseTest
                 array(array('W'))
             ),
             '2 subpatterns'             => array(
-                array('/([A-Z])(.)/', self::$subject, 0, 0),
+                array('/([A-Z])(.)/', self::$subject),
                 array(array('He', 'Wo'), array('H', 'W'), array('e', 'o'))
             ),
             '2 subpatterns; set order'  => array(

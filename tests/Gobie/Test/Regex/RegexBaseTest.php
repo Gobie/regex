@@ -15,7 +15,7 @@ abstract class RegexBaseTest extends \PHPUnit_Framework_TestCase
     public static $method;
 
     /**
-     * @dataProvider provideExecuteAndAssert
+     * @dataProvider provideSuccessBehavior
      */
     public function testShouldExecuteMethodAndAssertResult($args, $expectedResult)
     {
@@ -23,7 +23,7 @@ abstract class RegexBaseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideCompilationError
+     * @dataProvider provideErrorBehavior
      */
     public function testShouldFailWithCompilationError($args, $exceptionMessage)
     {
@@ -45,9 +45,9 @@ abstract class RegexBaseTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    abstract public function provideExecuteAndAssert();
+    abstract public function provideSuccessBehavior();
 
-    abstract public function provideCompilationError();
+    abstract public function provideErrorBehavior();
 
     protected function addCallback($original)
     {

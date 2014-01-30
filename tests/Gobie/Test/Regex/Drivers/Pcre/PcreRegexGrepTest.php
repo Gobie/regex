@@ -14,19 +14,15 @@ class PcreRegexGrepTest extends PcreRegexBaseTest
         parent::executeAndFail($method, $args, $exceptionMessage);
     }
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'all'                    => array(
-                array('/./', array('a', 'b', 'c'), 0),
-                array('a', 'b', 'c')
-            ),
             'space separated'        => array(
-                array('/\s/', array('a b', 'bc', 'c d'), 0),
+                array('/\s/', array('a b', 'bc', 'c d')),
                 array('a b', 2 => 'c d')
             ),
             'none'                   => array(
-                array('/\d/', array('a b', 'bc', 'c d'), 0),
+                array('/\d/', array('a b', 'bc', 'c d')),
                 array()
             ),
             'space separated invert' => array(

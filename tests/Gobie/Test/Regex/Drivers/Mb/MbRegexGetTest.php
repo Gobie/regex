@@ -12,13 +12,9 @@ class MbRegexGetTest extends MbRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'full match'   => array(
-                array('Hello\sWorld', self::$subject),
-                array('Hello World')
-            ),
             'single match' => array(
                 array('l', self::$subject),
                 array('l')

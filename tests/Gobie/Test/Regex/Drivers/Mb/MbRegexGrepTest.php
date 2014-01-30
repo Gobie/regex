@@ -17,13 +17,9 @@ class MbRegexGrepTest extends MbRegexBaseTest
         parent::executeAndFail($method, $args, $exceptionMessage);
     }
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'all'             => array(
-                array('.', array('a', 'b', 'c')),
-                array('a', 'b', 'c')
-            ),
             'space separated' => array(
                 array('\s', array('a b', 'bc', 'c d')),
                 array('a b', 2 => 'c d')

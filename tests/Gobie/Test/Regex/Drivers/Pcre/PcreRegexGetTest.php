@@ -9,23 +9,23 @@ class PcreRegexGetTest extends PcreRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'full match'               => array(
-                array('/^Hello\sWorld$/', self::$subject, 0, 0),
+                array('/^Hello\sWorld$/', self::$subject),
                 array('Hello World')
             ),
             'single match'             => array(
-                array('/l/', self::$subject, 0, 0),
+                array('/l/', self::$subject),
                 array('l')
             ),
             '2 subgroups'              => array(
-                array('/(Hello)\s(World)/', self::$subject, 0, 0),
+                array('/(Hello)\s(World)/', self::$subject),
                 array('Hello World', 'Hello', 'World')
             ),
             'no match'                 => array(
-                array('/HelloWorld/', self::$subject, 0, 0),
+                array('/HelloWorld/', self::$subject),
                 array()
             ),
             'uppercase after offset 1' => array(

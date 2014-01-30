@@ -12,26 +12,18 @@ class MbRegexMatchTest extends MbRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'full match'   => array(
-                array('Hello\sWorld', self::$subject),
-                true
-            ),
-            'single match' => array(
-                array('l', self::$subject),
-                true
-            ),
-            '2 subgroups'  => array(
+            '2 subgroups' => array(
                 array('(Hello)\s(World)', self::$subject),
                 true
             ),
-            'no match'     => array(
+            'no match'    => array(
                 array('HelloWorld', self::$subject),
                 false
             ),
-            'ignore case'  => array(
+            'ignore case' => array(
                 array('L', self::$subject, 'i'),
                 true
             ),

@@ -10,9 +10,9 @@ class PcreRegexFilterTest extends PcreRegexBaseTest
 
     public static $method = array('\Gobie\Regex\Drivers\Pcre\PcreRegex', 'filter');
 
-    public function provideCompilationError()
+    public function provideErrorBehavior()
     {
-        $original = parent::provideCompilationError();
+        $original = parent::provideErrorBehavior();
 
         $specificData = array(
             'string pattern and array replacement' => array(
@@ -42,13 +42,9 @@ class PcreRegexFilterTest extends PcreRegexBaseTest
         return $withString + $specificData;
     }
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'all'                                 => array(
-                array('/./', '-', array('a', 'b', 'c')),
-                array('-', '-', '-')
-            ),
             'space separated'                     => array(
                 array('/\s/', '-', array('a b', 'bc', 'c d')),
                 array('a-b', 2 => 'c-d')

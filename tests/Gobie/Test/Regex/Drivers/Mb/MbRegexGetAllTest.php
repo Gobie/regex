@@ -12,7 +12,7 @@ class MbRegexGetAllTest extends MbRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
             'full match'       => array(
@@ -22,10 +22,6 @@ class MbRegexGetAllTest extends MbRegexBaseTest
             'multiple matches' => array(
                 array('l', self::$subject),
                 array(array('l', 'l', 'l'))
-            ),
-            '2 subgroups'      => array(
-                array('(.)\s(.)', self::$subject),
-                array(array('o W'), array('o'), array('W'))
             ),
             'all'              => array(
                 array('(.)(\w+)(.)', self::$subject),

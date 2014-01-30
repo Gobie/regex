@@ -12,26 +12,26 @@ class MbRegexSplitTest extends MbRegexBaseTest
 
     public static $subject = 'Hello World';
 
-    public function provideExecuteAndAssert()
+    public function provideSuccessBehavior()
     {
         return array(
-            'on l'        => array(
+            'on l'                  => array(
                 array('l', self::$subject),
                 array('He', '', 'o Wor', 'd')
             ),
-            'no split'    => array(
-                array('\d', self::$subject),
-                array('Hello World')
-            ),
-            'limit 3'     => array(
+            'on l limit 3'          => array(
                 array('l', self::$subject, '', 3),
                 array('He', '', 'o World')
             ),
-            'ignore case' => array(
+            'no split'              => array(
+                array('\d', self::$subject),
+                array('Hello World')
+            ),
+            'ignore case'           => array(
                 array('L', self::$subject, 'i'),
                 array('He', '', 'o Wor', 'd')
             ),
-            'multiple nothing' => array(
+            'pattern hitting edges' => array(
                 array('(.)(\w+).', self::$subject),
                 array('', '', '')
             ),
