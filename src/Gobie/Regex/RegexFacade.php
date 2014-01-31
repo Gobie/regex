@@ -4,6 +4,14 @@ namespace Gobie\Regex;
 
 /**
  * Facade over static drivers to use them in object method calls and DI.
+ *
+ * @method bool match($pattern, $subject)
+ * @method string get($pattern, $subject)
+ * @method string[][] getAll($pattern, $subject)
+ * @method string|string[] replace($pattern, $replacement, $subject)
+ * @method string[] split($pattern, $subject)
+ * @method string[] grep($pattern, $subject)
+ * @method string[] filter($pattern, $replacement, $subject)
  */
 class RegexFacade
 {
