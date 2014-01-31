@@ -114,25 +114,23 @@ class MbRegex
     {
         static::setUp($pattern);
 
-        self::prepareReplaceArgs($pattern, $replacement);
+        $replaceMap = self::prepareReplaceMap($pattern, $replacement);
 
         $result = array();
-        foreach ((array) $subject as $subjectPart) {
-            $replacementPart = \reset($replacement);
-            foreach ($pattern as $patternPart) {
-                if ((\is_object($replacementPart) || \is_array($replacementPart)) && \is_callable($replacementPart)) {
-                    $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
-                } else {
-                    $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
-                }
-                $replacementPart = \next($replacement);
+        foreach ((array) $subject as $key => $subjectPart) {
+            foreach ($replaceMap as $item) {
+                list($pattern, $replacement) = $item;
+
+                $subjectPart = (\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)
+                    ? \mb_ereg_replace_callback($pattern, $replacement, $subjectPart, $option)
+                    : \mb_ereg_replace($pattern, $replacement, $subjectPart, $option);
             }
-            $result[] = $subjectPart;
+            $result[$key] = $subjectPart;
         }
 
         static::tearDown();
 
-        return \is_array($subject) ? ($result ? : $subject) : (\reset($result) ? : $subject);
+        return (\is_array($subject) ? $result : \reset($result)) ? : $subject;
     }
 
     /**
@@ -152,7 +150,6 @@ class MbRegex
 
         $position     = 0;
         $lastPosition = 0;
-        $counter      = 0;
         $res          = array();
         $subjectLen   = \mb_strlen($subject);
 
@@ -165,19 +162,10 @@ class MbRegex
                 break;
             }
 
-            $position = \mb_ereg_search_getpos();
-            if ($position === false) {
-                break;
-            }
-
-            $resultLen    = \mb_strlen($matches[0]);
-            $res[]        = \mb_substr($subject, $lastPosition, $position - $resultLen - $lastPosition);
+            $position     = \mb_ereg_search_getpos();
+            $res[]        = \mb_substr($subject, $lastPosition, $position - \mb_strlen($matches[0]) - $lastPosition);
             $lastPosition = $position;
-
-            if ($limit !== -1 && ++$counter >= $limit - 1) {
-                break;
-            }
-        } while ($position < $subjectLen);
+        } while ($position < $subjectLen && --$limit !== 1);
 
         if ($lastPosition <= $subjectLen) {
             $res[] = \mb_substr($subject, $lastPosition);
@@ -203,13 +191,11 @@ class MbRegex
         static::setUp($pattern);
 
         $matches = array();
-        $counter = 0;
-        foreach ((array) $subject as $sub) {
-            \mb_ereg_search_init($sub, $pattern, $option);
+        foreach ((array) $subject as $key => $subjectPart) {
+            \mb_ereg_search_init($subjectPart, $pattern, $option);
             if (\mb_ereg_search()) {
-                $matches[$counter] = $sub;
+                $matches[$key] = $subjectPart;
             }
-            ++$counter;
         }
 
         static::tearDown();
@@ -236,32 +222,23 @@ class MbRegex
     {
         static::setUp($pattern);
 
-        self::prepareReplaceArgs($pattern, $replacement);
+        $replaceMap = self::prepareReplaceMap($pattern, $replacement);
 
-        $result  = array();
-        $counter = 0;
-        foreach ((array) $subject as $subjectPart) {
-            $replaced        = false;
-            $replacementPart = \reset($replacement);
-            foreach ($pattern as $patternPart) {
-                \mb_ereg_search_init($subjectPart, $patternPart, $option);
-                if (\mb_ereg_search()) {
-                    if ((\is_object($replacementPart) || \is_array($replacementPart))
-                        && \is_callable($replacementPart)
-                    ) {
-                        $subjectPart = \mb_ereg_replace_callback($patternPart, $replacementPart, $subjectPart, $option);
-                    } else {
-                        $subjectPart = \mb_ereg_replace($patternPart, $replacementPart, $subjectPart, $option);
-                    }
-                    $replaced = true;
+        $result = array();
+        foreach ((array) $subject as $key => $subjectPart) {
+            foreach ($replaceMap as $item) {
+                list($pattern, $replacement) = $item;
+
+                \mb_ereg_search_init($subjectPart, $pattern, $option);
+                if (!\mb_ereg_search()) {
+                    continue;
                 }
-                $replacementPart = \next($replacement);
-            }
 
-            if ($replaced) {
-                $result[$counter] = $subjectPart;
+                $subjectPart  = (\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)
+                    ? \mb_ereg_replace_callback($pattern, $replacement, $subjectPart, $option)
+                    : \mb_ereg_replace($pattern, $replacement, $subjectPart, $option);
+                $result[$key] = $subjectPart;
             }
-            ++$counter;
         }
 
         static::tearDown();
@@ -291,12 +268,13 @@ class MbRegex
     }
 
     /**
-     * Prepare arguments for replace-like methods.
+     * Prepare map (pattern, replacement) from arguments.
      *
      * @param string|string[]         $pattern     Pattern or array of patterns
      * @param callable|string|mixed[] $replacement Replacement (string or callback) or array of replacements
+     * @return string[][] Array of pattern and replacement
      */
-    private static function prepareReplaceArgs(&$pattern, &$replacement)
+    private static function prepareReplaceMap($pattern, $replacement)
     {
         $isPatternArray     = \is_array($pattern);
         $isReplacementArray = \is_array($replacement) && !\is_callable($replacement);
@@ -305,15 +283,17 @@ class MbRegex
             \trigger_error('Parameter mismatch, pattern is a string while replacement is an array', \E_USER_WARNING);
         }
 
-        if (!$isPatternArray) {
+        if ($isPatternArray) {
+            $replacement = $isReplacementArray
+                ? \array_pad($replacement, \count($pattern), '')
+                : \array_fill(0, \count($pattern), $replacement);
+        } else {
             $pattern     = (array) $pattern;
             $replacement = (array) $replacement;
-
-            return;
         }
 
-        $replacement = $isReplacementArray
-            ? \array_pad($replacement, \count($pattern), '')
-            : \array_fill(0, \count($pattern), $replacement);
+        return \array_map(function ($patternPart, $replacementPart) {
+            return array($patternPart, $replacementPart);
+        }, $pattern, $replacement);
     }
 }
