@@ -15,8 +15,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7.28",
-        "athletic/athletic": "*",
-        "satooshi/php-coveralls": "dev-master"
+        "athletic/athletic": ">=0.1.6",
+        "satooshi/php-coveralls": ">=0.6.1"
     },
     "autoload": {
         "psr-0": {
