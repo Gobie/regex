@@ -292,8 +292,6 @@ class MbRegex
             $replacement = (array) $replacement;
         }
 
-        return \array_map(function ($patternPart, $replacementPart) {
-            return array($patternPart, $replacementPart);
-        }, $pattern, $replacement);
+        return \array_map(null, $pattern, $replacement);
     }
 }
