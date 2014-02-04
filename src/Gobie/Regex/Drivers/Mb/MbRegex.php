@@ -121,9 +121,7 @@ class MbRegex
             foreach ($replaceMap as $item) {
                 list($pattern, $replacement) = $item;
 
-                $subjectPart = (\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)
-                    ? \mb_ereg_replace_callback($pattern, $replacement, $subjectPart, $option)
-                    : \mb_ereg_replace($pattern, $replacement, $subjectPart, $option);
+                $subjectPart = self::execReplace($pattern, $replacement, $subjectPart, $option);
             }
             $result[$key] = $subjectPart;
         }
@@ -234,9 +232,7 @@ class MbRegex
                     continue;
                 }
 
-                $subjectPart  = (\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)
-                    ? \mb_ereg_replace_callback($pattern, $replacement, $subjectPart, $option)
-                    : \mb_ereg_replace($pattern, $replacement, $subjectPart, $option);
+                $subjectPart = self::execReplace($pattern, $replacement, $subjectPart, $option);
                 $result[$key] = $subjectPart;
             }
         }
@@ -293,5 +289,21 @@ class MbRegex
         }
 
         return \array_map(null, $pattern, $replacement);
+    }
+
+    /**
+     * Replace subject by callback or by string.
+     *
+     * @param callable|string $replacement Replacement
+     * @param string          $pattern     Pattern
+     * @param string          $subject     Subject
+     * @param string          $option      Option
+     * @return string Replaced subject
+     */
+    private static function execReplace($pattern, $replacement, $subject, $option)
+    {
+        return (\is_object($replacement) || \is_array($replacement)) && \is_callable($replacement)
+            ? \mb_ereg_replace_callback($pattern, $replacement, $subject, $option)
+            : \mb_ereg_replace($pattern, $replacement, $subject, $option);
     }
 }
