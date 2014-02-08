@@ -3,7 +3,7 @@
 namespace Gobie\Bench;
 
 use Athletic\AthleticEvent;
-use Gobie\Regex\Drivers\Mb\MbRegex;
+use Gobie\Regex\Wrappers\Mb\MbRegex;
 
 class MbBench extends AthleticEvent
 {

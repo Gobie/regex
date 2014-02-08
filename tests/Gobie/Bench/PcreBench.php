@@ -3,7 +3,7 @@
 namespace Gobie\Bench;
 
 use Athletic\AthleticEvent;
-use Gobie\Regex\Drivers\Pcre\PcreRegex;
+use Gobie\Regex\Wrappers\Pcre\PcreRegex;
 
 class PcreBench extends AthleticEvent
 {
