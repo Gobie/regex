@@ -15,6 +15,12 @@
         <testsuite name="Full">
             <directory suffix=".php">./Gobie</directory>
         </testsuite>
+        <testsuite name="Wrappers">
+            <directory suffix=".php">./Gobie/Test/Regex/Wrappers</directory>
+        </testsuite>
+        <testsuite name="Tokenizer">
+            <directory suffix=".php">./Gobie/Test/Regex/Tokenizer</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
