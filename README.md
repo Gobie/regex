@@ -7,8 +7,6 @@ Regex
 [![Total Downloads](https://poser.pugx.org/gobie/regex/downloads.png)](https://packagist.org/packages/gobie/regex)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/Gobie/regex/badges/quality-score.png?s=0763e8dbf2953b656057f638413d6ab86a4d3be8)](https://scrutinizer-ci.com/g/Gobie/regex/)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b90f6621-642e-491a-af0c-84e2e68bbb10/mini.png)](https://insight.sensiolabs.com/projects/b90f6621-642e-491a-af0c-84e2e68bbb10)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Gobie/regex/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/c4598e4dbfeea15c383c64690dffad95 "githalytics.com")](http://githalytics.com/Gobie/regex)
 
 **Regex** is PHP library containing lightweight wrappers around regular expression libraries and extensions for day to day use.
 We try to **resolve error related issues** those libraries expose and which they handle rather peculiarly.
