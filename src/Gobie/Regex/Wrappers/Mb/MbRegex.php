@@ -294,8 +294,8 @@ class MbRegex
     /**
      * Replace subject by callback or by string.
      *
-     * @param callable|string $replacement Replacement
      * @param string          $pattern     Pattern
+     * @param callable|string $replacement Replacement
      * @param string          $subject     Subject
      * @param string          $option      Option
      * @return string Replaced subject
