@@ -5,15 +5,15 @@ namespace Gobie\Regex\Tokenizer;
 class RegexTokenizer
 {
 
-    protected $tokenizer;
+    protected $parser;
 
-    public function __construct(TokenizerInterface $tokenizer)
+    public function __construct(ParserInterface $parser)
     {
-        $this->tokenizer = $tokenizer;
+        $this->parser = $parser;
     }
 
     public function tokenize($regex)
     {
-        return $this->tokenizer->tokenize($regex);
+        return $this->parser->parse($regex);
     }
 }

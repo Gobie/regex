@@ -4,10 +4,10 @@ namespace Gobie\Regex\Tokenizer;
 
 use Gobie\Regex\Wrappers\Pcre\PcreRegex;
 
-class PcreTokenizer implements TokenizerInterface
+class PcreParser implements ParserInterface
 {
 
-    public function tokenize($regex)
+    public function parse($regex)
     {
         if (!\is_string($regex) || $regex === "") {
             throw new RegexTokenizerException('Invalid or empty regex "' . $regex . '"');
@@ -15,7 +15,7 @@ class PcreTokenizer implements TokenizerInterface
 
         $len   = \mb_strlen($regex);
         $pos   = 0;
-        $state = TokenizerInterface::REGEXP;
+        $state = ParserInterface::REGEXP;
 
         $root       = new TokenNode(array(
             'type'       => 'root',
@@ -34,7 +34,7 @@ class PcreTokenizer implements TokenizerInterface
             $char = \mb_substr($regex, $pos, 1);
 
             switch ($state) {
-                case TokenizerInterface::REGEXP:
+                case ParserInterface::REGEXP:
                     if (PcreRegex::match('/\s|\\\\|[[:alnum:]]/', $char)) {
                         throw new RegexTokenizerException('Invalid delimiter "' . $char . '"', $pos);
                     } elseif ($char === '{') {
@@ -44,10 +44,10 @@ class PcreTokenizer implements TokenizerInterface
                     }
 
                     array_push($root->delimiters, $char, $delimiter);
-                    $state = TokenizerInterface::PATTERN;
+                    $state = ParserInterface::PATTERN;
                     break;
 
-                case TokenizerInterface::PATTERN:
+                case ParserInterface::PATTERN:
                     if ($escaping) {
                         $escaping = false;
                         $last[]   = new TokenNode(array(
@@ -107,12 +107,32 @@ class PcreTokenizer implements TokenizerInterface
                             ));
                             break;
 
+                        case '.':
+                            $last[] = new TokenNode(
+                                array(
+                                    'type' => 'set',
+                                    'not'  => true,
+                                    'set'  =>
+                                        new TokenStack(
+                                            array(
+                                                new TokenNode(
+                                                    array(
+                                                        'type'  => 'char',
+                                                        'value' => "\n"
+                                                    )
+                                                )
+                                            )
+                                        )
+                                )
+                            );
+                            break;
+
                         case $delimiter:
                             if (count($groupStack)) {
                                 throw new RegexTokenizerException('Unterminated group', $pos);
                             }
 
-                            $state = TokenizerInterface::MODIFIERS;
+                            $state = ParserInterface::MODIFIERS;
                             break;
 
                         default:
@@ -124,7 +144,7 @@ class PcreTokenizer implements TokenizerInterface
                     }
                     break;
 
-                case TokenizerInterface::MODIFIERS:
+                case ParserInterface::MODIFIERS:
                     if (!PcreRegex::match('/[eimsuxADJSUX]/', $char)) {
                         throw new RegexTokenizerException('Unknown modifier "' . $char . '"', $pos);
                     }
@@ -136,7 +156,7 @@ class PcreTokenizer implements TokenizerInterface
             ++$pos;
         };
 
-        if ($state !== TokenizerInterface::MODIFIERS) {
+        if ($state !== ParserInterface::MODIFIERS) {
             throw new RegexTokenizerException('Missing delimiter "' . $delimiter . '"', $pos);
         }
 

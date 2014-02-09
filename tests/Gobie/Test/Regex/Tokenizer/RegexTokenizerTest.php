@@ -1,7 +1,7 @@
 <?php
 namespace Gobie\Test\Regex\Tokenizer;
 
-use Gobie\Regex\Tokenizer\PcreTokenizer;
+use Gobie\Regex\Tokenizer\PcreParser;
 use Gobie\Regex\Tokenizer\RegexTokenizer;
 use Gobie\Regex\Tokenizer\RegexTokenizerException;
 
@@ -15,7 +15,7 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->tokenizer = new RegexTokenizer(new PcreTokenizer());
+        $this->tokenizer = new RegexTokenizer(new PcreParser());
     }
 
     /**
@@ -237,6 +237,23 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
+            '/./'           => array(
+                '/./',
+                array(
+                    'type'       => 'root',
+                    'delimiters' => array('/', '/'),
+                    'modifiers'  => array(),
+                    'stack'      => array(
+                        array(
+                            'type' => 'set',
+                            'not'  => true,
+                            'set'  => array(
+                                array('type' => 'char', 'value' => "\n")
+                            )
+                        ),
+                    )
+                )
+            )
         );
     }
 
