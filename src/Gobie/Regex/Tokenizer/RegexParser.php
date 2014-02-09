@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex\Tokenizer;
 
-class RegexTokenizer
+class RegexParser
 {
 
     protected $parser;

@@ -2,21 +2,21 @@
 namespace Gobie\Test\Regex\Tokenizer;
 
 use Gobie\Regex\Tokenizer\PcreParser;
-use Gobie\Regex\Tokenizer\RegexTokenizer;
+use Gobie\Regex\Tokenizer\RegexParser;
 use Gobie\Regex\Tokenizer\ParserException;
 use Gobie\Regex\Tokenizer\TokenFactory;
 
-class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
+class RegexParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var RegexTokenizer
+     * @var RegexParser
      */
     private $tokenizer;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->tokenizer = new RegexTokenizer(new PcreParser(new TokenFactory()));
+        $this->tokenizer = new RegexParser(new PcreParser(new TokenFactory()));
     }
 
     /**
