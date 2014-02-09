@@ -48,8 +48,8 @@ class PcreParser implements ParserInterface
                         $delimiter = $char;
                     }
 
-                    array_push($root->delimiters, $char, $delimiter);
-                    $state = ParserInterface::PATTERN;
+                    $root->delimiters = array($char, $delimiter);
+                    $state            = ParserInterface::PATTERN;
                     break;
 
                 case ParserInterface::PATTERN:
@@ -65,9 +65,9 @@ class PcreParser implements ParserInterface
                             break;
 
                         case '(':
+                            $groupStack[] = $lastGroup;
                             $group        = $this->tokenFactory->createGroup();
                             $last[]       = $group;
-                            $groupStack[] = $lastGroup;
                             $lastGroup    = $group;
                             $last         = $group->stack;
                             unset($group);
