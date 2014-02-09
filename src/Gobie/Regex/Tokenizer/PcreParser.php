@@ -31,11 +31,11 @@ class PcreParser implements ParserInterface
             'type'       => 'root',
             'delimiters' => array(),
             'modifiers'  => array(),
-            'stack'      => new TokenStack()
+            'stack'      => new TokenArray()
         ));
         $lastGroup  = $root;
         $last       = $root->stack;
-        $groupStack = new TokenStack();
+        $groupStack = new TokenArray();
 
         $delimiter = null;
         $escaping  = false;
@@ -76,7 +76,7 @@ class PcreParser implements ParserInterface
                             $group        = new TokenNode(array(
                                 'type'     => 'group',
                                 'remember' => true,
-                                'stack'    => new TokenStack(),
+                                'stack'    => new TokenArray(),
                             ));
                             $last[]       = $group;
                             $groupStack[] = $lastGroup;
@@ -99,11 +99,11 @@ class PcreParser implements ParserInterface
 
                         case '|':
                             if (!isset($lastGroup->options)) {
-                                $lastGroup->options = new TokenStack(array($lastGroup->stack));
+                                $lastGroup->options = new TokenArray(array($lastGroup->stack));
                                 unset($lastGroup->stack);
                             }
 
-                            $stack                = new TokenStack();
+                            $stack                = new TokenArray();
                             $lastGroup->options[] = $stack;
                             $last                 = $stack;
                             unset($stack);
@@ -123,7 +123,7 @@ class PcreParser implements ParserInterface
                                     'type' => 'set',
                                     'not'  => true,
                                     'set'  =>
-                                        new TokenStack(
+                                        new TokenArray(
                                             array(
                                                 new TokenNode(
                                                     array(

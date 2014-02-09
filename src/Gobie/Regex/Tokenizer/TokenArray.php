@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex\Tokenizer;
 
-class TokenStack extends TokenNode implements \ArrayAccess, \Countable
+class TokenArray extends TokenNode implements \ArrayAccess, \Countable
 {
     public function __construct($data = array())
     {

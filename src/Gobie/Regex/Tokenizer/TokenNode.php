@@ -5,7 +5,7 @@ namespace Gobie\Regex\Tokenizer;
 /**
  * @property array $modifiers Array of modifiers
  * @property array $delimiters Array of delimiters
- * @property TokenStack $stack Stack
+ * @property TokenArray $stack Stack
  */
 class TokenNode
 {
