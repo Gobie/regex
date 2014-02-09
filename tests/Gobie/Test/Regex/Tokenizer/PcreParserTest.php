@@ -6,17 +6,17 @@ use Gobie\Regex\Tokenizer\RegexParser;
 use Gobie\Regex\Tokenizer\ParserException;
 use Gobie\Regex\Tokenizer\TokenFactory;
 
-class RegexParserTest extends \PHPUnit_Framework_TestCase
+class PcreParserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RegexParser
      */
-    private $tokenizer;
+    private $parser;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->tokenizer = new RegexParser(new PcreParser(new TokenFactory()));
+        $this->parser = new PcreParser(new TokenFactory());
     }
 
     /**
@@ -24,7 +24,7 @@ class RegexParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldTokenize($regex, $expectedTokens)
     {
-        $token = $this->tokenizer->tokenize($regex);
+        $token = $this->parser->parse($regex);
         $this->assertSame($token->toArray(), $expectedTokens);
     }
 
@@ -34,7 +34,7 @@ class RegexParserTest extends \PHPUnit_Framework_TestCase
     public function testShouldFailTokenize($regex, $expectedMessage)
     {
         try {
-            $this->tokenizer->tokenize($regex);
+            $this->parser->parse($regex);
             $this->fail('Exception should have been thrown');
         } catch (ParserException $e) {
             $this->assertSame($e->getMessage(), $expectedMessage);

@@ -12,7 +12,7 @@ class RegexParser
         $this->parser = $parser;
     }
 
-    public function tokenize($regex)
+    public function parse($regex)
     {
         return $this->parser->parse($regex);
     }
