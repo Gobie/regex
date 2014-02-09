@@ -7,6 +7,16 @@ use Gobie\Regex\Wrappers\Pcre\PcreRegex;
 class PcreParser implements ParserInterface
 {
 
+    /**
+     * @var TokenFactoryInterface
+     */
+    private $tokenFactory;
+
+    public function __construct(TokenFactoryInterface $tokenFactory)
+    {
+        $this->tokenFactory = $tokenFactory;
+    }
+
     public function parse($regex)
     {
         if (!\is_string($regex) || $regex === "") {

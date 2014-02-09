@@ -4,6 +4,7 @@ namespace Gobie\Test\Regex\Tokenizer;
 use Gobie\Regex\Tokenizer\PcreParser;
 use Gobie\Regex\Tokenizer\RegexTokenizer;
 use Gobie\Regex\Tokenizer\RegexTokenizerException;
+use Gobie\Regex\Tokenizer\TokenFactory;
 
 class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->tokenizer = new RegexTokenizer(new PcreParser());
+        $this->tokenizer = new RegexTokenizer(new PcreParser(new TokenFactory()));
     }
 
     /**
@@ -138,19 +139,6 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a^a/'         => array(
-                '/a^a/',
-                array(
-                    'type'       => 'root',
-                    'delimiters' => array('/', '/'),
-                    'modifiers'  => array(),
-                    'stack'      => array(
-                        array('type' => 'char', 'value' => 'a'),
-                        array('type' => 'position', 'value' => '^'),
-                        array('type' => 'char', 'value' => 'a'),
-                    )
-                )
-            ),
             '/b$/'          => array(
                 '/b$/',
                 array(
@@ -163,16 +151,18 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/b$b/'         => array(
-                '/b$b/',
+            '/a^b$c/'       => array(
+                '/a^b$c/',
                 array(
                     'type'       => 'root',
                     'delimiters' => array('/', '/'),
                     'modifiers'  => array(),
                     'stack'      => array(
+                        array('type' => 'char', 'value' => 'a'),
+                        array('type' => 'position', 'value' => '^'),
                         array('type' => 'char', 'value' => 'b'),
                         array('type' => 'position', 'value' => '$'),
-                        array('type' => 'char', 'value' => 'b'),
+                        array('type' => 'char', 'value' => 'c'),
                     )
                 )
             ),
