@@ -7,7 +7,7 @@ namespace Gobie\Regex\Tokenizer;
  * @property array $delimiters Array of delimiters
  * @property TokenArray $stack Stack
  */
-class TokenNode
+class Token
 {
 
     public function __construct($options = array())
@@ -21,7 +21,7 @@ class TokenNode
     {
         $arr = array();
         foreach ($this as $name => $value) {
-            $arr[$name] = $value instanceof TokenNode ? $value->toArray() : $value;
+            $arr[$name] = $value instanceof Token ? $value->toArray() : $value;
         }
 
         return $arr;

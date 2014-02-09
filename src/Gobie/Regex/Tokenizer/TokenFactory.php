@@ -7,7 +7,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createCharToken($char)
     {
-        return new TokenNode(array(
+        return new Token(array(
             'type'  => 'char',
             'value' => $char
         ));

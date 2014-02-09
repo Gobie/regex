@@ -2,12 +2,11 @@
 
 namespace Gobie\Regex\Tokenizer;
 
-class TokenArray extends TokenNode implements \ArrayAccess, \Countable
+class TokenArray extends Token implements \ArrayAccess, \Countable
 {
     public function __construct($data = array())
     {
         $this->data = $data;
-        parent::__construct();
     }
 
     public function offsetExists($offset)
@@ -48,7 +47,7 @@ class TokenArray extends TokenNode implements \ArrayAccess, \Countable
     {
         $arr = array();
         foreach ($this->data as $value) {
-            $arr[] = $value instanceof TokenNode ? $value->toArray() : $value;
+            $arr[] = $value instanceof Token ? $value->toArray() : $value;
         }
 
         return $arr;

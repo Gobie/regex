@@ -27,7 +27,7 @@ class PcreParser implements ParserInterface
         $pos   = 0;
         $state = ParserInterface::REGEXP;
 
-        $root       = new TokenNode(array(
+        $root       = new Token(array(
             'type'       => 'root',
             'delimiters' => array(),
             'modifiers'  => array(),
@@ -60,7 +60,7 @@ class PcreParser implements ParserInterface
                 case ParserInterface::PATTERN:
                     if ($escaping) {
                         $escaping = false;
-                        $last[]   = new TokenNode(array(
+                        $last[]   = new Token(array(
                             'type'  => 'char',
                             'value' => $char
                         ));
@@ -73,7 +73,7 @@ class PcreParser implements ParserInterface
                             break;
 
                         case '(':
-                            $group        = new TokenNode(array(
+                            $group        = new Token(array(
                                 'type'     => 'group',
                                 'remember' => true,
                                 'stack'    => new TokenArray(),
@@ -111,21 +111,21 @@ class PcreParser implements ParserInterface
 
                         case '^':
                         case '$':
-                            $last[] = new TokenNode(array(
+                            $last[] = new Token(array(
                                 'type'  => 'position',
                                 'value' => $char
                             ));
                             break;
 
                         case '.':
-                            $last[] = new TokenNode(
+                            $last[] = new Token(
                                 array(
                                     'type' => 'set',
                                     'not'  => true,
                                     'set'  =>
                                         new TokenArray(
                                             array(
-                                                new TokenNode(
+                                                new Token(
                                                     array(
                                                         'type'  => 'char',
                                                         'value' => "\n"
@@ -146,7 +146,7 @@ class PcreParser implements ParserInterface
                             break;
 
                         default:
-                            $last[] = new TokenNode(array(
+                            $last[] = new Token(array(
                                 'type'  => 'char',
                                 'value' => $char
                             ));
