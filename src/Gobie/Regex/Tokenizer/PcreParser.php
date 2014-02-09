@@ -20,7 +20,7 @@ class PcreParser implements ParserInterface
     public function parse($regex)
     {
         if (!\is_string($regex) || $regex === "") {
-            throw new RegexTokenizerException('Invalid or empty regex "' . $regex . '"');
+            throw new ParserException('Invalid or empty regex "' . $regex . '"');
         }
 
         $len   = \mb_strlen($regex);
@@ -46,7 +46,7 @@ class PcreParser implements ParserInterface
             switch ($state) {
                 case ParserInterface::REGEXP:
                     if (PcreRegex::match('/\s|\\\\|[[:alnum:]]/', $char)) {
-                        throw new RegexTokenizerException('Invalid delimiter "' . $char . '"', $pos);
+                        throw new ParserException('Invalid delimiter "' . $char . '"', $pos);
                     } elseif ($char === '{') {
                         $delimiter = '}';
                     } else {
@@ -87,7 +87,7 @@ class PcreParser implements ParserInterface
 
                         case ')':
                             if (count($groupStack) === 0) {
-                                throw new RegexTokenizerException('Unmatched )', $pos);
+                                throw new ParserException('Unmatched )', $pos);
                             }
 
                             $lastGroup = $groupStack->pop();
@@ -139,7 +139,7 @@ class PcreParser implements ParserInterface
 
                         case $delimiter:
                             if (count($groupStack)) {
-                                throw new RegexTokenizerException('Unterminated group', $pos);
+                                throw new ParserException('Unterminated group', $pos);
                             }
 
                             $state = ParserInterface::MODIFIERS;
@@ -156,7 +156,7 @@ class PcreParser implements ParserInterface
 
                 case ParserInterface::MODIFIERS:
                     if (!PcreRegex::match('/[eimsuxADJSUX]/', $char)) {
-                        throw new RegexTokenizerException('Unknown modifier "' . $char . '"', $pos);
+                        throw new ParserException('Unknown modifier "' . $char . '"', $pos);
                     }
 
                     $root->modifiers[] = $char;
@@ -167,7 +167,7 @@ class PcreParser implements ParserInterface
         };
 
         if ($state !== ParserInterface::MODIFIERS) {
-            throw new RegexTokenizerException('Missing delimiter "' . $delimiter . '"', $pos);
+            throw new ParserException('Missing delimiter "' . $delimiter . '"', $pos);
         }
 
         return $root;

@@ -3,7 +3,7 @@ namespace Gobie\Test\Regex\Tokenizer;
 
 use Gobie\Regex\Tokenizer\PcreParser;
 use Gobie\Regex\Tokenizer\RegexTokenizer;
-use Gobie\Regex\Tokenizer\RegexTokenizerException;
+use Gobie\Regex\Tokenizer\ParserException;
 use Gobie\Regex\Tokenizer\TokenFactory;
 
 class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
@@ -36,7 +36,7 @@ class RegexTokenizerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->tokenizer->tokenize($regex);
             $this->fail('Exception should have been thrown');
-        } catch (RegexTokenizerException $e) {
+        } catch (ParserException $e) {
             $this->assertSame($e->getMessage(), $expectedMessage);
         }
     }
