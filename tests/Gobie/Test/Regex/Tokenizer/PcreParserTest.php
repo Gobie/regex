@@ -1,9 +1,9 @@
 <?php
 namespace Gobie\Test\Regex\Tokenizer;
 
+use Gobie\Regex\Tokenizer\ParseException;
 use Gobie\Regex\Tokenizer\PcreParser;
 use Gobie\Regex\Tokenizer\RegexParser;
-use Gobie\Regex\Tokenizer\ParseException;
 use Gobie\Regex\Tokenizer\TokenFactory;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
@@ -243,7 +243,23 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                         ),
                     )
                 )
-            )
+            ),
+            '/a+b*c?/'          => array(
+                '/a+b*c?/',
+                array(
+                    'type'       => 'root',
+                    'delimiters' => array('/', '/'),
+                    'modifiers'  => array(),
+                    'stack'      => array(
+                        array('type' => 'char', 'value' => 'a'),
+                        array('type' => 'repetition', 'from' => '1', 'to' => 'INF'),
+                        array('type' => 'char', 'value' => 'b'),
+                        array('type' => 'repetition', 'from' => '0', 'to' => 'INF'),
+                        array('type' => 'char', 'value' => 'c'),
+                        array('type' => 'repetition', 'from' => '0', 'to' => '1'),
+                    ),
+                )
+            ),
         );
     }
 

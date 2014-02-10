@@ -106,6 +106,18 @@ class PcreParser implements ParserInterface
                             $last[] = $this->tokenFactory->createDot();
                             break;
 
+                        case '+':
+                            $last[] = $this->tokenFactory->createRepetition("1", "INF");
+                            break;
+
+                        case '*':
+                            $last[] = $this->tokenFactory->createRepetition("0", "INF");
+                            break;
+
+                        case '?':
+                            $last[] = $this->tokenFactory->createRepetition("0", "1");
+                            break;
+
                         case $delimiter:
                             if (count($groupStack)) {
                                 throw new ParseException('Unterminated group', $pos);

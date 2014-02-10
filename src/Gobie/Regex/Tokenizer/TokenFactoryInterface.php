@@ -17,4 +17,6 @@ interface TokenFactoryInterface
     public function createRoot();
 
     public function createTokenArray($tokens = array());
+
+    public function createRepetition($from, $to);
 }
