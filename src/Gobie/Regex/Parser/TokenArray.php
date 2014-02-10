@@ -11,12 +11,16 @@ class TokenArray extends Token implements \ArrayAccess, \Countable
 
     public function offsetExists($offset)
     {
-        throw new \LogicException('Method is not implemented');
+        return isset($this->data[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        throw new \LogicException('Method is not implemented');
+        if (!isset($this->data[$offset])) {
+            throw new \InvalidArgumentException('Accessing undefined offset "' . $offset . '"');
+        }
+
+        return $this->data[$offset];
     }
 
     public function offsetSet($offset, $value)
@@ -28,9 +32,14 @@ class TokenArray extends Token implements \ArrayAccess, \Countable
         }
     }
 
+    public function count()
+    {
+        return count($this->data);
+    }
+
     public function offsetUnset($offset)
     {
-        throw new \LogicException('Method is not implemented');
+        unset($this->data[$offset]);
     }
 
     public function last()
@@ -42,7 +51,6 @@ class TokenArray extends Token implements \ArrayAccess, \Countable
     {
         return array_pop($this->data);
     }
-
     public function toArray()
     {
         $arr = array();
@@ -51,10 +59,5 @@ class TokenArray extends Token implements \ArrayAccess, \Countable
         }
 
         return $arr;
-    }
-
-    public function count()
-    {
-        return count($this->data);
     }
 }
