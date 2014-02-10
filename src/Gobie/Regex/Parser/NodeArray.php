@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex\Parser;
 
-class TokenArray extends Token implements \ArrayAccess, \Countable
+class NodeArray extends Node implements \ArrayAccess, \Countable
 {
     public function __construct($data = array())
     {
@@ -55,7 +55,7 @@ class TokenArray extends Token implements \ArrayAccess, \Countable
     {
         $arr = array();
         foreach ($this->data as $value) {
-            $arr[] = $value instanceof Token ? $value->toArray() : $value;
+            $arr[] = $value instanceof Node ? $value->toArray() : $value;
         }
 
         return $arr;

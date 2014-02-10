@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex\Parser;
 
-interface TokenFactoryInterface
+interface NodeFactoryInterface
 {
     public function createPosition($char);
 

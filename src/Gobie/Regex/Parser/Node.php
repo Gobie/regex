@@ -5,9 +5,9 @@ namespace Gobie\Regex\Parser;
 /**
  * @property array $modifiers Array of modifiers
  * @property array $delimiters Array of delimiters
- * @property TokenArray $stack Stack
+ * @property NodeArray $stack Stack
  */
-class Token
+class Node
 {
 
     public function __construct($options = array())
@@ -21,7 +21,7 @@ class Token
     {
         $arr = array();
         foreach ($this as $name => $value) {
-            $arr[$name] = $value instanceof Token ? $value->toArray() : $value;
+            $arr[$name] = $value instanceof Node ? $value->toArray() : $value;
         }
 
         return $arr;

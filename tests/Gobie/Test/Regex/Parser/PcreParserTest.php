@@ -4,7 +4,7 @@ namespace Gobie\Test\Regex\Parser;
 use Gobie\Regex\Parser\ParseException;
 use Gobie\Regex\Parser\PcreParser;
 use Gobie\Regex\Parser\RegexParser;
-use Gobie\Regex\Parser\TokenFactory;
+use Gobie\Regex\Parser\NodeFactory;
 use Gobie\Regex\Parser\Tokenizer;
 use Gobie\Regex\Parser\TokenizerFactory;
 
@@ -18,7 +18,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->parser = new PcreParser(new TokenizerFactory(), new TokenFactory());
+        $this->parser = new PcreParser(new TokenizerFactory(), new NodeFactory());
     }
 
     /**

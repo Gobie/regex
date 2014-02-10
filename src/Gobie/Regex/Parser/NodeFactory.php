@@ -2,12 +2,12 @@
 
 namespace Gobie\Regex\Parser;
 
-class TokenFactory implements TokenFactoryInterface
+class NodeFactory implements NodeFactoryInterface
 {
 
     public function createChar($char)
     {
-        return new Token(array(
+        return new Node(array(
             'type'  => 'char',
             'value' => $char
         ));
@@ -15,7 +15,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createPosition($char)
     {
-        return new Token(array(
+        return new Node(array(
             'type'  => 'position',
             'value' => $char
         ));
@@ -23,7 +23,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createSet($not = false, $tokens = array())
     {
-        return new Token(array(
+        return new Node(array(
             'type' => 'set',
             'not'  => $not,
             'set'  => $this->createTokenArray($tokens)
@@ -32,7 +32,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createGroup($remember = true)
     {
-        return new Token(array(
+        return new Node(array(
             'type'     => 'group',
             'remember' => $remember,
             'stack'    => $this->createTokenArray(),
@@ -41,7 +41,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createRoot()
     {
-        return new Token(array(
+        return new Node(array(
             'type'       => 'root',
             'delimiters' => array(),
             'modifiers'  => array(),
@@ -58,7 +58,7 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createRepetition($from, $to)
     {
-        return new Token(array(
+        return new Node(array(
             'type'  => 'repetition',
             'from'  => $from,
             'to'    => $to
@@ -67,6 +67,6 @@ class TokenFactory implements TokenFactoryInterface
 
     public function createTokenArray($tokens = array())
     {
-        return new TokenArray($tokens);
+        return new NodeArray($tokens);
     }
 }

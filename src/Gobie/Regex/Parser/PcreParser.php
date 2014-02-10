@@ -13,14 +13,14 @@ class PcreParser implements ParserInterface
     private $tokenizerFactory;
 
     /**
-     * @var TokenFactoryInterface
+     * @var NodeFactoryInterface
      */
-    private $tokenFactory;
+    private $nodeFactory;
 
-    public function __construct(TokenizerFactoryInterface $tokenizerFactory, TokenFactoryInterface $tokenFactory)
+    public function __construct(TokenizerFactoryInterface $tokenizerFactory, NodeFactoryInterface $nodeFactory)
     {
-        $this->tokenizerFactory    = $tokenizerFactory;
-        $this->tokenFactory = $tokenFactory;
+        $this->tokenizerFactory = $tokenizerFactory;
+        $this->nodeFactory      = $nodeFactory;
     }
 
     public function parse($regex)
@@ -32,10 +32,10 @@ class PcreParser implements ParserInterface
         $tokenizer = $this->tokenizerFactory->create($regex);
         $state     = ParserInterface::REGEXP;
 
-        $root       = $this->tokenFactory->createRoot();
+        $root       = $this->nodeFactory->createRoot();
         $lastGroup  = $root;
         $last       = $root->stack;
-        $groupStack = $this->tokenFactory->createTokenArray();
+        $groupStack = $this->nodeFactory->createTokenArray();
 
         $delimiter = null;
         $escaping  = false;
@@ -59,7 +59,7 @@ class PcreParser implements ParserInterface
                 case ParserInterface::PATTERN:
                     if ($escaping) {
                         $escaping = false;
-                        $last[]   = $this->tokenFactory->createChar($char);
+                        $last[]   = $this->nodeFactory->createChar($char);
                         break;
                     }
 
@@ -70,7 +70,7 @@ class PcreParser implements ParserInterface
 
                         case '(':
                             $groupStack[] = $lastGroup;
-                            $group        = $this->tokenFactory->createGroup();
+                            $group        = $this->nodeFactory->createGroup();
                             $last[]       = $group;
                             $lastGroup    = $group;
                             $last         = $group->stack;
@@ -91,11 +91,11 @@ class PcreParser implements ParserInterface
 
                         case '|':
                             if (!isset($lastGroup->options)) {
-                                $lastGroup->options = $this->tokenFactory->createTokenArray(array($lastGroup->stack));
+                                $lastGroup->options = $this->nodeFactory->createTokenArray(array($lastGroup->stack));
                                 unset($lastGroup->stack);
                             }
 
-                            $stack                = $this->tokenFactory->createTokenArray();
+                            $stack                = $this->nodeFactory->createTokenArray();
                             $lastGroup->options[] = $stack;
                             $last                 = $stack;
                             unset($stack);
@@ -103,23 +103,23 @@ class PcreParser implements ParserInterface
 
                         case '^':
                         case '$':
-                            $last[] = $this->tokenFactory->createPosition($char);
+                            $last[] = $this->nodeFactory->createPosition($char);
                             break;
 
                         case '.':
-                            $last[] = $this->tokenFactory->createDot();
+                            $last[] = $this->nodeFactory->createDot();
                             break;
 
                         case '+':
-                            $last[] = $this->tokenFactory->createRepetition("1", "INF");
+                            $last[] = $this->nodeFactory->createRepetition("1", "INF");
                             break;
 
                         case '*':
-                            $last[] = $this->tokenFactory->createRepetition("0", "INF");
+                            $last[] = $this->nodeFactory->createRepetition("0", "INF");
                             break;
 
                         case '?':
-                            $last[] = $this->tokenFactory->createRepetition("0", "1");
+                            $last[] = $this->nodeFactory->createRepetition("0", "1");
                             break;
 
                         case $delimiter:
@@ -131,7 +131,7 @@ class PcreParser implements ParserInterface
                             break;
 
                         default:
-                            $last[] = $this->tokenFactory->createChar($char);
+                            $last[] = $this->nodeFactory->createChar($char);
                             break;
                     }
                     break;
