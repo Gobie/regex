@@ -2,7 +2,9 @@
 
 namespace Gobie\Regex\Parser;
 
-class Tokenizer implements \Iterator
+use Gobie\Regex\Wrappers\Pcre\PcreRegex;
+
+class Tokenizer implements TokenizerInterface
 {
 
     private $encoding;
@@ -48,5 +50,15 @@ class Tokenizer implements \Iterator
     public function rewind()
     {
         $this->position = 0;
+    }
+
+    public function pop($regex)
+    {
+        $data = PcreRegex::get($regex, \mb_substr($this->data, $this->position + 1, null, $this->encoding));
+        if ($data) {
+            $this->position += \mb_strlen($data[0], $this->encoding);
+        }
+
+        return $data;
     }
 }
