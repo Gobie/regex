@@ -1,11 +1,10 @@
 <?php
 namespace Gobie\Test\Regex\Parser;
 
+use Gobie\Regex\Parser\NodeFactory;
 use Gobie\Regex\Parser\ParseException;
 use Gobie\Regex\Parser\PcreParser;
 use Gobie\Regex\Parser\RegexParser;
-use Gobie\Regex\Parser\NodeFactory;
-use Gobie\Regex\Parser\Tokenizer;
 use Gobie\Regex\Parser\TokenizerFactory;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
@@ -246,7 +245,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a+b*c?/'          => array(
+            '/a+b*c?/'      => array(
                 '/a+b*c?/',
                 array(
                     'type'       => 'root',
@@ -262,6 +261,19 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     ),
                 )
             ),
+            '/\\n\\r\\t/'   => array(
+                '/\\n\\r\\t/',
+                array(
+                    'type'       => 'root',
+                    'delimiters' => array('/', '/'),
+                    'modifiers'  => array(),
+                    'stack'      => array(
+                        array('type' => 'char', 'value' => "\n"),
+                        array('type' => 'char', 'value' => "\r"),
+                        array('type' => 'char', 'value' => "\t"),
+                    )
+                )
+            ),
         );
     }
 
@@ -275,6 +287,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
             '{a'  => array('{a', 'Missing delimiter "}" at position 1'),
             '/(/' => array('/(/', 'Unterminated group at position 2'),
             '/)/' => array('/)/', 'Unmatched ) at position 1'),
+            '/\\' => array('/\\', 'Unfinished escape sequence at position 1'),
         );
     }
 }

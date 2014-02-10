@@ -38,7 +38,6 @@ class PcreParser implements ParserInterface
         $groupStack = $this->nodeFactory->createTokenArray();
 
         $delimiter = null;
-        $escaping  = false;
 
         foreach ($tokenizer as $pos => $char) {
 
@@ -57,15 +56,31 @@ class PcreParser implements ParserInterface
                     break;
 
                 case ParserInterface::PATTERN:
-                    if ($escaping) {
-                        $escaping = false;
-                        $last[]   = $this->nodeFactory->createChar($char);
-                        break;
-                    }
-
                     switch ($char) {
                         case '\\':
-                            $escaping = true;
+                            $tokenizer->next();
+                            if (!$tokenizer->valid()) {
+                                throw new ParseException('Unfinished escape sequence', $pos);
+                            }
+
+                            $next = $tokenizer->current();
+                            switch ($next) {
+                                case 'n':
+                                    $last[] = $this->nodeFactory->createChar("\n");
+                                    break;
+
+                                case 'r':
+                                    $last[] = $this->nodeFactory->createChar("\r");
+                                    break;
+
+                                case 't':
+                                    $last[] = $this->nodeFactory->createChar("\t");
+                                    break;
+
+                                default:
+                                    $last[] = $this->nodeFactory->createChar($next);
+                                    break;
+                            }
                             break;
 
                         case '(':
