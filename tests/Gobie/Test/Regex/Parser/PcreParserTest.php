@@ -5,6 +5,8 @@ use Gobie\Regex\Parser\ParseException;
 use Gobie\Regex\Parser\PcreParser;
 use Gobie\Regex\Parser\RegexParser;
 use Gobie\Regex\Parser\TokenFactory;
+use Gobie\Regex\Parser\Tokenizer;
+use Gobie\Regex\Parser\TokenizerFactory;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +18,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->parser = new PcreParser(new TokenFactory());
+        $this->parser = new PcreParser(new TokenizerFactory(), new TokenFactory());
     }
 
     /**
@@ -25,7 +27,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
     public function testShouldTokenize($regex, $expectedTokens)
     {
         $token = $this->parser->parse($regex);
-        $this->assertSame($token->toArray(), $expectedTokens);
+        $this->assertSame($expectedTokens, $token->toArray());
     }
 
     /**
@@ -37,7 +39,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
             $this->parser->parse($regex);
             $this->fail('Exception should have been thrown');
         } catch (ParseException $e) {
-            $this->assertSame($e->getMessage(), $expectedMessage);
+            $this->assertSame($expectedMessage, $e->getMessage());
         }
     }
 
@@ -270,7 +272,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
             ''    => array('', 'Invalid or empty regex ""'),
             '8//' => array('8//', 'Invalid delimiter "8" at position 0'),
             '//8' => array('//8', 'Unknown modifier "8" at position 2'),
-            '{a'  => array('{a', 'Missing delimiter "}" at position 2'),
+            '{a'  => array('{a', 'Missing delimiter "}" at position 1'),
             '/(/' => array('/(/', 'Unterminated group at position 2'),
             '/)/' => array('/)/', 'Unmatched ) at position 1'),
         );

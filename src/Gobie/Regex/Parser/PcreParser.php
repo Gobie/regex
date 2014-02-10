@@ -8,12 +8,18 @@ class PcreParser implements ParserInterface
 {
 
     /**
+     * @var TokenizerFactoryInterface
+     */
+    private $tokenizerFactory;
+
+    /**
      * @var TokenFactoryInterface
      */
     private $tokenFactory;
 
-    public function __construct(TokenFactoryInterface $tokenFactory)
+    public function __construct(TokenizerFactoryInterface $tokenizerFactory, TokenFactoryInterface $tokenFactory)
     {
+        $this->tokenizerFactory    = $tokenizerFactory;
         $this->tokenFactory = $tokenFactory;
     }
 
@@ -23,9 +29,8 @@ class PcreParser implements ParserInterface
             throw new ParseException('Invalid or empty regex "' . $regex . '"');
         }
 
-        $len   = \mb_strlen($regex);
-        $pos   = 0;
-        $state = ParserInterface::REGEXP;
+        $tokenizer = $this->tokenizerFactory->create($regex);
+        $state     = ParserInterface::REGEXP;
 
         $root       = $this->tokenFactory->createRoot();
         $lastGroup  = $root;
@@ -35,8 +40,7 @@ class PcreParser implements ParserInterface
         $delimiter = null;
         $escaping  = false;
 
-        while ($pos < $len) {
-            $char = \mb_substr($regex, $pos, 1);
+        foreach ($tokenizer as $pos => $char) {
 
             switch ($state) {
                 case ParserInterface::REGEXP:
@@ -140,8 +144,6 @@ class PcreParser implements ParserInterface
                     $root->modifiers[] = $char;
                     break;
             }
-
-            ++$pos;
         };
 
         if ($state !== ParserInterface::MODIFIERS) {
