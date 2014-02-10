@@ -1,10 +1,10 @@
 <?php
-namespace Gobie\Test\Regex\Tokenizer;
+namespace Gobie\Test\Regex\Parser;
 
-use Gobie\Regex\Tokenizer\ParseException;
-use Gobie\Regex\Tokenizer\PcreParser;
-use Gobie\Regex\Tokenizer\RegexParser;
-use Gobie\Regex\Tokenizer\TokenFactory;
+use Gobie\Regex\Parser\ParseException;
+use Gobie\Regex\Parser\PcreParser;
+use Gobie\Regex\Parser\RegexParser;
+use Gobie\Regex\Parser\TokenFactory;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
 {

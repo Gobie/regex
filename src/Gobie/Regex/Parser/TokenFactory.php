@@ -1,6 +1,6 @@
 <?php
 
-namespace Gobie\Regex\Tokenizer;
+namespace Gobie\Regex\Parser;
 
 class TokenFactory implements TokenFactoryInterface
 {
