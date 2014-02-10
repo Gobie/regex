@@ -2,7 +2,7 @@
 
 namespace Gobie\Regex\Tokenizer;
 
-class ParserException extends \RuntimeException
+class ParseException extends \RuntimeException
 {
     public function __construct($message, $position = null)
     {

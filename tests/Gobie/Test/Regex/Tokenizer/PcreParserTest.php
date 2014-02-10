@@ -3,7 +3,7 @@ namespace Gobie\Test\Regex\Tokenizer;
 
 use Gobie\Regex\Tokenizer\PcreParser;
 use Gobie\Regex\Tokenizer\RegexParser;
-use Gobie\Regex\Tokenizer\ParserException;
+use Gobie\Regex\Tokenizer\ParseException;
 use Gobie\Regex\Tokenizer\TokenFactory;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
@@ -36,7 +36,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
         try {
             $this->parser->parse($regex);
             $this->fail('Exception should have been thrown');
-        } catch (ParserException $e) {
+        } catch (ParseException $e) {
             $this->assertSame($e->getMessage(), $expectedMessage);
         }
     }
