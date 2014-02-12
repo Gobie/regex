@@ -209,7 +209,7 @@ if ($res === null && preg_last_error()) {
 
 It is meant to be used as drop-in replacement for current usage of library/extension functions.
 
-*I want to use it as dependency in object oriented style, can I?**
+**I want to use it as dependency in object oriented style, can I?**
 
 No problem, for that case we have `RegexFacade` which just redirects object calls to given wrapper.
 
