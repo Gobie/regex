@@ -10,9 +10,9 @@ namespace Gobie\Regex\Parser;
 class Node
 {
 
-    public function __construct($options = array())
+    public function __construct($data = array())
     {
-        foreach ($options as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         }
     }

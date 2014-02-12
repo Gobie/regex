@@ -32,11 +32,13 @@ class PcreParser implements ParserInterface
         $tokenizer = $this->tokenizerFactory->create($regex);
         $state     = ParserInterface::REGEXP;
 
-        $root       = $this->nodeFactory->createRoot();
-        $lastGroup  = $root;
-        $last       = $root->stack;
+        $root      = $this->nodeFactory->createRoot();
+        $lastGroup = $root;
+        $last      = $root->stack;
+        /** @var $groupStack NodeArray */
         $groupStack = $this->nodeFactory->createTokenArray();
 
+        $pos       = 0;
         $delimiter = null;
 
         foreach ($tokenizer as $pos => $char) {
@@ -118,10 +120,7 @@ class PcreParser implements ParserInterface
                                 unset($lastGroup->stack);
                             }
 
-                            $stack                = $this->nodeFactory->createTokenArray();
-                            $lastGroup->options[] = $stack;
-                            $last                 = $stack;
-                            unset($stack);
+                            $lastGroup->options[] = $last = $this->nodeFactory->createTokenArray();
                             break;
 
                         case '[':
@@ -134,7 +133,7 @@ class PcreParser implements ParserInterface
                             $last[] = $this->nodeFactory->createSet($tokens);
 
                             $token = $tokenizer->pop('/^\\]/');
-                            $pos = $tokenizer->key();
+                            $pos   = $tokenizer->key();
 
                             if (!$token) {
                                 throw new ParseException('Unterminated [', $pos);
