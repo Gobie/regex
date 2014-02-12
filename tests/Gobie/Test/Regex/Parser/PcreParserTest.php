@@ -236,9 +236,9 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     'modifiers'  => array(),
                     'stack'      => array(
                         array(
-                            'type' => 'set',
-                            'not'  => true,
-                            'set'  => array(
+                            'type'  => 'set',
+                            'not'   => true,
+                            'stack' => array(
                                 array('type' => 'char', 'value' => "\n")
                             )
                         ),

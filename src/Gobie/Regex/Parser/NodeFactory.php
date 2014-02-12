@@ -24,9 +24,9 @@ class NodeFactory implements NodeFactoryInterface
     public function createSet($not = false, $tokens = array())
     {
         return new Node(array(
-            'type' => 'set',
-            'not'  => $not,
-            'set'  => $this->createTokenArray($tokens)
+            'type'  => 'set',
+            'not'   => $not,
+            'stack' => $this->createTokenArray($tokens)
         ));
     }
 
@@ -59,9 +59,9 @@ class NodeFactory implements NodeFactoryInterface
     public function createRepetition($from, $to)
     {
         return new Node(array(
-            'type'  => 'repetition',
-            'from'  => $from,
-            'to'    => $to
+            'type' => 'repetition',
+            'from' => $from,
+            'to'   => $to
         ));
     }
 
