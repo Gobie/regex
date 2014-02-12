@@ -116,6 +116,28 @@ class PcreParser implements ParserInterface
                             unset($stack);
                             break;
 
+                        case '[':
+                            $classRegex =
+                                '/^(?:[a-z0-9]-[a-z0-9]|\\\\[^\\\\]|[^\\]\\[\\' . $delimiter . '])/i';
+                            $tokens     = array();
+                            while ($token = $tokenizer->pop($classRegex)) {
+                                $tokens[] = $this->nodeFactory->createChar($token);
+                            }
+                            $last[] = $this->nodeFactory->createSet($tokens);
+
+                            $token = $tokenizer->pop('/^\\]/');
+                            $pos = $tokenizer->key();
+
+                            if (!$token) {
+                                throw new ParseException('Unterminated [', $pos);
+                            }
+
+                            unset($tokens, $token);
+                            break;
+
+                        case ']':
+                            throw new ParseException('Unmatched ]', $pos);
+
                         case '^':
                         case '$':
                             $last[] = $this->nodeFactory->createPosition($char);

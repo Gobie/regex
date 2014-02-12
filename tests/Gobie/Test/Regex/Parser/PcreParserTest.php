@@ -6,6 +6,7 @@ use Gobie\Regex\Parser\ParseException;
 use Gobie\Regex\Parser\PcreParser;
 use Gobie\Regex\Parser\RegexParser;
 use Gobie\Regex\Parser\TokenizerFactory;
+use Gobie\Regex\Wrappers\Pcre\PcreRegex;
 
 class PcreParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,6 +26,9 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldTokenize($regex, $expectedTokens)
     {
+        // Test regex correctness
+        PcreRegex::match($regex, '');
+
         $token = $this->parser->parse($regex);
         $this->assertSame($expectedTokens, $token->toArray());
     }
@@ -45,7 +49,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
     public function provideCorrectRegex()
     {
         return array(
-            '//'            => array(
+            '//'               => array(
                 '//',
                 array(
                     'type'       => 'root',
@@ -54,7 +58,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     'stack'      => array(),
                 )
             ),
-            '//iS'          => array(
+            '//iS'             => array(
                 '//iS',
                 array(
                     'type'       => 'root',
@@ -63,7 +67,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     'stack'      => array(),
                 )
             ),
-            '/a/'           => array(
+            '/a/'              => array(
                 '/a/',
                 array(
                     'type'       => 'root',
@@ -74,7 +78,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '{a}'           => array(
+            '{a}'              => array(
                 '{a}',
                 array(
                     'type'       => 'root',
@@ -85,7 +89,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a|b|c/'       => array(
+            '/a|b|c/'          => array(
                 '/a|b|c/',
                 array(
                     'type'       => 'root',
@@ -104,7 +108,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a\\|b/'       => array(
+            '/a\\|b/'          => array(
                 '/a\\|b/',
                 array(
                     'type'       => 'root',
@@ -117,7 +121,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/\\\\/'        => array(
+            '/\\\\/'           => array(
                 '/\\\\/',
                 array(
                     'type'       => 'root',
@@ -128,7 +132,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/^a/'          => array(
+            '/^a/'             => array(
                 '/^a/',
                 array(
                     'type'       => 'root',
@@ -140,7 +144,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/b$/'          => array(
+            '/b$/'             => array(
                 '/b$/',
                 array(
                     'type'       => 'root',
@@ -152,7 +156,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a^b$c/'       => array(
+            '/a^b$c/'          => array(
                 '/a^b$c/',
                 array(
                     'type'       => 'root',
@@ -167,7 +171,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/(a|b)/'       => array(
+            '/(a|b)/'          => array(
                 '/(a|b)/',
                 array(
                     'type'       => 'root',
@@ -189,7 +193,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/(a|(b))|(c)/' => array(
+            '/(a|(b))|(c)/'    => array(
                 '/(a|(b))|(c)/',
                 array(
                     'type'       => 'root',
@@ -228,7 +232,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/./'           => array(
+            '/./'              => array(
                 '/./',
                 array(
                     'type'       => 'root',
@@ -245,7 +249,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            '/a+b*c?/'      => array(
+            '/a+b*c?/'         => array(
                 '/a+b*c?/',
                 array(
                     'type'       => 'root',
@@ -261,7 +265,7 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                     ),
                 )
             ),
-            '/\\n\\r\\t/'   => array(
+            '/\\n\\r\\t/'      => array(
                 '/\\n\\r\\t/',
                 array(
                     'type'       => 'root',
@@ -271,6 +275,29 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
                         array('type' => 'char', 'value' => "\n"),
                         array('type' => 'char', 'value' => "\r"),
                         array('type' => 'char', 'value' => "\t"),
+                    )
+                )
+            ),
+            '/[\da-z_&!A-B-]/' => array(
+                '/[\da-z_&!A-B-]/',
+                array(
+                    'type'       => 'root',
+                    'delimiters' => array('/', '/'),
+                    'modifiers'  => array(),
+                    'stack'      => array(
+                        array(
+                            'type'  => 'set',
+                            'not'   => false,
+                            'stack' => array(
+                                array('type' => 'range', 'from' => '0', 'to' => '9'),
+                                array('type' => 'range', 'from' => 'a', 'to' => 'z'),
+                                array('type' => 'char', 'value' => '_'),
+                                array('type' => 'char', 'value' => '&'),
+                                array('type' => 'char', 'value' => '!'),
+                                array('type' => 'range', 'from' => 'A', 'to' => 'B'),
+                                array('type' => 'char', 'value' => '-'),
+                            )
+                        ),
                     )
                 )
             ),
@@ -289,6 +316,9 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
             '/(()(/' => array('/(()(/', '2 unterminated group(s) at position 5'),
             '/)/'    => array('/)/', 'Unmatched ) at position 1'),
             '/\\'    => array('/\\', 'Unfinished escape sequence at position 1'),
+            '/[/'    => array('/[/', 'Unterminated [ at position 1'),
+            '/[[/'   => array('/[[/', 'Unterminated [ at position 1'),
+            '/]/'    => array('/]/', 'Unmatched ] at position 1'),
         );
     }
 }
