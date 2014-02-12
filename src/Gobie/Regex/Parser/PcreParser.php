@@ -138,8 +138,8 @@ class PcreParser implements ParserInterface
                             break;
 
                         case $delimiter:
-                            if (count($groupStack)) {
-                                throw new ParseException('Unterminated group', $pos);
+                            if ($unterminatedGroups = count($groupStack)) {
+                                throw new ParseException($unterminatedGroups . ' unterminated group(s)', $pos);
                             }
 
                             $state = ParserInterface::MODIFIERS;
