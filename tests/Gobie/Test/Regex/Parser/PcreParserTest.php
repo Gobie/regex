@@ -307,18 +307,20 @@ class PcreParserTest extends \PHPUnit_Framework_TestCase
     public function provideIncorrectRegex()
     {
         return array(
-            10       => array(10, 'Invalid or empty regex "10"'),
-            ''       => array('', 'Invalid or empty regex ""'),
-            '8//'    => array('8//', 'Invalid delimiter "8" at position 0'),
-            '//8'    => array('//8', 'Unknown modifier "8" at position 2'),
-            '{a'     => array('{a', 'Missing delimiter "}" at position 1'),
-            '/(/'    => array('/(/', '1 unterminated group(s) at position 2'),
-            '/(()(/' => array('/(()(/', '2 unterminated group(s) at position 5'),
-            '/)/'    => array('/)/', 'Unmatched ) at position 1'),
-            '/\\'    => array('/\\', 'Unfinished escape sequence at position 1'),
-            '/[/'    => array('/[/', 'Unterminated [ at position 1'),
-            '/[[/'   => array('/[[/', 'Unterminated [ at position 1'),
-            '/]/'    => array('/]/', 'Unmatched ] at position 1'),
+            10        => array(10, 'Invalid or empty regex "10"'),
+            ''        => array('', 'Invalid or empty regex ""'),
+            '8//'     => array('8//', 'Invalid delimiter "8" at position 0'),
+            '//8'     => array('//8', 'Unknown modifier "8" at position 2'),
+            '{a{,2}}' => array('{a{,2}}', 'Unknown modifier "}" at position 6'),
+            '+a+b+'   => array('+a+b+', 'Unknown modifier "b" at position 3'),
+            '{a'      => array('{a', 'Missing delimiter "}" at position 1'),
+            '/(/'     => array('/(/', '1 unterminated group(s) at position 2'),
+            '/(()(/'  => array('/(()(/', '2 unterminated group(s) at position 5'),
+            '/)/'     => array('/)/', 'Unmatched ) at position 1'),
+            '/\\'     => array('/\\', 'Unfinished escape sequence at position 1'),
+            '/[/'     => array('/[/', 'Unterminated [ at position 1'),
+            '/[[/'    => array('/[[/', 'Unterminated [ at position 1'),
+            '/]/'     => array('/]/', 'Unmatched ] at position 1'),
         );
     }
 }

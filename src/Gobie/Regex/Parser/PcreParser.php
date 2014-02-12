@@ -57,6 +57,14 @@ class PcreParser implements ParserInterface
 
                 case ParserInterface::PATTERN:
                     switch ($char) {
+                        case $delimiter:
+                            if ($unterminatedGroups = count($groupStack)) {
+                                throw new ParseException($unterminatedGroups . ' unterminated group(s)', $pos);
+                            }
+
+                            $state = ParserInterface::MODIFIERS;
+                            break;
+
                         case '\\':
                             $tokenizer->next();
                             if (!$tokenizer->valid()) {
@@ -118,7 +126,7 @@ class PcreParser implements ParserInterface
 
                         case '[':
                             $classRegex =
-                                '/^(?:[a-z0-9]-[a-z0-9]|\\\\[^\\\\]|[^\\]\\[\\' . $delimiter . '])/i';
+                                '/^(?:[a-z0-9]-[a-z0-9]|\\\\.|[^\\]\\[\\' . $delimiter . '])/is';
                             $tokens     = array();
                             while ($token = $tokenizer->pop($classRegex)) {
                                 $tokens[] = $this->nodeFactory->createChar($token);
@@ -157,14 +165,6 @@ class PcreParser implements ParserInterface
 
                         case '?':
                             $last[] = $this->nodeFactory->createRepetition("0", "1");
-                            break;
-
-                        case $delimiter:
-                            if ($unterminatedGroups = count($groupStack)) {
-                                throw new ParseException($unterminatedGroups . ' unterminated group(s)', $pos);
-                            }
-
-                            $state = ParserInterface::MODIFIERS;
                             break;
 
                         default:
