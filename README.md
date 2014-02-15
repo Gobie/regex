@@ -71,8 +71,8 @@ This library solves error handling problems by doing all the heavy lifting in re
 Every error is handled by exception derived from `\Gobie\Regex\RegexException`.
 
 ```php
-use Gobie\Regex\Drivers\Pcre\PcreRegex;
-use Gobie\Regex\Drivers\Pcre\PcreRegexException;
+use Gobie\Regex\Wrappers\Pcre\PcreRegex;
+use Gobie\Regex\Wrappers\Pcre\PcreRegexException;
 
 // matching
 if (PcreRegex::match($pattern, $subject)) {
@@ -101,7 +101,7 @@ try {
 ```
 
 ```php
-use Gobie\Regex\Drivers\Mb\MbRegex;
+use Gobie\Regex\Wrappers\Mb\MbRegex;
 
 // greping
 if ($res = MbRegex::grep($pattern, $subject)) {
