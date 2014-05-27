@@ -15,6 +15,9 @@
         <testsuite name="Full">
             <directory suffix=".php">./Gobie</directory>
         </testsuite>
+        <testsuite name="Builder">
+            <directory suffix=".php">./Gobie/Test/Regex/Builder</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
