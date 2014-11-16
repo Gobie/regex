@@ -27,7 +27,7 @@ class MbRegex
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      */
-    public static function match($pattern, $subject, $option = "")
+    public static function match($pattern, $subject, $option = '')
     {
         static::setUp($pattern);
         \mb_ereg_search_init($subject, $pattern, $option);
@@ -47,7 +47,7 @@ class MbRegex
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
-    public static function get($pattern, $subject, $option = "")
+    public static function get($pattern, $subject, $option = '')
     {
         static::setUp($pattern);
         \mb_ereg_search_init($subject, $pattern, $option);
@@ -67,7 +67,7 @@ class MbRegex
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search-regs.php
      */
-    public static function getAll($pattern, $subject, $option = "")
+    public static function getAll($pattern, $subject, $option = '')
     {
         static::setUp($pattern);
 
@@ -110,7 +110,7 @@ class MbRegex
      * @link http://php.net/function.mb-ereg-replace.php
      * @link http://php.net/function.mb-ereg-replace-callback.php
      */
-    public static function replace($pattern, $replacement, $subject, $option = "")
+    public static function replace($pattern, $replacement, $subject, $option = '')
     {
         static::setUp($pattern);
 
@@ -184,7 +184,7 @@ class MbRegex
      * @throws MbRegexException When compilation error occurs
      * @link http://php.net/function.mb-ereg-search.php
      */
-    public static function grep($pattern, $subject, $option = "")
+    public static function grep($pattern, $subject, $option = '')
     {
         static::setUp($pattern);
 
@@ -216,7 +216,7 @@ class MbRegex
      * @link http://php.net/function.mb-ereg-replace.php
      * @link http://php.net/function.mb-ereg-replace-callback.php
      */
-    public static function filter($pattern, $replacement, $subject, $option = "")
+    public static function filter($pattern, $replacement, $subject, $option = '')
     {
         static::setUp($pattern);
 
