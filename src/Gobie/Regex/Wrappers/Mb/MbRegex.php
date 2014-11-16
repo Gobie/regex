@@ -232,7 +232,7 @@ class MbRegex
                     continue;
                 }
 
-                $subjectPart = self::execReplace($pattern, $replacement, $subjectPart, $option);
+                $subjectPart  = self::execReplace($pattern, $replacement, $subjectPart, $option);
                 $result[$key] = $subjectPart;
             }
         }
